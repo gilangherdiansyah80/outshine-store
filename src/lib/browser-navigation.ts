@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect } from "react";
-import { useNavigationActions } from "../hooks/use-responsive-navigation";
-import { useNavigationStore } from "../store/navigationStore";
-import { parseScreenSearchParam } from "./utils";
-import { useDevice } from "../hooks/use-device";
+import { useNavigationActions } from "@outshine/hooks/use-responsive-navigation";
+import { useNavigationStore } from "@outshine/store/navigationStore";
+import { parseScreenSearchParam } from "@outshine/lib/utils";
+import { useDevice } from "@outshine/hooks/use-device";
 
 /**
  * Hook to handle browser back/forward navigation

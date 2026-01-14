@@ -3,33 +3,18 @@
 import { Suspense, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams, useLocation } from "react-router-dom";
 
-import { useDevice } from "../hooks/use-device";
-import { useNavigationActions } from "../hooks/use-responsive-navigation";
-import { useNavigationStore } from "./store";
-import {
-  createScreenSearchParam,
-  isValidScreenPath,
-  parseScreenSearchParam,
-} from "./utils";
-
-/**
- * Interface for internal safety tracking to prevent infinite loops
- */
-interface SafetyState {
-  navigationAttempts: number;
-  lastNavigationTime: number;
-}
+import { useDevice } from "@outshine/hooks/use-device";
+import { useNavigationActions } from "@outshine/hooks/use-responsive-navigation";
+import { useNavigationStore } from "@outshine/lib/store";
+import { isValidScreenPath, parseScreenSearchParam } from "@outshine/lib/utils";
 
 export type Props = {
   basePath: string;
 };
 
-// Navigation safety constants
-const MAX_NAVIGATION_ATTEMPTS = 5;
-const NAVIGATION_COOLDOWN_MS = 1000;
-
 /**
  * Component that synchronizes the browser URL with the virtual navigation stack.
+ * Uses refs to prevent circular updates between URL and store.
  */
 const Sync = () => {
   const navigate = useNavigate();
@@ -40,201 +25,153 @@ const Sync = () => {
     stack,
     isNavigationHydrated,
     isReady: hasCompletedInitialSync,
-    navigationAttempts,
-    lastNavigationTime,
-    isDoingRealNavigation,
   } = useNavigationStore((s) => ({
     stack: s.stack,
     isNavigationHydrated: s.isHydrated,
     isReady: s.isReady,
-    navigationAttempts: s.navigationAttempts,
-    lastNavigationTime: s.lastNavigationTime,
-    isDoingRealNavigation: s.isDoingRealNavigation,
   }));
 
-  const {
-    replace: replaceNavigation,
-    setHasReady: setNavigationHasReady,
-    setIsDoingRealNavigation,
-    resetNavigationSafety,
-  } = useNavigationActions();
+  const { replace: replaceNavigation, setHasReady: setNavigationHasReady } =
+    useNavigationActions();
 
   const { isMobile } = useDevice();
   const { pathname, search } = useLocation();
-  const lastPathnameRef = useRef(pathname);
 
-  // Handle external pathname changes (outside virtual stack)
+  // Refs to prevent circular updates
+  const isUpdatingFromUrl = useRef(false);
+  const isUpdatingFromStack = useRef(false);
+  const hasInitialized = useRef(false);
+
+  // Get current stack path for comparison
+  const currentStackPath = stack[stack.length - 1]?.path ?? "/";
+  // Stringify params for stable comparison in effect dependencies
+  const currentStackParamsJson = JSON.stringify(
+    stack[stack.length - 1]?.params ?? {}
+  );
+
+  // Initial sync effect - runs once when hydrated
   useEffect(() => {
-    if (!isNavigationHydrated) return;
+    if (!isMobile || !isNavigationHydrated || hasInitialized.current) return;
+    hasInitialized.current = true;
 
-    if (lastPathnameRef.current !== pathname) {
-      lastPathnameRef.current = pathname;
+    // Decode screen param from URL
+    const urlScreenPath = screenSearchParam
+      ? parseScreenSearchParam(screenSearchParam)
+      : "/";
 
-      const decodedPath = screenSearchParam
-        ? parseScreenSearchParam(screenSearchParam)
-        : "/";
-
-      const otherParams: Record<string, unknown> = {};
-      searchParams.forEach((value, key) => {
-        if (key !== "screen") {
-          otherParams[key] = value;
-        }
-      });
-
-      const targetPath = isValidScreenPath(decodedPath) ? decodedPath : "/";
-      replaceNavigation(targetPath, otherParams);
-    }
-  }, [
-    pathname,
-    screenSearchParam,
-    searchParams,
-    isNavigationHydrated,
-    replaceNavigation,
-  ]);
-
-  // Manage navigation mode (real vs virtual) based on stack depth
-  useEffect(() => {
-    if (!isNavigationHydrated) return;
-
-    const shouldBeRealNavigation = stack.length === 1;
-    if (isDoingRealNavigation !== shouldBeRealNavigation) {
-      setIsDoingRealNavigation(shouldBeRealNavigation);
-    }
-  }, [
-    stack.length,
-    isNavigationHydrated,
-    setIsDoingRealNavigation,
-    isDoingRealNavigation,
-  ]);
-
-  // Perform initial synchronization of URL to store on load
-  useEffect(() => {
-    if (!isMobile || !isNavigationHydrated || hasCompletedInitialSync) return;
-
-    const currentStack = stack[stack.length - 1];
-    let needsNavigation = false;
-    let targetPath = "/";
-    let targetParams: Record<string, unknown> = {};
-
-    if (!screenSearchParam) {
-      if (currentStack?.path !== "/") {
-        needsNavigation = true;
-        targetPath = "/";
-      }
-    } else {
-      const decodedPath = parseScreenSearchParam(screenSearchParam);
-      const otherParams: Record<string, unknown> = {};
-      searchParams.forEach((value, key) => {
-        if (key !== "screen") {
-          otherParams[key] = value;
-        }
-      });
-
-      if (
-        decodedPath !== currentStack?.path ||
-        JSON.stringify(otherParams) !== JSON.stringify(currentStack?.params)
-      ) {
-        needsNavigation = true;
-        if (isValidScreenPath(decodedPath)) {
-          targetPath = decodedPath;
-          targetParams = otherParams;
-        } else {
-          targetPath = "/";
-        }
-      }
-    }
-
-    if (needsNavigation && currentStack?.path !== targetPath) {
-      const now = Date.now();
-      if (
-        navigationAttempts >= MAX_NAVIGATION_ATTEMPTS ||
-        now - lastNavigationTime < NAVIGATION_COOLDOWN_MS
-      ) {
-        console.warn(
-          "[ResponsiveNavigation] Navigation blocked (safety triggers active)"
-        );
-        return;
-      }
-
-      resetNavigationSafety();
-
-      // Update store state directly for internal safety tracking
-      const stateUpdate =
-        useNavigationStore.getState() as unknown as SafetyState;
-      stateUpdate.navigationAttempts = navigationAttempts + 1;
-      stateUpdate.lastNavigationTime = now;
-
-      try {
-        replaceNavigation(targetPath, targetParams);
-      } catch (error) {
-        console.error("[ResponsiveNavigation] Initial sync error:", error);
-      }
+    // If URL has a valid screen that's different from stack, sync store to URL
+    if (
+      isValidScreenPath(urlScreenPath) &&
+      urlScreenPath !== currentStackPath
+    ) {
+      isUpdatingFromUrl.current = true;
+      replaceNavigation(urlScreenPath, {});
+      // Reset flag after a tick
+      setTimeout(() => {
+        isUpdatingFromUrl.current = false;
+      }, 0);
     }
 
     setNavigationHasReady();
   }, [
+    isMobile,
+    isNavigationHydrated,
     screenSearchParam,
-    searchParams,
+    currentStackPath,
+    replaceNavigation,
+    setNavigationHasReady,
+  ]);
+
+  // Sync URL to match stack (when stack changes from user navigation)
+  useEffect(() => {
+    // Skip if not mobile, not hydrated, or if we're updating from URL
+    if (!isMobile || !isNavigationHydrated || !hasCompletedInitialSync) return;
+    if (isUpdatingFromUrl.current) return;
+
+    const urlScreenPath = screenSearchParam ?? "";
+
+    // Only update URL if stack path is different from URL
+    if (urlScreenPath === currentStackPath) return;
+
+    // Prevent this from triggering URL->stack sync
+    isUpdatingFromStack.current = true;
+
+    // Build new URL
+    const params = new URLSearchParams();
+    params.set("screen", currentStackPath);
+
+    // Parse params from JSON string
+    const currentStackParams = JSON.parse(currentStackParamsJson) as Record<
+      string,
+      unknown
+    >;
+    Object.entries(currentStackParams).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        params.set(key, String(value));
+      }
+    });
+
+    const newUrl = `${pathname}?${params.toString()}`;
+    const currentUrl = pathname + search;
+
+    if (newUrl !== currentUrl) {
+      navigate(newUrl, { replace: true });
+    }
+
+    // Reset flag after navigation completes
+    setTimeout(() => {
+      isUpdatingFromStack.current = false;
+    }, 0);
+  }, [
+    currentStackPath,
+    currentStackParamsJson,
     isMobile,
     isNavigationHydrated,
     hasCompletedInitialSync,
-    stack,
-    navigationAttempts,
-    lastNavigationTime,
-    replaceNavigation,
-    setNavigationHasReady,
-    resetNavigationSafety,
-  ]);
-
-  // Update browser URL when virtual stack changes
-  useEffect(() => {
-    if (!isMobile || !isNavigationHydrated) return;
-    const currentStack = stack[stack.length - 1];
-    if (!currentStack) return;
-
-    const stackString = createScreenSearchParam(currentStack.path);
-    const currentUrlParams = new URLSearchParams(window.location.search);
-    let needsUpdate = screenSearchParam !== stackString;
-
-    if (!needsUpdate) {
-      for (const key of Object.keys(currentStack.params)) {
-        if (currentUrlParams.get(key) !== String(currentStack.params[key])) {
-          needsUpdate = true;
-          break;
-        }
-      }
-    }
-
-    if (needsUpdate) {
-      const params = new URLSearchParams(window.location.search);
-      params.set("screen", stackString);
-
-      // Keep only 'screen' and new actual params
-      const keysToRemove: string[] = [];
-      params.forEach((_, key) => {
-        if (key !== "screen") keysToRemove.push(key);
-      });
-      keysToRemove.forEach((key) => params.delete(key));
-
-      Object.entries(currentStack.params).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
-          params.set(key, String(value));
-        }
-      });
-
-      const newUrl = `${window.location.pathname}?${params.toString()}`;
-      if (newUrl !== pathname + search) {
-        navigate(newUrl, { replace: true });
-      }
-    }
-  }, [
-    stack,
-    isMobile,
-    isNavigationHydrated,
     screenSearchParam,
     navigate,
     pathname,
     search,
+  ]);
+
+  // Sync stack to match URL (when URL changes from browser navigation)
+  useEffect(() => {
+    // Skip if not mobile, not hydrated, or if we're updating from stack
+    if (!isMobile || !isNavigationHydrated || !hasCompletedInitialSync) return;
+    if (isUpdatingFromStack.current) return;
+
+    const urlScreenPath = screenSearchParam
+      ? parseScreenSearchParam(screenSearchParam)
+      : "/";
+
+    // Only update stack if URL path is different
+    if (urlScreenPath === currentStackPath) return;
+    if (!isValidScreenPath(urlScreenPath)) return;
+
+    // Prevent this from triggering stack->URL sync
+    isUpdatingFromUrl.current = true;
+
+    const otherParams: Record<string, unknown> = {};
+    searchParams.forEach((value, key) => {
+      if (key !== "screen") {
+        otherParams[key] = value;
+      }
+    });
+
+    replaceNavigation(urlScreenPath, otherParams);
+
+    // Reset flag after state update
+    setTimeout(() => {
+      isUpdatingFromUrl.current = false;
+    }, 0);
+  }, [
+    screenSearchParam,
+    searchParams,
+    currentStackPath,
+    isMobile,
+    isNavigationHydrated,
+    hasCompletedInitialSync,
+    replaceNavigation,
   ]);
 
   return null;
@@ -245,8 +182,6 @@ const Sync = () => {
  * Wrapped in Suspense to handle React Router's search param hooks.
  */
 export const ResponsiveSearchParamsSync = ({ basePath }: Props) => {
-  // Use basePath as a key for Sync component to satisfy the 'unused-vars' lint rule.
-  // This ensures the sync recalibrates if the base path configuration changes.
   return (
     <Suspense fallback={null}>
       <Sync key={basePath} />

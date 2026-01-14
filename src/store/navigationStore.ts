@@ -4,7 +4,7 @@ import type {
   NavigationActions,
   NavigationState,
   StackEntry,
-} from "../lib/types";
+} from "@outshine/lib/types";
 
 // Internal state for safety features
 interface InternalNavigationState extends NavigationState {
@@ -27,7 +27,7 @@ const useNavigationStore = create<InternalNavigationState>()(
     (set) => ({
       stack: [{ path: "/", params: {} }],
       isHydrated: false,
-      isReady: false,
+      isReady: true, // Default to true since we temporarily disabled sync
       isDoingRealNavigation: true,
       navigationAttempts: 0,
       lastNavigationTime: 0,
@@ -100,12 +100,8 @@ const useNavigationStore = create<InternalNavigationState>()(
       }),
       onRehydrateStorage: () => (state) => {
         if (!state) return;
-
-        setTimeout(() => {
-          if (state?.stack) {
-            state.actions?.setHasHydrated?.();
-          }
-        }, 1000);
+        // Immediately mark as hydrated without delay
+        state.actions?.setHasHydrated?.();
       },
     }
   )

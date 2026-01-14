@@ -20,7 +20,7 @@ export {
   useNavigationState,
   useResponsiveNavigation,
   useResponsiveRouteParams,
-} from "../hooks/use-responsive-navigation";
+} from "@outshine/hooks/use-responsive-navigation";
 
 // Components
 export { ResponsiveRoute } from "./components";

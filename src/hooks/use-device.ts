@@ -1,5 +1,3 @@
-"use client";
-
 import { useSyncExternalStore } from "react";
 
 // Default breakpoint (matches Tailwind's md breakpoint)

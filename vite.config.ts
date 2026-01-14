@@ -9,6 +9,15 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      "@outshine/hooks": path.resolve(__dirname, "./src/hooks"),
+      "@outshine/store": path.resolve(__dirname, "./src/store"),
+      "@outshine/lib": path.resolve(__dirname, "./src/lib"),
+      "@outshine/middleware": path.resolve(__dirname, "./src/middleware"),
+      "@outshine/services": path.resolve(__dirname, "./src/services"),
+      "@outshine/container": path.resolve(__dirname, "./src/container"),
+      "@outshine/components": path.resolve(__dirname, "./src/components"),
+      "@outshine/pages": path.resolve(__dirname, "./src/pages"),
+      "@outshine/ui": path.resolve(__dirname, "./src/ui"),
     },
   },
 });

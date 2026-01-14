@@ -1,3 +1,13 @@
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+/**
+ * Utility to merge tailwind classes safely
+ */
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+
 /**
  * Utility functions for navigation system
  */
@@ -61,10 +71,10 @@ export const createScreenSearchParam = (path: string): string => {
   }
 
   try {
-    return encodeURIComponent(path);
+    return path;
   } catch (error) {
-    console.error("[ResponsiveNavigation] Encoding error:", error);
-    return encodeURIComponent("/");
+    console.error("[ResponsiveNavigation] Path processing error:", error);
+    return "/";
   }
 };
 

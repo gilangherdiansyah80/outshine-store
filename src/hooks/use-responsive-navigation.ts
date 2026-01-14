@@ -1,8 +1,6 @@
-"use client";
-
 import { useNavigate } from "react-router-dom";
-import { useNavigationStore } from "../lib/store";
-import type { NavigationState } from "../lib/types";
+import { useNavigationStore } from "@outshine/lib/store";
+import type { NavigationState } from "@outshine/lib/types";
 
 /**
  * Simple selector hook for navigation state

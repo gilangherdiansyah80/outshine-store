@@ -11,7 +11,16 @@
     /* Path Aliases */
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@outshine/hooks/*": ["./src/hooks/*"],
+      "@outshine/store/*": ["./src/store/*"],
+      "@outshine/lib/*": ["./src/lib/*"],
+      "@outshine/middleware/*": ["./src/middleware/*"],
+      "@outshine/services/*": ["./src/services/*"],
+      "@outshine/container/*": ["./src/container/*"],
+      "@outshine/components/*": ["./src/components/*"],
+      "@outshine/pages/*": ["./src/pages/*"],
+      "@outshine/ui/*": ["./src/ui/*"]
     },
 
     /* Bundler mode */
