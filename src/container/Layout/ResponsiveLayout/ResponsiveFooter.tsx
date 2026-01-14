@@ -52,7 +52,7 @@ const ResponsiveFooter = () => {
               </div>
             </Link>
             <Link
-              to="/outshine/product"
+              to="/outshine/products"
               className={`flex flex-col items-center gap-1 px-3 py-1.5 rounded-2xl transition-all duration-300`}
             >
               <div
