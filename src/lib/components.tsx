@@ -1,6 +1,3 @@
-"use client";
-
-import React from "react";
 import { useNavigationStore } from "@outshine/lib/store";
 import type { ResponsiveRouteProps } from "@outshine/lib/types";
 

@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect } from "react";
 import { useNavigationActions } from "@outshine/hooks/use-responsive-navigation";
 import { useNavigationStore } from "@outshine/store/navigationStore";

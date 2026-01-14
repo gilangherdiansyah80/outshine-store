@@ -1,5 +1,3 @@
-"use client";
-
 // import { useBrowserNavigation } from "@outshine/lib/browser-navigation";
 import type { ResponsiveProviderProps } from "@outshine/lib/types";
 // import { ResponsiveSearchParamsSync } from "@outshine/lib/url-sync";
@@ -10,11 +8,7 @@ import type { ResponsiveProviderProps } from "@outshine/lib/types";
  *
  * TEMPORARILY DISABLED: URL sync and browser navigation to debug infinite loop.
  */
-export const ResponsiveProvider = ({
-  children,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  basePath = "/",
-}: ResponsiveProviderProps) => {
+export const ResponsiveProvider = ({ children }: ResponsiveProviderProps) => {
   // TEMPORARILY DISABLED: Handle browser back/forward buttons
   // useBrowserNavigation();
 

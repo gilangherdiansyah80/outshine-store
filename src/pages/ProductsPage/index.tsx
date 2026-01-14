@@ -1,5 +1,5 @@
 import { useDevice, useHasMounted } from "@/hooks/use-device";
-import HomeResponsive from "@/container/Home/Responsive/HomeResponsive";
+import ProductsResponsive from "@/container/Products/Responsive/ProductsResponsive";
 
 export default function ProductsPage() {
   const { isMobile } = useDevice();
@@ -10,5 +10,5 @@ export default function ProductsPage() {
     return null;
   }
 
-  return <>{isMobile ? <HomeResponsive /> : <p>Desktop</p>}</>;
+  return <>{isMobile ? <ProductsResponsive /> : <p>Desktop</p>}</>;
 }
