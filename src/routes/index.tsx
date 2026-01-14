@@ -6,18 +6,18 @@ import ProductsPage from "@outshine/pages/ProductsPage/index.tsx";
 const route = createBrowserRouter([
   {
     path: "/",
+    element: <Navigate to="/outshine/home" replace />,
+  },
+  {
+    path: "/outshine",
     element: <MainLayout />,
     children: [
       {
-        index: true,
-        element: <Navigate to="/outshine/home" replace />,
-      },
-      {
-        path: "outshine/home",
+        path: "home",
         element: <HomePage />,
       },
       {
-        path: "outshine/products",
+        path: "products",
         element: <ProductsPage />,
       },
     ],
