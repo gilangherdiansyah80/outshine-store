@@ -84,7 +84,7 @@ const CardProductTrending = ({
       </div>
 
       {/* Content - Dark Background */}
-      <div className="flex flex-col gap-0.5 p-3 bg-[#0A2665]">
+      <div className="flex flex-col gap-0.5 p-3 bg-[#5D5D5D]">
         {/* Product Name */}
         <h3 className="text-sm font-semibold text-white line-clamp-1 leading-tight">
           {product.name}

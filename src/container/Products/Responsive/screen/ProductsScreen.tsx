@@ -1,6 +1,6 @@
 import FilterBar from "../components/FilterBar";
 import ProductSortBar from "../components/ProductSortBar";
-import ProductCardGrid from "../components/ProductCardGrid";
+import CardProduct from "@/components/Card/CardProduct"; // Updated import
 import { useGetProducts } from "@/services/Products/useGetProducts";
 
 const ProductsScreen = () => {
@@ -41,7 +41,18 @@ const ProductsScreen = () => {
         ) : (
           <div className="grid grid-cols-2 gap-x-4 gap-y-6">
             {products?.map((product) => (
-              <ProductCardGrid key={product.id} product={product} />
+              <CardProduct
+                key={product.id}
+                imageSrc={product.image}
+                name={product.name}
+                price={product.price}
+                originalPrice={product.originalPrice}
+                discount={product.discount}
+                isNew={product.isNew}
+                aspectRatio="portrait"
+                onClick={() => console.log("View product:", product.name)}
+                onWishlistClick={() => console.log("Wishlist:", product.name)}
+              />
             ))}
           </div>
         )}

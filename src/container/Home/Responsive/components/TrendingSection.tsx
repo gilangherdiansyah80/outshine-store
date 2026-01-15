@@ -1,7 +1,7 @@
 import { cn } from "@outshine/lib/utils";
 import { useGetTrendingProducts } from "@outshine/services/Home/useGetTrendingProducts";
-import CardProductTrending from "./CardProductTrending";
 import { ChevronRightIcon } from "@programmer-molor/my-icons";
+import CardProduct from "@outshine/components/Card/CardProduct";
 
 interface TrendingSectionProps {
   onViewAll?: () => void;
@@ -27,7 +27,7 @@ const TrendingSection = ({ onViewAll, className }: TrendingSectionProps) => {
           {[1, 2, 3, 4].map((i) => (
             <div
               key={i}
-              className="aspect-[3/4] bg-gray-200 rounded-2xl animate-pulse"
+              className="aspect-square bg-gray-200 rounded-2xl animate-pulse"
             />
           ))}
         </div>
@@ -52,9 +52,16 @@ const TrendingSection = ({ onViewAll, className }: TrendingSectionProps) => {
       {/* Product Grid */}
       <div className="grid grid-cols-2 gap-4">
         {products.map((product) => (
-          <CardProductTrending
+          <CardProduct
             key={product.id}
-            product={product}
+            imageSrc={product.imageSrc}
+            name={product.name}
+            price={product.price}
+            originalPrice={product.originalPrice}
+            currency={product.currency}
+            isNew={product.isNew}
+            discount={product.isSale ? "SALE" : undefined}
+            aspectRatio="square"
             onAddToCart={() => console.log("Add to cart:", product.name)}
             onClick={() => console.log("View product:", product.name)}
           />
