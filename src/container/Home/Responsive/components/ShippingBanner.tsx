@@ -12,7 +12,7 @@ const ShippingBanner = ({ className }: ShippingBannerProps) => {
   return (
     <div
       className={cn(
-        "flex items-center justify-between p-4 rounded-xl bg-[#0A2665]",
+        "flex items-center justify-between p-4 rounded-xl bg-[#0F172A]",
         className
       )}
     >

@@ -27,11 +27,6 @@ const ProductsScreen = () => {
   return (
     <div className="min-h-screen bg-white">
       <div className="px-4 pt-4 pb-24">
-        {/* Title Section */}
-        <div className="flex items-center justify-between py-4">
-          <h1 className="text-xl font-bold">Winter Collection</h1>
-        </div>
-
         {/* Filter Bar */}
         <div className="mb-4">
           <FilterBar onFilterClick={() => console.log("Filter clicked")} />

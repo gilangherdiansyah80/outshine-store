@@ -3,6 +3,8 @@ import MainLayout from "@outshine/container/Layout/MainLayout/MainLayout.tsx";
 import HomePage from "@outshine/pages/HomePage/index.tsx";
 import ProductsPage from "@outshine/pages/ProductsPage/index.tsx";
 import DetailProductPage from "@outshine/pages/DetailProductPage/index.tsx";
+import AboutUsPage from "@outshine/pages/AboutUsPage/index.tsx";
+import WishListsPage from "@outshine/pages/WishListsPage/index.tsx";
 
 const route = createBrowserRouter([
   {
@@ -22,8 +24,12 @@ const route = createBrowserRouter([
         element: <ProductsPage />,
       },
       {
-        path: "products",
-        element: <ProductsPage />,
+        path: "about-us",
+        element: <AboutUsPage />,
+      },
+      {
+        path: "wishlists",
+        element: <WishListsPage />,
       },
     ],
   },

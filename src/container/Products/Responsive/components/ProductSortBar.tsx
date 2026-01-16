@@ -17,9 +17,9 @@ const ProductSortBar = ({
 
       <button
         onClick={onSortClick}
-        className="flex items-center gap-1.5 text-sm text-white font-medium"
+        className="flex items-center gap-1.5 text-sm text-[#0F172A] font-medium"
       >
-        <ArrowUpDown size={14} className="text-[#3B82F6]" />
+        <ArrowUpDown size={14} className="text-[#0F172A]" />
         Sort: Recommended
       </button>
     </div>

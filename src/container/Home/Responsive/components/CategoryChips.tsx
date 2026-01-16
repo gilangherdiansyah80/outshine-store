@@ -54,7 +54,7 @@ const CategoryChips = ({ onCategorySelect, className }: CategoryChipsProps) => {
             "shrink-0 px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300",
             "border border-gray-300",
             selectedCategory === category.id
-              ? "bg-[#0A2665] text-white border-[#0A2665]"
+              ? "bg-[#0F172A] text-white border-[#0F172A]"
               : "bg-white text-gray-800 hover:bg-gray-100"
           )}
         >
