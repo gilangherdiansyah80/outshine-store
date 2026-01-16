@@ -17,6 +17,8 @@ const ResponsiveLayout = ({ children }: ResponsiveLayoutProps) => {
   const isFullScreen =
     currentPath === "/filter" ||
     currentPath === "/sort" ||
+    pathname?.includes("/cart") ||
+    pathname?.includes("/wishlist") ||
     pathname?.includes("/product/saas/") ||
     pathname?.includes("/product/template/");
 

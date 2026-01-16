@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { HomeIcon } from "@programmer-molor/my-icons";
 import { ShoppingBagIcon, InfoIcon, Heart } from "lucide-react";
-import Image from "@outshine/ui/Image/Image.tsx";
+import Image from "@outshine/ui/Image/Image";
 
 const ResponsiveFooter = () => {
   const { pathname } = useLocation();

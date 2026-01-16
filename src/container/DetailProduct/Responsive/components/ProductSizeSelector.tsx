@@ -1,13 +1,16 @@
 import { Ruler } from "lucide-react";
-import { useState } from "react";
 
 interface ProductSizeSelectorProps {
   sizes: string[];
+  selectedSize: string | null;
+  onSizeChange: (size: string) => void;
 }
 
-const ProductSizeSelector = ({ sizes }: ProductSizeSelectorProps) => {
-  const [selectedSize, setSelectedSize] = useState<string | null>(null);
-
+const ProductSizeSelector = ({
+  sizes,
+  selectedSize,
+  onSizeChange,
+}: ProductSizeSelectorProps) => {
   return (
     <div className="space-y-3">
       <div className="flex justify-between items-center">
@@ -22,7 +25,7 @@ const ProductSizeSelector = ({ sizes }: ProductSizeSelectorProps) => {
         {sizes.map((size) => (
           <button
             key={size}
-            onClick={() => setSelectedSize(size)}
+            onClick={() => onSizeChange(size)}
             className={`py-3 rounded-lg border text-sm font-semibold transition-all ${
               selectedSize === size
                 ? "bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-900/50"

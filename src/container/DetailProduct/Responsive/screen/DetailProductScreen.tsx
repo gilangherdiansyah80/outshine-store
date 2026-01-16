@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import type { ProductDetail } from "@outshine/services/Products/useGetDetailProduct";
 import ProductActions from "../components/ProductActions";
 import ProductDetails from "../components/ProductDetails";
@@ -14,8 +14,10 @@ interface DetailProductScreenProps {
 const DetailProductScreen: React.FC<DetailProductScreenProps> = ({
   product,
 }) => {
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
+
   return (
-    <div className="min-h-screen bg-white pb-24 font-sans">
+    <div className="min-h-screen bg-[#0B0F19] pb-24 font-sans text-white">
       <ProductImageGallery
         id={product.id}
         images={product.images}
@@ -31,9 +33,19 @@ const DetailProductScreen: React.FC<DetailProductScreenProps> = ({
           reviewCount={product.reviewCount}
         />
 
-        <ProductSizeSelector sizes={product.sizes} />
+        <ProductSizeSelector
+          sizes={product.sizes}
+          selectedSize={selectedSize}
+          onSizeChange={setSelectedSize}
+        />
 
-        <ProductActions />
+        <ProductActions
+          id={product.id}
+          name={product.title}
+          price={product.price}
+          image={product.images[0]}
+          selectedSize={selectedSize}
+        />
 
         <ProductDetails fabricAndCare={product.fabricAndCare} />
 

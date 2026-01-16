@@ -1,17 +1,20 @@
 import { Link, useNavigate } from "react-router-dom";
-import Input from "@outshine/ui/Form/Input/Input.tsx";
+import { useCartStore } from "@outshine/store/cartStore";
+import Input from "@outshine/ui/Form/Input/Input";
 import {
   SearchIcon,
   ChevronLeftIcon,
   CartIcon,
 } from "@programmer-molor/my-icons";
-import { useResponsiveNavigation } from "@outshine/hooks/use-responsive-navigation.ts";
-import { useSearchStore } from "@outshine/store/searchStore.ts";
+import { useResponsiveNavigation } from "@outshine/hooks/use-responsive-navigation";
+import { useSearchStore } from "@outshine/store/searchStore";
 
 const ResponsiveHeader = () => {
   const navigate = useNavigate();
   const { pop, stack } = useResponsiveNavigation();
   const { searchQuery, setSearchQuery } = useSearchStore();
+  const { items } = useCartStore();
+  const itemCount = items.reduce((total, item) => total + item.quantity, 0);
 
   const handleBack = () => {
     if (stack && stack.length > 1) {
@@ -52,10 +55,15 @@ const ResponsiveHeader = () => {
           {/* Troli / Cart */}
           <Link
             to="/outshine/cart"
-            className="flex flex-col items-center gap-[2px]"
+            className="flex flex-col items-center gap-[2px] relative"
           >
-            <div className="text-white">
+            <div className="text-white relative">
               <CartIcon size={24} color="#ffffff" />
+              {itemCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-sm">
+                  {itemCount}
+                </span>
+              )}
             </div>
             <span className="text-[11px] font-medium text-white">Troli</span>
           </Link>

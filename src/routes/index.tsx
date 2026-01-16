@@ -1,10 +1,11 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import MainLayout from "@outshine/container/Layout/MainLayout/MainLayout.tsx";
-import HomePage from "@outshine/pages/HomePage/index.tsx";
-import ProductsPage from "@outshine/pages/ProductsPage/index.tsx";
-import DetailProductPage from "@outshine/pages/DetailProductPage/index.tsx";
-import AboutUsPage from "@outshine/pages/AboutUsPage/index.tsx";
-import WishListsPage from "@outshine/pages/WishListsPage/index.tsx";
+import MainLayout from "@outshine/container/Layout/MainLayout/MainLayout";
+import HomePage from "@outshine/pages/HomePage";
+import ProductsPage from "@outshine/pages/ProductsPage";
+import DetailProductPage from "@outshine/pages/DetailProductPage";
+import AboutUsPage from "@outshine/pages/AboutUsPage";
+import WishListsPage from "@outshine/pages/WishListsPage";
+import CartPage from "@outshine/pages/CartPage";
 
 const route = createBrowserRouter([
   {
@@ -20,7 +21,7 @@ const route = createBrowserRouter([
         element: <HomePage />,
       },
       {
-        path: "products",
+        path: "products/*",
         element: <ProductsPage />,
       },
       {
@@ -31,11 +32,15 @@ const route = createBrowserRouter([
         path: "wishlist",
         element: <WishListsPage key="wishlist-page" />,
       },
+      {
+        path: "cart",
+        element: <CartPage />,
+      },
+      {
+        path: "product/:id",
+        element: <DetailProductPage />,
+      },
     ],
-  },
-  {
-    path: "/outshine/products/:id",
-    element: <DetailProductPage />,
   },
 ]);
 

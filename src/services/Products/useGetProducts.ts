@@ -9,6 +9,11 @@ export interface ProductItem {
   isNew?: boolean;
   discount?: number; // percent
   isWishlisted?: boolean;
+  // Metadata for filtering
+  sizes: string[];
+  colors: string[];
+  category: string;
+  rating: number;
 }
 
 const USE_MOCK = true;
@@ -23,6 +28,10 @@ export const mockAPIResult = {
       image:
         "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=1000&auto=format&fit=crop",
       isNew: true,
+      sizes: ["S", "M", "L", "XL"],
+      colors: ["Brown", "Black"],
+      category: "Jackets",
+      rating: 4.8,
     },
     {
       id: "2",
@@ -30,6 +39,10 @@ export const mockAPIResult = {
       price: 45.0,
       image:
         "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=1000&auto=format&fit=crop",
+      sizes: ["XS", "S", "M", "L", "XL"],
+      colors: ["White", "Black", "Grey"],
+      category: "T-Shirts",
+      rating: 4.5,
     },
     {
       id: "3",
@@ -39,6 +52,10 @@ export const mockAPIResult = {
       discount: 20,
       image:
         "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?q=80&w=1000&auto=format&fit=crop",
+      sizes: ["S", "M", "L", "XL"],
+      colors: ["Grey", "Black", "Navy"],
+      category: "Hoodies",
+      rating: 4.7,
     },
     {
       id: "4",
@@ -46,6 +63,10 @@ export const mockAPIResult = {
       price: 95.0,
       image:
         "https://images.unsplash.com/photo-1517445312882-641029cabc7b?q=80&w=1000&auto=format&fit=crop",
+      sizes: ["28", "30", "32", "34"],
+      colors: ["Navy", "Olive", "Black"],
+      category: "Pants",
+      rating: 4.6,
     },
     {
       id: "5",
@@ -53,6 +74,10 @@ export const mockAPIResult = {
       price: 110.0,
       image:
         "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?q=80&w=1000&auto=format&fit=crop",
+      sizes: ["S", "M", "L"],
+      colors: ["Cream", "Grey"],
+      category: "Sweaters",
+      rating: 4.9,
     },
     {
       id: "6",
@@ -60,20 +85,21 @@ export const mockAPIResult = {
       price: 89.0,
       image:
         "https://images.unsplash.com/photo-1576871337632-b9aef4c17ab9?q=80&w=1000&auto=format&fit=crop",
+      sizes: ["S", "M", "L", "XL"],
+      colors: ["Blue", "Light Blue"],
+      category: "Jackets",
+      rating: 4.4,
     },
   ],
 };
 
 export const getProductsData = async (): Promise<ProductItem[]> => {
   if (USE_MOCK) {
-    // Simulate API delay
     await new Promise((resolve) => setTimeout(resolve, 800));
     return mockAPIResult.Data;
   } else {
     const response = await fetch("/api/products/responsive");
-    if (!response.ok) {
-      throw new Error("Failed to fetch products");
-    }
+    if (!response.ok) throw new Error("Failed to fetch products");
     const result = await response.json();
     return result.Data || [];
   }
