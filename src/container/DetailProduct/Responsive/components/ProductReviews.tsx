@@ -8,10 +8,12 @@ interface ProductReviewsProps {
 const ProductReviews = ({ rating, reviewCount }: ProductReviewsProps) => {
   return (
     <div className="pt-6 pb-8">
-      <h3 className="text-lg font-bold text-white mb-4">Customer Reviews</h3>
+      <h3 className="text-lg font-bold text-[#0F172A] mb-4">
+        Customer Reviews
+      </h3>
       <div className="flex items-center gap-6 mb-6">
         <div>
-          <div className="text-5xl font-bold text-white leading-none">
+          <div className="text-5xl font-bold text-[#0F172A] leading-none">
             {rating}
           </div>
           <div className="flex gap-1 mt-2 text-blue-500">
@@ -35,7 +37,7 @@ const ProductReviews = ({ rating, reviewCount }: ProductReviewsProps) => {
             { star: 3, pct: "5%" },
           ].map((row) => (
             <div key={row.star} className="flex items-center gap-3 text-xs">
-              <span className="font-bold text-white w-2">{row.star}</span>
+              <span className="font-bold text-[#0F172A] w-2">{row.star}</span>
               <div className="flex-1 h-1.5 bg-gray-800 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-blue-600 rounded-full"

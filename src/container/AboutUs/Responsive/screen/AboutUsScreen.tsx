@@ -22,7 +22,7 @@ const AboutUsScreen = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#0B0F19] text-white font-sans">
+    <div className="min-h-screen bg-white font-sans">
       <AboutHero />
 
       {/* Main Content */}

@@ -15,7 +15,7 @@ const DetailProductScreen: React.FC<DetailProductScreenProps> = ({
   product,
 }) => {
   return (
-    <div className="min-h-screen bg-[#0B0F19] text-white pb-24 font-sans">
+    <div className="min-h-screen bg-white pb-24 font-sans">
       <ProductImageGallery
         id={product.id}
         images={product.images}

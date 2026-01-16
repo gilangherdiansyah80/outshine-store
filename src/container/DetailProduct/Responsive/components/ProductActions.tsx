@@ -7,7 +7,7 @@ const ProductActions = () => {
         <ShoppingBag className="w-6 h-6" />
       </button>
       <button className="flex-1 h-14 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold rounded-xl flex items-center justify-center gap-2 transition-colors shadow-lg shadow-blue-900/40">
-        Add to Cart
+        Buy Now
         <ChevronRight className="w-5 h-5" />
       </button>
     </div>
