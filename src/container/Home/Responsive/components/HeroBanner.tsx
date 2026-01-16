@@ -1,4 +1,6 @@
+import { useNavigate } from "react-router-dom";
 import { cn } from "@outshine/lib/utils";
+import Button from "@outshine/ui/Button/Button";
 
 interface HeroBannerProps {
   className?: string;
@@ -9,6 +11,8 @@ interface HeroBannerProps {
  * Features: Background image, exclusive label, title, and CTA button
  */
 const HeroBanner = ({ className }: HeroBannerProps) => {
+  const navigate = useNavigate();
+
   return (
     <section
       className={cn(
@@ -42,9 +46,12 @@ const HeroBanner = ({ className }: HeroBannerProps) => {
         </h1>
 
         {/* CTA Button */}
-        <button className="w-fit bg-[#0F172A] hover:bg-[#0d3380] text-white font-semibold py-3 px-8 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl">
+        <Button
+          onClick={() => navigate("/outshine/products")}
+          className="w-fit bg-[#0F172A] hover:bg-[#0d3380] text-white font-semibold py-3 px-8 rounded-full cursor-pointer transition-all duration-300 shadow-lg hover:shadow-xl border-none"
+        >
           Shop Now
-        </button>
+        </Button>
       </div>
     </section>
   );

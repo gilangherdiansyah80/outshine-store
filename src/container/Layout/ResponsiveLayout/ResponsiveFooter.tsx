@@ -114,9 +114,9 @@ const ResponsiveFooter = () => {
               >
                 <InfoIcon size={24} />
               </div>
-              <div className="flex flex-col items-center gap-0.5">
+              <div className="flex flex-col items-center text-center gap-0.5">
                 <span
-                  className={`text-[11px] font-semibold transition-colors ${
+                  className={`text-[11px] font-semibold text-center transition-colors ${
                     isActive("/outshine/about-us")
                       ? "text-[#0F172A]"
                       : "text-gray-500"

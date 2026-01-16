@@ -12,29 +12,43 @@ const WishlistTabs = ({
   itemCount,
 }: WishlistTabsProps) => {
   return (
-    <div className="flex gap-8 px-5 border-b border-white/5">
+    <div className="flex items-center gap-6 px-5 h-18 border-b border-gray-100 bg-white sticky top-0 z-20">
       <button
         onClick={() => onTabChange("items")}
         className={cn(
-          "py-4 text-sm font-bold transition-all relative",
-          activeTab === "items" ? "text-[#0B0F19]" : "text-gray-500"
+          "py-4 text-[13px] font-bold transition-all relative flex items-center gap-2 cursor-pointer",
+          activeTab === "items" ? "text-black" : "text-gray-400"
         )}
       >
-        All Items ({itemCount})
+        <span>All Items</span>
+        <span
+          className={cn(
+            "px-1.5 py-0.5 rounded-md text-[10px] leading-none",
+            activeTab === "items"
+              ? "bg-black text-white"
+              : "bg-gray-100 text-gray-500"
+          )}
+        >
+          {itemCount}
+        </span>
         {activeTab === "items" && (
-          <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#0B0F19] rounded-full" />
+          <div className="absolute bottom-0 left-0 right-0 h-1 bg-black rounded-b-full" />
         )}
       </button>
+
+      {/* Vertical Separator */}
+      <div className="w-px h-9 bg-gray-200" />
+
       <button
         onClick={() => onTabChange("collections")}
         className={cn(
-          "py-4 text-sm font-bold transition-all relative",
-          activeTab === "collections" ? "text-[#0B0F19]" : "text-gray-500"
+          "py-4 text-[13px] font-bold transition-all relative cursor-pointer",
+          activeTab === "collections" ? "text-black" : "text-gray-400"
         )}
       >
         Collections
         {activeTab === "collections" && (
-          <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-full" />
+          <div className="absolute bottom-0 left-0 right-0 h-1 bg-black rounded-b-full" />
         )}
       </button>
     </div>

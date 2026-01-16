@@ -35,7 +35,7 @@ const WishListsScreen = () => {
       <div className="px-5 pt-8">
         {activeTab === "items" ? (
           wishlists && wishlists.length > 0 ? (
-            <div className="flex flex-col gap-8">
+            <div className="flex flex-col gap-6">
               {wishlists.map((product) => (
                 <CardWishlist
                   key={product.id}
