@@ -42,7 +42,7 @@ const HeroBanner = ({ className }: HeroBannerProps) => {
         </h1>
 
         {/* CTA Button */}
-        <button className="w-fit bg-[#0A2665] hover:bg-[#0d3380] text-white font-semibold py-3 px-8 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl">
+        <button className="w-fit bg-[#0F172A] hover:bg-[#0d3380] text-white font-semibold py-3 px-8 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl">
           Shop Now
         </button>
       </div>

@@ -57,7 +57,7 @@ const CardProductTrending = ({
 
         {/* NEW Badge */}
         {product.isNew && (
-          <div className="absolute top-3 left-3 z-10 bg-[#0A2665] text-white text-xs font-semibold px-2.5 py-1 rounded-md">
+          <div className="absolute top-3 left-3 z-10 bg-[#0F172A] text-white text-xs font-semibold px-2.5 py-1 rounded-md">
             NEW
           </div>
         )}
@@ -74,7 +74,7 @@ const CardProductTrending = ({
           onClick={handleAddToCart}
           className={cn(
             "absolute bottom-3 right-3 z-10 flex h-9 w-9 items-center justify-center rounded-full",
-            "bg-[#0A2665] shadow-md",
+            "bg-[#0F172A] shadow-md",
             "transition-all duration-300 hover:bg-[#0d3380] hover:scale-110"
           )}
           aria-label="Add to cart"
@@ -95,7 +95,7 @@ const CardProductTrending = ({
 
         {/* Price */}
         <div className="flex items-center gap-2 mt-1">
-          <span className="text-sm font-semibold text-blue-400">
+          <span className="text-sm font-semibold text-[#0F172A]">
             {product.currency}
             {formattedPrice}
           </span>

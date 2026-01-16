@@ -6,7 +6,10 @@ import Image from "@outshine/ui/Image/Image.tsx";
 const ResponsiveFooter = () => {
   const { pathname } = useLocation();
 
-  const isActive = (path: string) => pathname === path;
+  const isActive = (path: string) => {
+    if (path === "/outshine/home") return pathname === path;
+    return pathname.startsWith(path);
+  };
 
   return (
     <footer className="fixed bottom-0 left-0 right-0 z-50 pb-safe pointer-events-none">
@@ -33,7 +36,7 @@ const ResponsiveFooter = () => {
               <div
                 className={`transition-colors cursor-pointer ${
                   isActive("/outshine/home")
-                    ? "text-[#FF6B35]"
+                    ? "text-[#0F172A]"
                     : "text-gray-400"
                 }`}
               >
@@ -43,7 +46,7 @@ const ResponsiveFooter = () => {
                 <span
                   className={`text-[11px] font-semibold transition-colors ${
                     isActive("/outshine/home")
-                      ? "text-[#FF6B35]"
+                      ? "text-[#0F172A]"
                       : "text-gray-500"
                   }`}
                 >
@@ -57,21 +60,21 @@ const ResponsiveFooter = () => {
             >
               <div
                 className={`transition-colors ${
-                  isActive("/outshine/product")
-                    ? "text-[#FF6B35]"
+                  isActive("/outshine/products")
+                    ? "text-[#0F172A]"
                     : "text-gray-400"
                 }`}
               >
                 <ShoppingBagIcon
                   size={24}
-                  strokeWidth={isActive("/outshine/product") ? 2.5 : 2}
+                  strokeWidth={isActive("/outshine/products") ? 2.5 : 2}
                 />
               </div>
               <div className="flex flex-col items-center gap-0.5">
                 <span
                   className={`text-[11px] font-semibold transition-colors ${
-                    isActive("/outshine/product")
-                      ? "text-[#FF6B35]"
+                    isActive("/outshine/products")
+                      ? "text-[#0F172A]"
                       : "text-gray-500"
                   }`}
                 >
@@ -85,11 +88,11 @@ const ResponsiveFooter = () => {
           <div className="w-16 h-full flex items-center justify-center">
             <div className="absolute -top-16 left-1/2 -translate-x-1/2">
               <div className="relative">
-                <div className="bg-[#0A2665] rounded-full p-2 h-20 w-20 flex -mt-2 justify-center items-center shadow-lg border-4 border-white">
+                <div className="bg-[#0F172A] rounded-full p-2 h-20 w-20 flex -mt-1 justify-center items-center shadow-lg border-4 border-white">
                   <Image
-                    src="/images/logo.png"
+                    src="/images/O.png"
                     alt="Outshine Store"
-                    className="w-12 h-12 object-contain"
+                    className="w-16 h-16 object-contain"
                   />
                 </div>
               </div>
@@ -105,7 +108,7 @@ const ResponsiveFooter = () => {
               <div
                 className={`transition-colors ${
                   isActive("/outshine/about-us")
-                    ? "text-[#FF6B35]"
+                    ? "text-[#0F172A]"
                     : "text-gray-400"
                 }`}
               >
@@ -115,7 +118,7 @@ const ResponsiveFooter = () => {
                 <span
                   className={`text-[11px] font-semibold transition-colors ${
                     isActive("/outshine/about-us")
-                      ? "text-[#FF6B35]"
+                      ? "text-[#0F172A]"
                       : "text-gray-500"
                   }`}
                 >
@@ -130,7 +133,7 @@ const ResponsiveFooter = () => {
               <div
                 className={`transition-colors ${
                   isActive("/outshine/profile")
-                    ? "text-[#FF6B35]"
+                    ? "text-[#0F172A]"
                     : "text-gray-400"
                 }`}
               >
@@ -140,7 +143,7 @@ const ResponsiveFooter = () => {
                 <span
                   className={`text-[11px] font-semibold transition-colors ${
                     isActive("/outshine/profile")
-                      ? "text-[#FF6B35]"
+                      ? "text-[#0F172A]"
                       : "text-gray-500"
                   }`}
                 >

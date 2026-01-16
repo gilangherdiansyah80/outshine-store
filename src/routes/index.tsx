@@ -2,6 +2,7 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import MainLayout from "@outshine/container/Layout/MainLayout/MainLayout.tsx";
 import HomePage from "@outshine/pages/HomePage/index.tsx";
 import ProductsPage from "@outshine/pages/ProductsPage/index.tsx";
+import DetailProductPage from "@outshine/pages/DetailProductPage/index.tsx";
 
 const route = createBrowserRouter([
   {
@@ -20,7 +21,15 @@ const route = createBrowserRouter([
         path: "products",
         element: <ProductsPage />,
       },
+      {
+        path: "products",
+        element: <ProductsPage />,
+      },
     ],
+  },
+  {
+    path: "/outshine/products/:id",
+    element: <DetailProductPage />,
   },
 ]);
 

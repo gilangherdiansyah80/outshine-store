@@ -146,11 +146,9 @@ const CardProduct = ({
 
       {/* Content Info */}
       <div className="flex flex-col gap-1">
-        <h3 className="text-sm font-semibold text-gray-900 dark:text-white truncate">
-          {name}
-        </h3>
+        <h3 className="text-sm font-semibold text-gray-900 truncate">{name}</h3>
         <div className="flex items-center gap-2">
-          <span className="text-sm font-bold text-[#3B82F6]">
+          <span className="text-sm font-bold text-[#0F172A]">
             {currency}
             {formattedPrice}
           </span>

@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { cn } from "@outshine/lib/utils";
 import { useGetTrendingProducts } from "@outshine/services/Home/useGetTrendingProducts";
 import { ChevronRightIcon } from "@programmer-molor/my-icons";
@@ -13,6 +14,7 @@ interface TrendingSectionProps {
  */
 const TrendingSection = ({ onViewAll, className }: TrendingSectionProps) => {
   const { data: products, isLoading } = useGetTrendingProducts();
+  const navigate = useNavigate();
 
   if (isLoading) {
     return (
@@ -63,7 +65,7 @@ const TrendingSection = ({ onViewAll, className }: TrendingSectionProps) => {
             discount={product.isSale ? "SALE" : undefined}
             aspectRatio="square"
             onAddToCart={() => console.log("Add to cart:", product.name)}
-            onClick={() => console.log("View product:", product.name)}
+            onClick={() => navigate(`/outshine/products/${product.id}`)}
           />
         ))}
       </div>

@@ -22,12 +22,12 @@ const ResponsiveHeader = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-[#0A2665] px-4 py-3 shadow-md">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-[#0F172A] px-4 py-3 shadow-md">
       <div className="flex items-center gap-3">
         {/* Back Button */}
         <button
           onClick={handleBack}
-          className="w-8 h-8 shrink-0 bg-white rounded-full flex items-center justify-center text-[#0A2665] shadow-sm hover:bg-gray-100 transition-colors"
+          className="w-8 h-8 shrink-0 bg-white rounded-full flex items-center justify-center text-[#0F172A] shadow-sm hover:bg-gray-100 transition-colors"
         >
           <ChevronLeftIcon size={22} color="#0A2665" />
         </button>
