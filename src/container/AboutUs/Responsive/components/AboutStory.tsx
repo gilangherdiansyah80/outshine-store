@@ -1,15 +1,17 @@
 const AboutStory = () => {
   return (
-    <div className="space-y-3">
-      <h3 className="text-xl font-bold">Our Story</h3>
-      <p className="text-gray-400 leading-relaxed text-sm">
-        Outshine Store was born from a simple idea: premium streetwear shouldn't
-        be complicated. We curate the best responsive designs and high-quality
-        materials to bring you apparel that stands out.
+    <div className="space-y-4">
+      <h3 className="text-2xl font-bold">Our Story</h3>
+      <p className="text-gray-300 leading-relaxed text-sm">
+        Founded in 2024, Aethel bridges the gap between modern aesthetics and
+        sustainable practices. We believe in timeless silhouettes designed for
+        the contemporary individual, where every stitch tells a story of
+        conscious craftsmanship.
       </p>
-      <p className="text-gray-400 leading-relaxed text-sm">
-        What started as a small project in a garage has grown into a community
-        of fashion enthusiasts who value style, comfort, and authenticity.
+      <p className="text-gray-300 leading-relaxed text-sm">
+        Our materials are ethically sourced from regenerative farms, ensuring
+        that your style never comes at a cost to the planet. Welcome to the
+        future of mindful luxury.
       </p>
     </div>
   );

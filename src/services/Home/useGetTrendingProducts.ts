@@ -15,7 +15,7 @@ export interface TrendingProductItem {
   category: string;
 }
 
-const mockAPIResult = {
+export const mockAPIResult = {
   Message: { Code: 200, Text: "SUCCESS" },
   Data: [
     {

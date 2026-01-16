@@ -1,8 +1,7 @@
 import AboutContact from "../components/AboutContact";
-import AboutFeatures from "../components/AboutFeatures";
-import AboutFooter from "../components/AboutFooter";
 import AboutHero from "../components/AboutHero";
-import AboutStats from "../components/AboutStats";
+import AboutLocation from "../components/AboutLocation";
+import AboutSocials from "../components/AboutSocials";
 import AboutStory from "../components/AboutStory";
 
 import { useEffect, useState } from "react";
@@ -27,12 +26,11 @@ const AboutUsScreen = () => {
       <AboutHero />
 
       {/* Main Content */}
-      <div className="px-5 space-y-8 mt-6">
+      <div className="px-5 space-y-10 mt-8 pb-10">
         <AboutStory />
-        <AboutStats />
-        <AboutFeatures />
+        <AboutLocation />
         <AboutContact />
-        <AboutFooter />
+        <AboutSocials />
       </div>
     </div>
   );

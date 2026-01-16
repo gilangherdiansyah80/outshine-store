@@ -1,5 +1,12 @@
+import { ResponsiveRoute } from "@outshine/lib/components";
+import WishListsScreen from "./screen/WishListsScreen";
+
 const WishListsResponsive = () => {
-  return <div>WishListsResponsive</div>;
+  return (
+    <>
+      <ResponsiveRoute path="/" component={<WishListsScreen />} />
+    </>
+  );
 };
 
 export default WishListsResponsive;

@@ -1,16 +1,16 @@
 import { useDevice, useHasMounted } from "@/hooks/use-device";
-import ProductsResponsive from "@/container/Products/Responsive/ProductsResponsive";
-
+import WishListsResponsive from "@/container/WishLists/Responsive/WishListsResponsive";
 import Loading from "@/components/Loader/Loading";
 
-export default function WisthListsPage() {
+export default function WishListsPage() {
   const { isMobile } = useDevice();
   const hasMounted = useHasMounted();
 
-  // Render null on server to avoid hydration mismatch
+  console.log("Rendering WishListsPage, isMobile:", isMobile);
+
   if (!hasMounted) {
     return <Loading />;
   }
 
-  return <>{isMobile ? <ProductsResponsive /> : <p>Desktop</p>}</>;
+  return <>{isMobile ? <WishListsResponsive /> : <p>Desktop Wishlist</p>}</>;
 }

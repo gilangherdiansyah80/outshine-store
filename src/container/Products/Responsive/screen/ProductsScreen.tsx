@@ -45,6 +45,7 @@ const ProductsScreen = () => {
           {products?.map((product) => (
             <CardProduct
               key={product.id}
+              id={product.id}
               imageSrc={product.image}
               name={product.name}
               price={product.price}

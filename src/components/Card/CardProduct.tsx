@@ -1,7 +1,6 @@
 import { cn } from "@outshine/lib/utils";
 import Image from "@outshine/ui/Image/Image";
 import { HeartIcon } from "@programmer-molor/my-icons";
-import { useState } from "react";
 import Badge from "@outshine/ui/Badge/Badge";
 
 export interface CardProductProps {
@@ -33,6 +32,8 @@ export interface CardProductProps {
   aspectRatio?: "square" | "portrait";
 }
 
+import { useWishlistStore } from "@outshine/store/wishlistStore";
+
 /**
  * Unified Product Card Component
  * Supports both Home Page (Square, Bold) and Product Grid (Portrait, Clean) styles.
@@ -45,18 +46,30 @@ const CardProduct = ({
   currency = "$",
   isNew,
   discount,
-  isWishlisted = false,
+  // isWishlisted prop is ignored now as we use global store
   onWishlistClick,
   // onAddToCart,
   onClick,
   className,
   aspectRatio = "portrait",
-}: CardProductProps) => {
-  const [wishlisted, setWishlisted] = useState(isWishlisted);
+  id, // Need ID for wishlist
+}: CardProductProps & { id?: string }) => {
+  const { toggleItem, isInWishlist } = useWishlistStore();
+  const wishlisted = id ? isInWishlist(id) : false;
 
   const handleWishlistClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setWishlisted(!wishlisted);
+    if (id) {
+      toggleItem({
+        id,
+        name,
+        price,
+        originalPrice,
+        image: imageSrc,
+        isNew,
+        discount,
+      });
+    }
     onWishlistClick?.();
   };
 

@@ -15,6 +15,10 @@ export interface ProductDetail {
 }
 
 import { mockAPIResult as productsData } from "./useGetProducts";
+import {
+  mockAPIResult as trendingData,
+  type TrendingProductItem,
+} from "../Home/useGetTrendingProducts";
 
 const USE_MOCK = true;
 
@@ -55,6 +59,21 @@ export const getDetailProductData = async (
         price: foundProduct.price,
         // Using the image from the list as the first image
         images: [foundProduct.image, ...defaultDetail.images.slice(1)],
+      };
+    }
+
+    // Find the product in the trending list
+    const foundTrending = trendingData.Data.find(
+      (p: TrendingProductItem) => p.id === id
+    );
+
+    if (foundTrending) {
+      return {
+        ...defaultDetail,
+        id: foundTrending.id,
+        title: foundTrending.name,
+        price: foundTrending.price,
+        images: [foundTrending.imageSrc, ...defaultDetail.images.slice(1)],
       };
     }
 

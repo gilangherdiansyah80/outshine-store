@@ -1,4 +1,5 @@
 import { useParams } from "react-router-dom";
+import { ResponsiveRoute } from "@outshine/lib/components";
 import { useGetDetailProduct } from "@outshine/services/Products/useGetDetailProduct";
 import DetailProductScreen from "./screen/DetailProductScreen";
 
@@ -31,7 +32,12 @@ const DetailProductResponsive = () => {
     );
   }
 
-  return <DetailProductScreen product={product} />;
+  return (
+    <ResponsiveRoute
+      path="/"
+      component={<DetailProductScreen product={product} />}
+    />
+  );
 };
 
 export default DetailProductResponsive;

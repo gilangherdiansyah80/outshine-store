@@ -28,8 +28,8 @@ const route = createBrowserRouter([
         element: <AboutUsPage />,
       },
       {
-        path: "wishlists",
-        element: <WishListsPage />,
+        path: "wishlist",
+        element: <WishListsPage key="wishlist-page" />,
       },
     ],
   },

@@ -56,6 +56,7 @@ const TrendingSection = ({ onViewAll, className }: TrendingSectionProps) => {
         {products.map((product) => (
           <CardProduct
             key={product.id}
+            id={product.id}
             imageSrc={product.imageSrc}
             name={product.name}
             price={product.price}
