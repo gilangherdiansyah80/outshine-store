@@ -66,7 +66,7 @@ const TrendingSection = ({ onViewAll, className }: TrendingSectionProps) => {
             discount={product.isSale ? "SALE" : undefined}
             aspectRatio="square"
             onAddToCart={() => console.log("Add to cart:", product.name)}
-            onClick={() => navigate(`/outshine/products/${product.id}`)}
+            onClick={() => navigate(`/outshine/product/${product.id}`)}
           />
         ))}
       </div>

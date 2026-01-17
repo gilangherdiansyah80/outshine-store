@@ -2,6 +2,7 @@ import { cn } from "@outshine/lib/utils";
 import Image from "@outshine/ui/Image/Image";
 import { HeartIcon } from "@programmer-molor/my-icons";
 import Badge from "@outshine/ui/Badge/Badge";
+import { useWishlistStore } from "@outshine/store/wishlistStore";
 
 export interface CardProductProps {
   /** Product image URL */
@@ -32,8 +33,6 @@ export interface CardProductProps {
   aspectRatio?: "square" | "portrait";
 }
 
-import { useWishlistStore } from "@outshine/store/wishlistStore";
-
 /**
  * Unified Product Card Component
  * Supports both Home Page (Square, Bold) and Product Grid (Portrait, Clean) styles.
@@ -46,9 +45,7 @@ const CardProduct = ({
   currency = "$",
   isNew,
   discount,
-  // isWishlisted prop is ignored now as we use global store
   onWishlistClick,
-  // onAddToCart,
   onClick,
   className,
   aspectRatio = "portrait",
@@ -72,11 +69,6 @@ const CardProduct = ({
     }
     onWishlistClick?.();
   };
-
-  // const handleAddToCart = (e: React.MouseEvent) => {
-  //   e.stopPropagation();
-  //   onAddToCart?.();
-  // };
 
   const formattedPrice = new Intl.NumberFormat("en-US", {
     minimumFractionDigits: 2,
@@ -102,7 +94,7 @@ const CardProduct = ({
       <div
         className={cn(
           "relative overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-800",
-          aspectRatio === "square" ? "aspect-square" : "aspect-3/4"
+          aspectRatio === "square" ? "aspect-square" : "aspect-[3/4]"
         )}
       >
         <Image
@@ -140,26 +132,11 @@ const CardProduct = ({
             color={wishlisted ? "#ef4444" : "#ffffff"}
           />
         </button>
-
-        {/* Add to Cart Button (Bottom Right) - Only if handler provided */}
-        {/* {onAddToCart && (
-          <button
-            onClick={handleAddToCart}
-            className={cn(
-              "absolute bottom-2 right-2 h-9 w-9 flex items-center justify-center rounded-full",
-              "bg-[#0A2665] text-white shadow-lg",
-              "transition-all duration-300 transform translate-y-12 opacity-0",
-              "group-hover:translate-y-0 group-hover:opacity-100 hover:bg-[#0F358E]"
-            )}
-          >
-            <PlusIcon size={18} color="#ffffff" />
-          </button>
-        )} */}
       </div>
 
       {/* Content Info */}
       <div className="flex flex-col gap-1">
-        <h3 className="text-sm font-semibold text-gray-900 truncate">{name}</h3>
+        <h3 className="text-sm font-semibold text-gray-500 truncate">{name}</h3>
         <div className="flex items-center gap-2">
           <span className="text-sm font-bold text-[#0F172A]">
             {currency}

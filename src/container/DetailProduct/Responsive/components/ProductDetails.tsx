@@ -36,7 +36,7 @@ const ProductDetails = ({ fabricAndCare }: ProductDetailsProps) => {
       ].map((item, idx) => (
         <button
           key={idx}
-          className="w-full p-4 flex justify-between items-center rounded-2xl bg-[#0B0F19] border-b border-white/10 hover:bg-white/5 transition-colors"
+          className="w-full p-4 flex justify-between items-center rounded-2xl bg-[#0B0F19] border-b border-white/10 transition-colors cursor-pointer"
         >
           <span className="font-semibold text-white">{item.label}</span>
           <item.icon className="w-5 h-5 text-gray-500" />

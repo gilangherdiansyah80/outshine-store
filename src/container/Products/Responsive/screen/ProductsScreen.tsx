@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import FilterBar from "../components/FilterBar";
 import ProductSortBar from "../components/ProductSortBar";
 import CardProduct from "@/components/Card/CardProduct";
+import DataNotFound from "@/components/DataNotFound/DataNotFound";
 import { useGetProducts } from "@/services/Products/useGetProducts";
 import Loading from "@/components/Loader/Loading";
 import { useEffect, useState, useMemo } from "react";
@@ -9,6 +10,7 @@ import {
   useFilterSortStore,
   PRICE_RANGES,
 } from "@outshine/store/filterSortStore";
+import { useSearchStore } from "@outshine/store/searchStore";
 
 const ProductsScreen = () => {
   const { products, isLoading: swrLoading } = useGetProducts();
@@ -21,7 +23,9 @@ const ProductsScreen = () => {
     selectedCategories,
     selectedPriceRange,
     sortOption,
+    clearFilters,
   } = useFilterSortStore();
+  const { searchQuery, setSearchQuery } = useSearchStore();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -34,6 +38,12 @@ const ProductsScreen = () => {
     if (!products) return [];
 
     let result = [...products];
+
+    // Search logic
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase().trim();
+      result = result.filter((p) => p.name.toLowerCase().includes(query));
+    }
 
     // Filtering logic
     if (selectedSizes.length > 0) {
@@ -78,6 +88,7 @@ const ProductsScreen = () => {
     return result;
   }, [
     products,
+    searchQuery,
     selectedSizes,
     selectedColors,
     selectedCategories,
@@ -124,17 +135,25 @@ const ProductsScreen = () => {
             ))}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center py-20 text-center">
-            <p className="text-gray-500 font-medium">
-              No products match your filters.
-            </p>
-            <button
-              onClick={() => useFilterSortStore.getState().clearFilters()}
-              className="mt-4 text-[#1E40AF] font-bold underline"
-            >
-              Clear all filters
-            </button>
-          </div>
+          <DataNotFound
+            title="Produk Tidak Ditemukan"
+            description="Maaf, tidak ada produk yang sesuai dengan pencarian atau filter Anda. Silakan coba atur ulang pencarian atau filter Anda."
+            resetLabel={
+              searchQuery.trim() &&
+              (selectedSizes.length > 0 ||
+                selectedColors.length > 0 ||
+                selectedCategories.length > 0 ||
+                selectedPriceRange !== "all")
+                ? "Clear All Results"
+                : searchQuery.trim()
+                ? "Clear All Search"
+                : "Clear All Filter"
+            }
+            onReset={() => {
+              setSearchQuery("");
+              clearFilters();
+            }}
+          />
         )}
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useCartStore } from "@outshine/store/cartStore";
 import Input from "@outshine/ui/Form/Input/Input";
 import {
@@ -11,6 +11,7 @@ import { useSearchStore } from "@outshine/store/searchStore";
 
 const ResponsiveHeader = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { pop, stack } = useResponsiveNavigation();
   const { searchQuery, setSearchQuery } = useSearchStore();
   const { items } = useCartStore();
@@ -42,9 +43,13 @@ const ResponsiveHeader = () => {
           <Input
             type="text"
             value={searchQuery}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setSearchQuery(e.target.value)
-            }
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              const value = e.target.value;
+              setSearchQuery(value);
+              if (value && !location.pathname.includes("/outshine/products")) {
+                navigate("/outshine/products");
+              }
+            }}
             placeholder="Cari Produk"
             className="w-full bg-white rounded-lg py-2 pl-11 pr-10 text-sm outline-none placeholder:text-gray-500"
           />

@@ -17,7 +17,7 @@ const DetailProductScreen: React.FC<DetailProductScreenProps> = ({
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
 
   return (
-    <div className="min-h-screen bg-[#0B0F19] pb-24 font-sans text-white">
+    <div className="min-h-screen bg-white pb-24 font-sans">
       <ProductImageGallery
         id={product.id}
         images={product.images}

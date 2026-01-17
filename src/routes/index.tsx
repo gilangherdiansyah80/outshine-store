@@ -6,6 +6,7 @@ import DetailProductPage from "@outshine/pages/DetailProductPage";
 import AboutUsPage from "@outshine/pages/AboutUsPage";
 import WishListsPage from "@outshine/pages/WishListsPage";
 import CartPage from "@outshine/pages/CartPage";
+import CheckoutPage from "@outshine/pages/Checkout";
 
 const route = createBrowserRouter([
   {
@@ -35,6 +36,14 @@ const route = createBrowserRouter([
       {
         path: "cart",
         element: <CartPage />,
+      },
+      {
+        path: "checkout/*",
+        element: (
+          <div className="checkout-page-container">
+            <CheckoutPage />
+          </div>
+        ),
       },
       {
         path: "product/:id",

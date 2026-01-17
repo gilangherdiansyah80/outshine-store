@@ -3,7 +3,7 @@ import { useWishlistStore } from "@outshine/store/wishlistStore";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import WishlistEmpty from "../components/WishlistEmpty";
-import CardWishlist from "../components/CardWishlist";
+import CardProduct from "@/components/Card/CardProduct";
 import WishlistTabs from "../components/WishlistTabs";
 
 const WishListsScreen = () => {
@@ -35,18 +35,19 @@ const WishListsScreen = () => {
       <div className="px-5 pt-8">
         {activeTab === "items" ? (
           wishlists && wishlists.length > 0 ? (
-            <div className="flex flex-col gap-6">
+            <div className="grid grid-cols-2 gap-x-4 gap-y-6 pb-24">
               {wishlists.map((product) => (
-                <CardWishlist
+                <CardProduct
                   key={product.id}
                   id={product.id}
                   imageSrc={product.image}
                   name={product.name}
-                  category={product.category || "ESSENTIAL WEAR"}
                   price={product.price}
-                  inStock={true}
-                  onAddToCart={() => {}}
-                  onClick={() => navigate(`/outshine/products/${product.id}`)}
+                  originalPrice={product.originalPrice}
+                  discount={product.discount}
+                  isNew={product.isNew}
+                  aspectRatio="portrait"
+                  onClick={() => navigate(`/outshine/product/${product.id}`)}
                 />
               ))}
             </div>

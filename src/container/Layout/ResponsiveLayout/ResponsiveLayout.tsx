@@ -18,7 +18,8 @@ const ResponsiveLayout = ({ children }: ResponsiveLayoutProps) => {
     currentPath === "/filter" ||
     currentPath === "/sort" ||
     pathname?.includes("/cart") ||
-    pathname?.includes("/wishlist") ||
+    pathname?.includes("/checkout") ||
+    pathname?.includes("/outshine/product/") ||
     pathname?.includes("/product/saas/") ||
     pathname?.includes("/product/template/");
 

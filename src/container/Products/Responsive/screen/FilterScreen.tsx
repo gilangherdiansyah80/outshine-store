@@ -5,6 +5,7 @@ import {
 } from "@outshine/store/filterSortStore";
 import { cn } from "@outshine/lib/utils";
 import { useResponsiveNavigation } from "@outshine/hooks/use-responsive-navigation";
+import { useSearchStore } from "@outshine/store/searchStore";
 
 const FilterScreen = () => {
   const {
@@ -18,6 +19,12 @@ const FilterScreen = () => {
     setPriceRange,
     clearFilters,
   } = useFilterSortStore();
+  const { setSearchQuery } = useSearchStore();
+
+  const handleReset = () => {
+    clearFilters();
+    setSearchQuery("");
+  };
 
   const { pop, popToTop } = useResponsiveNavigation();
 
@@ -42,7 +49,7 @@ const FilterScreen = () => {
         </button>
         <h1 className="text-lg font-bold text-gray-900">Filter</h1>
         <button
-          onClick={clearFilters}
+          onClick={handleReset}
           className="flex items-center gap-1 text-[#0F172A] font-bold text-sm cursor-pointer"
         >
           <RotateCcw size={16} />

@@ -1,5 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import Button from "@outshine/ui/Button/Button";
+import { useNavigate } from "react-router-dom";
 
 interface CartSummaryProps {
   subtotal: number;
@@ -8,6 +9,8 @@ interface CartSummaryProps {
 }
 
 const CartSummary = ({ subtotal, shipping, total }: CartSummaryProps) => {
+  const navigate = useNavigate();
+
   return (
     <div className="space-y-6 pt-8 pb-10 px-6 border-t fixed bottom-0 left-0 right-0 bg-[#0B0F19] border-white/10 z-30 shadow-[0_-20px_40px_rgba(0,0,0,0.6)] rounded-t-[32px]">
       {/* Promo Code */}
@@ -34,8 +37,10 @@ const CartSummary = ({ subtotal, shipping, total }: CartSummaryProps) => {
         </div>
         <div className="flex justify-between items-center">
           <span className="text-gray-500 font-bold text-sm">Shipping</span>
-          <span className="text-green-500 font-bold text-sm">
-            {shipping === 0 ? "FREE" : `$${shipping.toFixed(2)}`}
+          <span className="text-red-500 font-bold text-sm">
+            {shipping === 0
+              ? "Harga Belum Termasuk Ongkir"
+              : `$${shipping.toFixed(2)}`}
           </span>
         </div>
         <div className="h-px bg-white/5 my-2" />
@@ -50,7 +55,10 @@ const CartSummary = ({ subtotal, shipping, total }: CartSummaryProps) => {
       </div>
 
       {/* Checkout Button */}
-      <Button className="w-full h-16 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold rounded-2xl text-[15px] flex items-center justify-center gap-2 transition-all shadow-xl shadow-blue-900/20 border-none group">
+      <Button
+        onClick={() => navigate("/outshine/checkout")}
+        className="w-full h-16 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold rounded-2xl text-[15px] flex items-center justify-center gap-2 transition-all shadow-xl shadow-blue-900/20 border-none group"
+      >
         Proceed to Checkout
         <ArrowRight
           size={20}

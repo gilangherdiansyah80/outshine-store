@@ -5,9 +5,13 @@ import ShippingBanner from "../components/ShippingBanner";
 
 import { useEffect, useState } from "react";
 import Loading from "@/components/Loader/Loading";
+import { useFilterSortStore } from "@outshine/store/filterSortStore";
+import { useNavigate } from "react-router-dom";
 
 export default function HomeScreen() {
   const [isLoading, setIsLoading] = useState(true);
+  const { clearFilters, toggleCategory } = useFilterSortStore();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -27,13 +31,22 @@ export default function HomeScreen() {
 
       {/* Category Chips */}
       <CategoryChips
-        onCategorySelect={(category) =>
-          console.log("Selected category:", category)
-        }
+        onCategorySelect={(category) => {
+          clearFilters();
+          if (category) {
+            toggleCategory(category.id);
+          }
+          navigate("/outshine/products");
+        }}
       />
 
       {/* Trending Now Section */}
-      <TrendingSection onViewAll={() => console.log("View all trending")} />
+      <TrendingSection
+        onViewAll={() => {
+          clearFilters();
+          navigate("/outshine/products");
+        }}
+      />
 
       {/* Shipping Banner */}
       <ShippingBanner className="mt-2" />
