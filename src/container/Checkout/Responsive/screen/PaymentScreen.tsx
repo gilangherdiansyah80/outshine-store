@@ -4,14 +4,13 @@ import {
   Copy,
   CheckCircle2,
   Clock,
-  Smartphone,
-  Building2,
   Upload,
   Info,
 } from "lucide-react";
 import Button from "@outshine/ui/Button/Button";
 import { useState, useRef } from "react";
 import BottomSheet from "@outshine/ui/BottomSheet/BottomSheet";
+import { useGetPaymentDetails } from "@outshine/services/Checkout/useGetPaymentDetails";
 
 const PaymentScreen = () => {
   const navigate = useNavigate();
@@ -25,11 +24,22 @@ const PaymentScreen = () => {
       buyNowItem: null,
     };
 
+  const details = useGetPaymentDetails(paymentMethod?.type, true);
+
   const [copied, setCopied] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [isSharing, setIsSharing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Check if Native Share with file is supported
+  const isNativeShareSupported = () => {
+    if (!navigator.share || !navigator.canShare) return false;
+    // Test with a dummy file to check file sharing support
+    const testFile = new File(["test"], "test.png", { type: "image/png" });
+    return navigator.canShare({ files: [testFile] });
+  };
 
   // Formatting for currency
   const formatCurrency = (amount: number) => {
@@ -51,101 +61,50 @@ const PaymentScreen = () => {
   const handleSendWhatsApp = async () => {
     if (!selectedFile) return;
 
+    setIsSharing(true);
+
     const productName = buyNowItem?.name || "Product Outshine";
     const productSize = buyNowItem?.size || "M";
     const addressStr = address
       ? `${address.street}, ${address.district}, ${address.city}`
       : "Alamat belum diatur";
     const shippingName = shippingMethod?.name || "Standard";
+    const adminNumber = "+62 813-5374-168";
 
-    // Get absolute image URL for product preview (Fallback for link method)
-    const productImage = buyNowItem?.image || "";
-    const absoluteProductImage = productImage.startsWith("http")
-      ? productImage
-      : `${window.location.origin}${productImage}`;
-
-    const message = `${absoluteProductImage}\n\nHaii admin outhsine. Saya telah melakukan pembayaran product ${productName} dengan size ${productSize}. Bisa dikirim ke alamat ${addressStr} dengan pengiriman ${shippingName}. Bukti pembayaran saya sertakan di bawah pesan ini (terlampir). Terimakasih`;
+    // Caption message for sharing
+    const message = `Kirim ke: ${adminNumber}\n\nHaii admin outshine. Saya telah melakukan pembayaran product ${productName} dengan size ${productSize}. Bisa dikirim ke alamat ${addressStr} dengan pengiriman ${shippingName}. Terimakasih`;
 
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/628135374168?text=${encodedMessage}`;
 
-    // Re-implement Native Share for file support
-    if (
-      navigator.share &&
-      navigator.canShare &&
-      navigator.canShare({ files: [selectedFile] })
-    ) {
+    // Native Share API - Automatically attaches the file
+    if (isNativeShareSupported() && selectedFile) {
       try {
         await navigator.share({
           files: [selectedFile],
+          title: "Bukti Pembayaran Outshine",
           text: message,
         });
+        setIsSharing(false);
         setIsSheetOpen(false);
+        // Reset state after successful share
+        setSelectedFile(null);
+        setPreviewUrl(null);
         return;
       } catch (error) {
-        console.error("Error sharing:", error);
+        // User cancelled or share failed
+        if ((error as Error).name !== "AbortError") {
+          console.error("Error sharing:", error);
+        }
+        setIsSharing(false);
       }
-    }
-
-    // Default Fallback to Link
-    window.open(whatsappUrl, "_blank");
-    setIsSheetOpen(false);
-  };
-
-  const getPaymentDetails = () => {
-    // ... (existing switch case for payment details)
-    switch (paymentMethod?.type) {
-      case "dana":
-        return {
-          label: "Dana Number",
-          number: "0813 5374 168",
-          icon: <Smartphone className="text-blue-400" />,
-          instructions: [
-            "Buka aplikasi DANA di ponsel Anda",
-            "Pilih menu 'Kirim' atau 'Send'",
-            "Pilih 'Kirim ke Nomor Telepon'",
-            "Masukkan nomor di atas",
-            "Masukkan nominal sesuai tagihan",
-            "Selesaikan pembayaran dan simpan bukti transfer",
-          ],
-        };
-      case "bni":
-        return {
-          label: "BNI Virtual Account",
-          number: "8806 0813 5374 168",
-          icon: <Building2 className="text-orange-400" />,
-          instructions: [
-            "Pilih menu 'Transfer' di ATM atau m-Banking",
-            "Pilih 'Virtual Account Billing'",
-            "Masukkan nomor VA di atas",
-            "Tagihan akan muncul otomatis",
-            "Konfirmasi dan selesaikan transaksi",
-          ],
-        };
-      case "seabank":
-        return {
-          label: "SeaBank Virtual Account",
-          number: "7891 0813 5374 168",
-          icon: <Building2 className="text-orange-500" />,
-          instructions: [
-            "Buka aplikasi perbankan Anda",
-            "Pilih 'Transfer' -> 'Virtual Account'",
-            "Input nomor VA SeaBank di atas",
-            "Pastikan nominal sesuai",
-            "Klik 'Konfirmasi' untuk menyelesaikan",
-          ],
-        };
-      default:
-        return {
-          label: "Payment Number",
-          number: "0813 5374 168",
-          icon: <CheckCircle2 className="text-gray-400" />,
-          instructions: ["Please contact support for payment instructions."],
-        };
+    } else {
+      // Fallback for desktop or unsupported browsers
+      window.open(whatsappUrl, "_blank");
+      setIsSharing(false);
+      setIsSheetOpen(false);
     }
   };
-
-  const details = getPaymentDetails();
 
   const handleCopy = () => {
     navigator.clipboard.writeText(details.number.replace(/\s/g, ""));
@@ -262,13 +221,43 @@ const PaymentScreen = () => {
         title="Payment Confirmation"
       >
         <div className="space-y-6">
-          <div className="flex items-start gap-3 p-4 bg-blue-500/5 border border-blue-500/10 rounded-2xl">
-            <Info className="text-blue-500 shrink-0 mt-0.5" size={18} />
-            <p className="text-gray-400 text-[13px] leading-relaxed">
-              Jika WhatsApp terbuka otomatis, pastikan Anda melampirkan file
-              bukti transfer yang telah dipilih di bawah ini.
-            </p>
-          </div>
+          {/* Show different message based on Native Share support */}
+          {isNativeShareSupported() ? (
+            <div className="flex items-start gap-4 p-5 bg-emerald-500/10 border border-emerald-500/20 rounded-[24px]">
+              <CheckCircle2
+                className="text-emerald-500 shrink-0 mt-0.5"
+                size={20}
+              />
+              <div className="space-y-1">
+                <p className="text-emerald-500 text-[13px] font-bold uppercase tracking-wider">
+                  SIAP KIRIM
+                </p>
+                <p className="text-gray-300 text-[13px] leading-relaxed font-medium">
+                  Upload bukti pembayaran, lalu klik tombol{" "}
+                  <span className="text-white font-bold">Kirim Konfirmasi</span>
+                  . Pilih <span className="text-white font-bold">WhatsApp</span>{" "}
+                  dari menu share untuk mengirim langsung ke admin.
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-start gap-4 p-5 bg-amber-500/10 border border-amber-500/20 rounded-[24px]">
+              <Info className="text-amber-500 shrink-0 mt-0.5" size={20} />
+              <div className="space-y-1">
+                <p className="text-amber-500 text-[13px] font-bold uppercase tracking-wider">
+                  PENTING
+                </p>
+                <p className="text-gray-300 text-[13px] leading-relaxed font-medium">
+                  Setelah WhatsApp terbuka, Anda{" "}
+                  <span className="text-white font-bold">
+                    WAJIB Mengeklik Ikon Klip (Lampiran)
+                  </span>{" "}
+                  di WhatsApp untuk mengirim foto bukti transfer yang barusan
+                  Anda pilih.
+                </p>
+              </div>
+            </div>
+          )}
 
           <input
             type="file"
@@ -302,15 +291,24 @@ const PaymentScreen = () => {
 
           <Button
             onClick={handleSendWhatsApp}
-            disabled={!selectedFile}
+            disabled={!selectedFile || isSharing}
             className={`w-full h-16 rounded-2xl font-bold flex gap-2 ${
-              selectedFile
+              selectedFile && !isSharing
                 ? "bg-blue-600 hover:bg-blue-700 text-white"
                 : "bg-white/5 text-gray-600 cursor-not-allowed"
             }`}
           >
-            {selectedFile && <CheckCircle2 size={20} />}
-            Kirim Konfirmasi
+            {isSharing ? (
+              <>
+                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                Mengirim...
+              </>
+            ) : (
+              <>
+                {selectedFile && <CheckCircle2 size={20} />}
+                Kirim Konfirmasi
+              </>
+            )}
           </Button>
         </div>
       </BottomSheet>
