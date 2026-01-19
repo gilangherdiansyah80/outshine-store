@@ -69,10 +69,9 @@ const PaymentScreen = () => {
       ? `${address.street}, ${address.district}, ${address.city}`
       : "Alamat belum diatur";
     const shippingName = shippingMethod?.name || "Standard";
-    const adminNumber = "+62 813-5374-168";
 
     // Caption message for sharing
-    const message = `Kirim ke: ${adminNumber}\n\nHaii admin outshine. Saya telah melakukan pembayaran product ${productName} dengan size ${productSize}. Bisa dikirim ke alamat ${addressStr} dengan pengiriman ${shippingName}. Terimakasih`;
+    const message = `Haii admin outshine. Saya telah melakukan pembayaran product ${productName} dengan size ${productSize}. Bisa dikirim ke alamat ${addressStr} dengan pengiriman ${shippingName}. Terimakasih`;
 
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/628135374168?text=${encodedMessage}`;
