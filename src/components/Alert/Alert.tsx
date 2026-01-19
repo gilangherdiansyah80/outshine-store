@@ -16,6 +16,11 @@ interface AlertProps {
   onCancel?: () => void;
   confirmText?: string;
   cancelText?: string;
+  // Input support for "prompt" style alerts
+  showInput?: boolean;
+  inputValue?: string;
+  onInputChange?: (value: string) => void;
+  placeholder?: string;
 }
 
 const Alert = ({
@@ -27,6 +32,10 @@ const Alert = ({
   onCancel,
   confirmText = "Confirm",
   cancelText = "Cancel",
+  showInput = false,
+  inputValue = "",
+  onInputChange,
+  placeholder = "Type something...",
 }: AlertProps) => {
   const [isRendered, setIsRendered] = useState(isOpen);
 
@@ -94,9 +103,22 @@ const Alert = ({
           </div>
 
           <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
-          <p className="text-[15px] text-gray-400 leading-relaxed mb-8">
+          <p className="text-[15px] text-gray-400 leading-relaxed mb-6">
             {message}
           </p>
+
+          {showInput && (
+            <div className="w-full mb-8">
+              <input
+                type="text"
+                value={inputValue}
+                onChange={(e) => onInputChange?.(e.target.value)}
+                placeholder={placeholder}
+                autoFocus
+                className="w-full px-6 py-4 rounded-2xl bg-white/5 border border-white/10 text-white text-[15px] placeholder:text-gray-600 focus:outline-none focus:border-white/20 transition-all"
+              />
+            </div>
+          )}
 
           <div className="flex gap-3 w-full">
             {(type === "confirm" || onCancel) && (
