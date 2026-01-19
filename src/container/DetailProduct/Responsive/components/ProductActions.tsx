@@ -40,7 +40,25 @@ const ProductActions = ({
     });
 
     // Optional: navigate to cart or show success message
-    navigate("/outshine/cart");
+  };
+
+  const handleBuyNow = () => {
+    if (!selectedSize) {
+      setShowAlert(true);
+      return;
+    }
+
+    const buyNowItem = {
+      id,
+      name,
+      price,
+      image,
+      size: selectedSize,
+      color: "Standard",
+      quantity: 1,
+    };
+
+    navigate("/outshine/checkout", { state: { buyNowItem } });
   };
 
   const handleChatWhatsApp = () => {
@@ -82,6 +100,7 @@ const ProductActions = ({
           <MessageCircle className="w-6 h-6" />
         </Button>
         <Button
+          onClick={handleBuyNow}
           size="lg"
           className="flex-1 h-14 gap-2 bg-blue-600 hover:bg-blue-700"
         >

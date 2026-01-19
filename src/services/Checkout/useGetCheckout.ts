@@ -24,7 +24,7 @@ export interface PaymentMethod {
   cardNumber?: string;
   expiry?: string;
   icon?: string;
-  type: "visa" | "apple-pay" | "google-pay" | "paypal";
+  type: "bni" | "dana" | "seabank" | string;
 }
 
 export interface CheckoutData {
@@ -63,15 +63,18 @@ const mockCheckoutData: CheckoutData = {
   paymentMethods: [
     {
       id: "pay-1",
-      name: "Visa ending in 4242",
-      cardNumber: "4242",
-      expiry: "12/26",
-      type: "visa",
+      name: "BNI",
+      type: "bni",
     },
     {
       id: "pay-2",
-      name: "Apple Pay",
-      type: "apple-pay",
+      name: "Dana",
+      type: "dana",
+    },
+    {
+      id: "pay-3",
+      name: "SeaBank",
+      type: "seabank",
     },
   ],
 };
