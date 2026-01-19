@@ -22,6 +22,8 @@ export interface CardProductProps {
   discount?: number | string;
   /** Whether the product is in wishlist */
   isWishlisted?: boolean;
+  /** Whether the product is pre-order */
+  isPo?: boolean;
   /** Callback when wishlist button is clicked */
   onWishlistClick?: () => void;
   /** Callback when add to cart button is clicked (optional, shows button if provided) */
@@ -47,6 +49,7 @@ const CardProduct = ({
   originalPrice,
   currency = "$",
   isNew,
+  isPo,
   discount,
   onWishlistClick,
   onAddToCollection,
@@ -110,6 +113,7 @@ const CardProduct = ({
 
         {/* Badges Container */}
         <div className="absolute top-2 left-2 flex flex-col gap-1 z-10">
+          {isPo && <Badge variant="primary">Pre-Order</Badge>}
           {isNew && <Badge variant="dark">NEW</Badge>}
           {discount && (
             <Badge variant="danger">

@@ -9,6 +9,7 @@ export interface ProductItem {
   isNew?: boolean;
   discount?: number; // percent
   isWishlisted?: boolean;
+  isPo?: boolean; // pre-order status
   // Metadata for filtering
   sizes: string[];
   colors: string[];
@@ -28,6 +29,7 @@ export const mockAPIResult = {
       image:
         "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=1000&auto=format&fit=crop",
       isNew: true,
+      isPo: true,
       sizes: ["S", "M", "L", "XL"],
       colors: ["Brown", "Black"],
       category: "Jackets",
@@ -74,6 +76,7 @@ export const mockAPIResult = {
       price: 110.0,
       image:
         "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?q=80&w=1000&auto=format&fit=crop",
+      isPo: true,
       sizes: ["S", "M", "L"],
       colors: ["Cream", "Grey"],
       category: "Sweaters",
@@ -108,7 +111,7 @@ export const getProductsData = async (): Promise<ProductItem[]> => {
 export const useGetProducts = () => {
   const { data, error, isLoading } = useSWR<ProductItem[]>(
     "/api/products/responsive",
-    getProductsData
+    getProductsData,
   );
 
   return {

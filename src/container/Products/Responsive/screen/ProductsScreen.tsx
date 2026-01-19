@@ -48,12 +48,12 @@ const ProductsScreen = () => {
     // Filtering logic
     if (selectedSizes.length > 0) {
       result = result.filter((p) =>
-        p.sizes.some((s) => selectedSizes.includes(s))
+        p.sizes.some((s) => selectedSizes.includes(s)),
       );
     }
     if (selectedColors.length > 0) {
       result = result.filter((p) =>
-        p.colors.some((c) => selectedColors.includes(c))
+        p.colors.some((c) => selectedColors.includes(c)),
       );
     }
     if (selectedCategories.length > 0) {
@@ -63,7 +63,7 @@ const ProductsScreen = () => {
       const range = PRICE_RANGES.find((r) => r.id === selectedPriceRange);
       if (range) {
         result = result.filter(
-          (p) => p.price >= range.min && p.price <= range.max
+          (p) => p.price >= range.min && p.price <= range.max,
         );
       }
     }
@@ -128,6 +128,7 @@ const ProductsScreen = () => {
                 originalPrice={product.originalPrice}
                 discount={product.discount}
                 isNew={product.isNew}
+                isPo={product.isPo}
                 aspectRatio="portrait"
                 onClick={() => navigate(`/outshine/product/${product.id}`)}
                 onWishlistClick={() => console.log("Wishlist:", product.name)}
@@ -146,8 +147,8 @@ const ProductsScreen = () => {
                 selectedPriceRange !== "all")
                 ? "Clear All Results"
                 : searchQuery.trim()
-                ? "Clear All Search"
-                : "Clear All Filter"
+                  ? "Clear All Search"
+                  : "Clear All Filter"
             }
             onReset={() => {
               setSearchQuery("");
