@@ -1,9 +1,16 @@
 import { ShieldCheck, Lock } from "lucide-react";
 
-const CheckoutFooter = () => {
+interface CheckoutFooterProps {
+  onClick?: () => void;
+}
+
+const CheckoutFooter = ({ onClick }: CheckoutFooterProps) => {
   return (
     <footer className="fixed bottom-0 left-0 right-0 p-6 bg-[#0B0F19]/80 backdrop-blur-xl border-t border-white/5 z-30">
-      <button className="w-full h-16 bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white font-bold rounded-2xl flex items-center justify-center gap-3 transition-all shadow-xl shadow-blue-900/20">
+      <button
+        onClick={onClick}
+        className="w-full h-16 bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white font-bold rounded-2xl flex items-center justify-center gap-3 transition-all shadow-xl shadow-blue-900/20"
+      >
         <ShieldCheck size={24} />
         Place Order
       </button>

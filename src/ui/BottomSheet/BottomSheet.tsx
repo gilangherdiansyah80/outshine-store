@@ -1,0 +1,75 @@
+import React, { useEffect, useState } from "react";
+import { X } from "lucide-react";
+
+interface BottomSheetProps {
+  isOpen: boolean;
+  onClose: () => void;
+  title: string;
+  children: React.ReactNode;
+}
+
+const BottomSheet = ({
+  isOpen,
+  onClose,
+  title,
+  children,
+}: BottomSheetProps) => {
+  const [isRendered, setIsRendered] = useState(isOpen);
+
+  // Derived state adjustment for rendering
+  if (isOpen && !isRendered) {
+    setIsRendered(true);
+  }
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else if (isRendered) {
+      const timer = setTimeout(() => {
+        setIsRendered(false);
+        document.body.style.overflow = "unset";
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen, isRendered]);
+
+  if (!isRendered) return null;
+
+  return (
+    <div
+      className={`fixed inset-0 z-10000 flex items-end justify-center transition-all duration-300 ${
+        isOpen
+          ? "bg-black/60 backdrop-blur-sm"
+          : "bg-black/0 pointer-events-none"
+      }`}
+      onClick={onClose}
+    >
+      <div
+        className={`w-full max-w-lg bg-[#0B0F19] rounded-t-[40px] border-t border-white/10 p-8 pt-4 transition-all duration-300 transform ${
+          isOpen ? "translate-y-0" : "translate-y-full"
+        }`}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Handle */}
+        <div
+          className="w-12 h-1.5 bg-white/10 rounded-full mx-auto mb-8 cursor-pointer"
+          onClick={onClose}
+        />
+
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-2xl font-bold text-white">{title}</h2>
+          <button
+            onClick={onClose}
+            className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
+          >
+            <X size={20} />
+          </button>
+        </div>
+
+        <div className="pb-10">{children}</div>
+      </div>
+    </div>
+  );
+};
+
+export default BottomSheet;

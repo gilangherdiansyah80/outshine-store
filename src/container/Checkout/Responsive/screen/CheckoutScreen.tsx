@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useCartStore } from "@/store/cartStore";
 import { useGetCheckout } from "@/services/Checkout/useGetCheckout";
 import { useAddressStore } from "@/store/addressStore";
@@ -11,7 +12,11 @@ import CheckoutSummary from "../components/CheckoutSummary";
 import CheckoutFooter from "../components/CheckoutFooter";
 
 const CheckoutScreen = () => {
-  const { items, getTotalPrice } = useCartStore();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const buyNowItem = location.state?.buyNowItem;
+
+  const { items: cartItems, getTotalPrice } = useCartStore();
   const { data } = useGetCheckout();
   const { addresses, selectedAddressId } = useAddressStore();
 
@@ -22,9 +27,14 @@ const CheckoutScreen = () => {
     return null; // Global loader will handle it
   }
 
-  const subtotal = getTotalPrice();
+  // Use either buyNowItem or cartItems
+  const displayItems = buyNowItem ? [buyNowItem] : cartItems;
+  const subtotal = buyNowItem
+    ? buyNowItem.price * buyNowItem.quantity
+    : getTotalPrice();
+
   const shippingMethod = data.shippingMethods.find(
-    (m) => m.id === selectedShipping
+    (m) => m.id === selectedShipping,
   );
   const shippingPrice = shippingMethod?.price || 0;
   const estimatedTax = subtotal * 0.08; // 8% tax
@@ -32,6 +42,21 @@ const CheckoutScreen = () => {
 
   const activeAddress =
     addresses.find((a) => a.id === selectedAddressId) || addresses[0];
+
+  const handlePlaceOrder = () => {
+    const paymentMethod = data.paymentMethods.find(
+      (m) => m.id === selectedPayment,
+    );
+    navigate("./payment", {
+      state: {
+        total,
+        paymentMethod,
+        buyNowItem,
+        address: activeAddress,
+        shippingMethod,
+      },
+    });
+  };
 
   return (
     <div className="min-h-screen bg-[#0B0F19] text-white font-sans flex flex-col pb-32">
@@ -46,7 +71,7 @@ const CheckoutScreen = () => {
           onSelect={setSelectedShipping}
         />
 
-        <CheckoutItems items={items} />
+        <CheckoutItems items={displayItems} />
 
         <CheckoutPayment
           methods={data.paymentMethods}
@@ -62,7 +87,7 @@ const CheckoutScreen = () => {
         />
       </main>
 
-      <CheckoutFooter />
+      <CheckoutFooter onClick={handlePlaceOrder} />
     </div>
   );
 };
