@@ -48,7 +48,7 @@ const PaymentScreen = () => {
     }
   };
 
-  const handleSendWhatsApp = () => {
+  const handleSendWhatsApp = async () => {
     if (!selectedFile) return;
 
     const productName = buyNowItem?.name || "Product Outshine";
@@ -58,7 +58,7 @@ const PaymentScreen = () => {
       : "Alamat belum diatur";
     const shippingName = shippingMethod?.name || "Standard";
 
-    // Get absolute image URL for product preview
+    // Get absolute image URL for product preview (Fallback for link method)
     const productImage = buyNowItem?.image || "";
     const absoluteProductImage = productImage.startsWith("http")
       ? productImage
@@ -69,6 +69,25 @@ const PaymentScreen = () => {
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/628135374168?text=${encodedMessage}`;
 
+    // Re-implement Native Share for file support
+    if (
+      navigator.share &&
+      navigator.canShare &&
+      navigator.canShare({ files: [selectedFile] })
+    ) {
+      try {
+        await navigator.share({
+          files: [selectedFile],
+          text: message,
+        });
+        setIsSheetOpen(false);
+        return;
+      } catch (error) {
+        console.error("Error sharing:", error);
+      }
+    }
+
+    // Default Fallback to Link
     window.open(whatsappUrl, "_blank");
     setIsSheetOpen(false);
   };
