@@ -50,7 +50,14 @@ const ProductActions = ({
     }
 
     const phoneNumber = "628135374168";
-    const message = `Haii admin outshine. Apakah product ${name} dengan size ${selectedSize} masih ready?`;
+    const currentUrl = window.location.href;
+
+    // Memastikan link gambar diawali dengan domain jika gambarnya link relatif
+    const absoluteImageUrl = image.startsWith("http")
+      ? image
+      : `${window.location.origin}${image}`;
+
+    const message = `${absoluteImageUrl}\n\nHaii admin outshine. Apakah product ${name} dengan size ${selectedSize} masih ready?\n\nLink Produk: ${currentUrl}`;
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
 
