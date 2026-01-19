@@ -48,7 +48,7 @@ const PaymentScreen = () => {
     }
   };
 
-  const handleSendWhatsApp = async () => {
+  const handleSendWhatsApp = () => {
     if (!selectedFile) return;
 
     const productName = buyNowItem?.name || "Product Outshine";
@@ -64,31 +64,11 @@ const PaymentScreen = () => {
       ? productImage
       : `${window.location.origin}${productImage}`;
 
-    const message = `${absoluteProductImage}\n\nHaii admin outhsine. saya telah melakukan pembayaran product ${productName} dengan size ${productSize}. Bisa dikirim ke alamat ${addressStr} dengan pengiriman ${shippingName}. Saya sertakan juga bukti pembayarannya. Terimakasih`;
+    const message = `${absoluteProductImage}\n\nHaii admin outhsine. Saya telah melakukan pembayaran product ${productName} dengan size ${productSize}. Bisa dikirim ke alamat ${addressStr} dengan pengiriman ${shippingName}. Bukti pembayaran saya sertakan di bawah pesan ini (terlampir). Terimakasih`;
 
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/628135374168?text=${encodedMessage}`;
 
-    // Attempt to use Web Share API for direct file sharing if supported
-    if (
-      navigator.share &&
-      navigator.canShare &&
-      navigator.canShare({ files: [selectedFile] })
-    ) {
-      try {
-        await navigator.share({
-          files: [selectedFile],
-          text: message,
-        });
-        setIsSheetOpen(false);
-        return;
-      } catch (error) {
-        console.error("Error sharing:", error);
-        // Fallback to standard WhatsApp link
-      }
-    }
-
-    // Default Fallback
     window.open(whatsappUrl, "_blank");
     setIsSheetOpen(false);
   };
