@@ -3,6 +3,7 @@ import Image from "@outshine/ui/Image/Image";
 import { HeartIcon } from "@programmer-molor/my-icons";
 import Badge from "@outshine/ui/Badge/Badge";
 import { useWishlistStore } from "@outshine/store/wishlistStore";
+import { FolderPlus } from "lucide-react";
 
 export interface CardProductProps {
   /** Product image URL */
@@ -27,6 +28,8 @@ export interface CardProductProps {
   onAddToCart?: () => void;
   /** Callback when card is clicked */
   onClick?: () => void;
+  /** Callback to add to collection */
+  onAddToCollection?: () => void;
   /** Additional class names */
   className?: string;
   /** Aspect ratio of the card image */
@@ -46,6 +49,7 @@ const CardProduct = ({
   isNew,
   discount,
   onWishlistClick,
+  onAddToCollection,
   onClick,
   className,
   aspectRatio = "portrait",
@@ -87,14 +91,14 @@ const CardProduct = ({
       onClick={onClick}
       className={cn(
         "group relative flex flex-col gap-3 cursor-pointer",
-        className
+        className,
       )}
     >
       {/* Image Container */}
       <div
         className={cn(
           "relative overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-800",
-          aspectRatio === "square" ? "aspect-square" : "aspect-[3/4]"
+          aspectRatio === "square" ? "aspect-square" : "aspect-[3/4]",
         )}
       >
         <Image
@@ -120,18 +124,35 @@ const CardProduct = ({
           className={cn(
             "absolute top-2 right-2 h-8 w-8 flex items-center justify-center rounded-full",
             "bg-white/20 backdrop-blur-md shadow-sm",
-            "transition-all duration-200 hover:bg-white hover:scale-110 active:scale-95"
+            "transition-all duration-200 hover:bg-white hover:scale-110 active:scale-95",
           )}
         >
           <HeartIcon
             size={18}
             className={cn(
               "transition-colors",
-              wishlisted ? "fill-red-500 text-red-500" : "text-white"
+              wishlisted ? "fill-red-500 text-red-500" : "text-white",
             )}
             color={wishlisted ? "#ef4444" : "#ffffff"}
           />
         </button>
+
+        {/* Add to Collection Button (Custom for Wishlist) */}
+        {onAddToCollection && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onAddToCollection();
+            }}
+            className={cn(
+              "absolute top-12 right-2 h-8 w-8 flex items-center justify-center rounded-full",
+              "bg-white/20 backdrop-blur-md shadow-sm text-white",
+              "transition-all duration-200 hover:bg-white hover:text-black hover:scale-110 active:scale-95",
+            )}
+          >
+            <FolderPlus size={16} />
+          </button>
+        )}
       </div>
 
       {/* Content Info */}
