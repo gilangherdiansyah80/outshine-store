@@ -1,21 +1,24 @@
-// import { useBrowserNavigation } from "@outshine/lib/browser-navigation";
-import type { ResponsiveProviderProps } from "@outshine/lib/types";
-// import { ResponsiveSearchParamsSync } from "@outshine/lib/url-sync";
+import { useBrowserNavigation } from "@/lib/browser-navigation";
+import { ResponsiveSearchParamsSync } from "@/lib/url-sync";
+import type { ResponsiveProviderProps } from "@/lib/types";
+
+interface ProviderProps extends ResponsiveProviderProps {
+  basePath?: string;
+}
 
 /**
  * Responsive navigation provider that orchestrates all navigation logic.
  * Wraps the application to provide virtual navigation capabilities on mobile.
- *
- * TEMPORARILY DISABLED: URL sync and browser navigation to debug infinite loop.
  */
-export const ResponsiveProvider = ({ children }: ResponsiveProviderProps) => {
-  // TEMPORARILY DISABLED: Handle browser back/forward buttons
-  // useBrowserNavigation();
+export const ResponsiveProvider = ({
+  children,
+  basePath = "/",
+}: ProviderProps) => {
+  useBrowserNavigation();
 
   return (
     <>
-      {/* TEMPORARILY DISABLED: URL sync component */}
-      {/* <ResponsiveSearchParamsSync basePath={basePath} /> */}
+      <ResponsiveSearchParamsSync basePath={basePath} />
       {children}
     </>
   );

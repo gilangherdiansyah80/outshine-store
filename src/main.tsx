@@ -3,14 +3,14 @@ import ReactDOM from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
 import router from "@/routes/index";
 import { SWRConfig } from "swr";
+import type { Middleware, SWRHook } from "swr";
 import { useLoadingStore } from "@/store/loadingStore";
 
 import "./index.css"; // Tailwind CSS
 
 // Middleware to sync SWR loading state with global loading store
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const loadingMiddleware =
-  (useSWRNext: any) => (key: any, fetcher: any, config: any) => {
+const loadingMiddleware: Middleware =
+  (useSWRNext: SWRHook) => (key, fetcher, config) => {
     const swr = useSWRNext(key, fetcher, config);
     const { startDataLoading, stopDataLoading } = useLoadingStore.getState();
 
@@ -43,5 +43,5 @@ ReactDOM.createRoot(rootElement).render(
     <SWRConfig value={{ use: [loadingMiddleware] }}>
       <RouterProvider router={router} />
     </SWRConfig>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

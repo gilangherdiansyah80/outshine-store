@@ -1,10 +1,11 @@
 import { Link, useLocation } from "react-router-dom";
 import { HomeIcon } from "@programmer-molor/my-icons";
-import { ShoppingBagIcon, InfoIcon, Heart } from "lucide-react";
+import { ShoppingBagIcon, InfoIcon, User } from "lucide-react";
 import Image from "@outshine/ui/Image/Image";
 
 const ResponsiveFooter = () => {
   const { pathname } = useLocation();
+  console.log("FOOTER RENDERED - PATH:", pathname);
 
   const isActive = (path: string) => {
     if (path === "/outshine/home") return pathname === path;
@@ -127,27 +128,27 @@ const ResponsiveFooter = () => {
               </div>
             </Link>
             <Link
-              to="/outshine/wishlist"
+              to="/outshine/profile"
               className={`flex flex-col items-center gap-1 px-3 py-1.5 rounded-2xl transition-all duration-300`}
             >
               <div
                 className={`transition-colors ${
-                  isActive("/outshine/wishlist")
+                  isActive("/outshine/profile")
                     ? "text-[#0F172A]"
                     : "text-gray-400"
                 }`}
               >
-                <Heart size={24} />
+                <User size={24} />
               </div>
               <div className="flex flex-col items-center gap-0.5">
                 <span
                   className={`text-[11px] font-semibold transition-colors ${
-                    isActive("/outshine/wishlist")
+                    isActive("/outshine/profile")
                       ? "text-[#0F172A]"
                       : "text-gray-500"
                   }`}
                 >
-                  Wishlist
+                  Profile
                 </span>
               </div>
             </Link>

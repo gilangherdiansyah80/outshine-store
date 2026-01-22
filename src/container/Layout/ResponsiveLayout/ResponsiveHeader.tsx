@@ -1,5 +1,6 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useCartStore } from "@outshine/store/cartStore";
+import { useUserStore } from "@/lib/auth-adapter/userStore";
 import Input from "@outshine/ui/Form/Input/Input";
 import {
   SearchIcon,
@@ -15,6 +16,9 @@ const ResponsiveHeader = () => {
   const { pop, stack } = useResponsiveNavigation();
   const { searchQuery, setSearchQuery } = useSearchStore();
   const { items } = useCartStore();
+  const dataUser = useUserStore((state) => state.dataUser);
+  const isLoggedIn = dataUser?.isLoggedIn;
+
   const itemCount = items.reduce((total, item) => total + item.quantity, 0);
 
   const handleBack = () => {
@@ -64,7 +68,7 @@ const ResponsiveHeader = () => {
           >
             <div className="text-white relative">
               <CartIcon size={24} color="#ffffff" />
-              {itemCount > 0 && (
+              {isLoggedIn && itemCount > 0 && (
                 <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-sm">
                   {itemCount}
                 </span>

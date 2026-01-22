@@ -27,7 +27,7 @@ const useNavigationStore = create<InternalNavigationState>()(
     (set) => ({
       stack: [{ path: "/", params: {} }],
       isHydrated: false,
-      isReady: true, // Default to true since we temporarily disabled sync
+      isReady: false, // Set to true after initial sync is complete
       isDoingRealNavigation: true,
       navigationAttempts: 0,
       lastNavigationTime: 0,
@@ -56,7 +56,7 @@ const useNavigationStore = create<InternalNavigationState>()(
         popTo: (path: string) =>
           set((state) => {
             const targetIndex = state.stack.findIndex(
-              (entry: StackEntry) => entry.path === path
+              (entry: StackEntry) => entry.path === path,
             );
             if (targetIndex === -1) return state;
             return { stack: state.stack.slice(0, targetIndex + 1) };
@@ -103,8 +103,8 @@ const useNavigationStore = create<InternalNavigationState>()(
         // Immediately mark as hydrated without delay
         state.actions?.setHasHydrated?.();
       },
-    }
-  )
+    },
+  ),
 );
 
 export { useNavigationStore };

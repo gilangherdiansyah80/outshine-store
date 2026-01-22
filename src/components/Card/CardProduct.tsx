@@ -1,22 +1,26 @@
+import { useNavigate, useLocation } from "react-router-dom";
 import { cn } from "@outshine/lib/utils";
 import Image from "@outshine/ui/Image/Image";
 import { HeartIcon } from "@programmer-molor/my-icons";
 import Badge from "@outshine/ui/Badge/Badge";
 import { useWishlistStore } from "@outshine/store/wishlistStore";
+import { useAuth } from "@/lib/auth";
 
 export interface CardProductProps {
   /** Product image URL */
   imageSrc: string;
   /** Product name/title */
   name: string;
-  /** Product price */
-  price: number;
+  /** Product price (number for formatting, or pre-formatted string) */
+  price: number | string;
   /** Original price for discount calculation/display */
-  originalPrice?: number;
-  /** Currency symbol (default: $) */
+  originalPrice?: number | string;
+  /** Currency symbol (default: $, ignored if price is pre-formatted string) */
   currency?: string;
   /** Whether product is new */
   isNew?: boolean;
+  /** Whether product is Pre-Order */
+  isPo?: boolean;
   /** Discount percentage or label (e.g. "SALE") */
   discount?: number | string;
   /** Whether the product is in wishlist */
@@ -42,8 +46,9 @@ const CardProduct = ({
   name,
   price,
   originalPrice,
-  currency = "$",
+  currency = "",
   isNew,
+  isPo,
   discount,
   onWishlistClick,
   onClick,
@@ -52,16 +57,25 @@ const CardProduct = ({
   id, // Need ID for wishlist
 }: CardProductProps & { id?: string }) => {
   const { toggleItem, isInWishlist } = useWishlistStore();
+  const { isLoggedIn } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
   const wishlisted = id ? isInWishlist(id) : false;
 
   const handleWishlistClick = (e: React.MouseEvent) => {
     e.stopPropagation();
+    if (!isLoggedIn) {
+      navigate("/outshine/welcome", { state: { from: location } });
+      return;
+    }
+
     if (id) {
       toggleItem({
         id,
         name,
-        price,
-        originalPrice,
+        price: typeof price === "number" ? price : 0,
+        originalPrice:
+          typeof originalPrice === "number" ? originalPrice : undefined,
         image: imageSrc,
         isNew,
         discount,
@@ -70,16 +84,24 @@ const CardProduct = ({
     onWishlistClick?.();
   };
 
-  const formattedPrice = new Intl.NumberFormat("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(price);
+  // Handle both pre-formatted string and number prices
+  const formattedPrice =
+    typeof price === "string"
+      ? price
+      : new Intl.NumberFormat("id-ID", {
+          style: "currency",
+          currency: "IDR",
+          minimumFractionDigits: 0,
+        }).format(price);
 
   const formattedOriginalPrice = originalPrice
-    ? new Intl.NumberFormat("en-US", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      }).format(originalPrice)
+    ? typeof originalPrice === "string"
+      ? originalPrice
+      : new Intl.NumberFormat("id-ID", {
+          style: "currency",
+          currency: "IDR",
+          minimumFractionDigits: 0,
+        }).format(originalPrice)
     : null;
 
   return (
@@ -87,14 +109,14 @@ const CardProduct = ({
       onClick={onClick}
       className={cn(
         "group relative flex flex-col gap-3 cursor-pointer",
-        className
+        className,
       )}
     >
       {/* Image Container */}
       <div
         className={cn(
           "relative overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-800",
-          aspectRatio === "square" ? "aspect-square" : "aspect-[3/4]"
+          aspectRatio === "square" ? "aspect-square" : "aspect-3/4",
         )}
       >
         <Image
@@ -107,6 +129,7 @@ const CardProduct = ({
         {/* Badges Container */}
         <div className="absolute top-2 left-2 flex flex-col gap-1 z-10">
           {isNew && <Badge variant="dark">NEW</Badge>}
+          {isPo && <Badge variant="warning">Pre-Order</Badge>}
           {discount && (
             <Badge variant="danger">
               {typeof discount === "number" ? `-${discount}%` : discount}
@@ -119,15 +142,15 @@ const CardProduct = ({
           onClick={handleWishlistClick}
           className={cn(
             "absolute top-2 right-2 h-8 w-8 flex items-center justify-center rounded-full",
-            "bg-white/20 backdrop-blur-md shadow-sm",
-            "transition-all duration-200 hover:bg-white hover:scale-110 active:scale-95"
+            "bg-black/50 backdrop-blur-md shadow-md border border-white/20",
+            "transition-all duration-200 hover:bg-black/70 hover:scale-110 active:scale-95",
           )}
         >
           <HeartIcon
             size={18}
             className={cn(
               "transition-colors",
-              wishlisted ? "fill-red-500 text-red-500" : "text-white"
+              wishlisted ? "fill-red-500 text-red-500" : "text-white",
             )}
             color={wishlisted ? "#ef4444" : "#ffffff"}
           />

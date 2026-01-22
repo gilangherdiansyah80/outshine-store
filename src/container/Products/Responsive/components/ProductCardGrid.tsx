@@ -44,11 +44,11 @@ const ProductCardGrid = ({ product }: ProductCardGridProps) => {
         </h3>
         <div className="flex items-center gap-2">
           <span className="text-sm font-bold text-[#3B82F6]">
-            ${product.price.toFixed(2)}
+            {product.formattedPrice}
           </span>
           {product.originalPrice && (
             <span className="text-xs text-gray-500 line-through">
-              ${product.originalPrice.toFixed(2)}
+              {product.formattedOriginalPrice}
             </span>
           )}
         </div>

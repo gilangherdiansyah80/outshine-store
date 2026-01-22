@@ -29,6 +29,8 @@ const DetailProductScreen: React.FC<DetailProductScreenProps> = ({
         <ProductInfo
           title={product.title}
           price={product.price}
+          formattedPrice={product.formattedPrice}
+          formattedOriginalPrice={product.formattedOriginalPrice}
           rating={product.rating}
           reviewCount={product.reviewCount}
         />
@@ -52,6 +54,8 @@ const DetailProductScreen: React.FC<DetailProductScreenProps> = ({
         <ProductReviews
           rating={product.rating}
           reviewCount={product.reviewCount}
+          ratingDistribution={product.ratingDistribution}
+          reviews={product.reviews}
         />
       </div>
     </div>

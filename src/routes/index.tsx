@@ -7,6 +7,11 @@ import AboutUsPage from "@outshine/pages/AboutUsPage";
 import WishListsPage from "@outshine/pages/WishListsPage";
 import CartPage from "@outshine/pages/CartPage";
 import CheckoutPage from "@outshine/pages/Checkout";
+import ProfilePage from "@outshine/pages/ProfilePage";
+import ProtectedRoute from "@outshine/components/ProtectedRoute/ProtectedRoute";
+import WelcomePage from "@outshine/pages/WelcomePage";
+import RegisterPage from "@outshine/pages/Auth/RegisterPage";
+import LoginPage from "@outshine/pages/Auth/LoginPage";
 
 const route = createBrowserRouter([
   {
@@ -34,8 +39,32 @@ const route = createBrowserRouter([
         element: <WishListsPage key="wishlist-page" />,
       },
       {
+        path: "profile",
+        element: (
+          <ProtectedRoute>
+            <ProfilePage />
+          </ProtectedRoute>
+        ),
+      },
+      {
         path: "cart",
-        element: <CartPage />,
+        element: (
+          <ProtectedRoute>
+            <CartPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "welcome",
+        element: <WelcomePage />,
+      },
+      {
+        path: "login",
+        element: <LoginPage />,
+      },
+      {
+        path: "register/*",
+        element: <RegisterPage />,
       },
       {
         path: "checkout/*",

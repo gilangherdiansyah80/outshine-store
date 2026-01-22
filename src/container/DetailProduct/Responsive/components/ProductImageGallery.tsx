@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { ChevronLeft, Share2, Heart } from "lucide-react";
 import { useWishlistStore } from "@outshine/store/wishlistStore";
+import { useAuthStore } from "@outshine/store/authStore";
 
 interface ProductImageGalleryProps {
   id: string;
@@ -18,6 +19,8 @@ const ProductImageGallery = ({
 }: ProductImageGalleryProps) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { toggleItem, isInWishlist } = useWishlistStore();
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const location = useLocation();
   const isWishlisted = isInWishlist(id);
 
   const handleNextImage = () => {
@@ -47,6 +50,11 @@ const ProductImageGallery = ({
   };
 
   const handleWishlist = () => {
+    if (!isLoggedIn) {
+      navigate("/outshine/welcome", { state: { from: location } });
+      return;
+    }
+
     toggleItem({
       id,
       name: title,

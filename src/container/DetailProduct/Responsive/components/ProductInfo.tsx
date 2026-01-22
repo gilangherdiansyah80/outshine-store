@@ -3,6 +3,9 @@ import { Star } from "lucide-react";
 interface ProductInfoProps {
   title: string;
   price: number;
+  formattedPrice?: string;
+  originalPrice?: number;
+  formattedOriginalPrice?: string;
   rating: number;
   reviewCount: number;
 }
@@ -10,16 +13,27 @@ interface ProductInfoProps {
 const ProductInfo = ({
   title,
   price,
+  formattedPrice,
+  formattedOriginalPrice,
   rating,
   reviewCount,
 }: ProductInfoProps) => {
   return (
     <>
-      <div className="flex justify-between items-start gap-4">
-        <h1 className="text-2xl font-bold leading-tight flex-1">{title}</h1>
-        <span className="text-xl font-bold text-white">
-          ${price ? price.toFixed(2) : "0.00"}
-        </span>
+      <div className="flex flex-col gap-2">
+        <h1 className="text-2xl font-bold leading-tight text-gray-900">
+          {title}
+        </h1>
+        <div className="flex items-center gap-2">
+          <span className="text-xl font-bold text-[#0F172A]">
+            {formattedPrice || `$${price.toFixed(2)}`}
+          </span>
+          {formattedOriginalPrice && (
+            <span className="text-sm text-gray-400 line-through">
+              {formattedOriginalPrice}
+            </span>
+          )}
+        </div>
       </div>
 
       <div className="flex items-center gap-2 mt-2">
