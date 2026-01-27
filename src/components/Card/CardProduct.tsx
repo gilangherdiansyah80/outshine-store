@@ -7,6 +7,7 @@ import { useWishlistStore } from "@outshine/store/wishlistStore";
 import { useAuth } from "@/lib/auth";
 import { usePostWishlists } from "@/services/WishLists/usePostWishlists";
 import { useDeleteWishlists } from "@/services/WishLists/useDeleteWishlists";
+import { FolderPlus } from "lucide-react";
 
 export interface CardProductProps {
   /** Product image URL */
@@ -33,6 +34,8 @@ export interface CardProductProps {
   onAddToCart?: () => void;
   /** Callback when card is clicked */
   onClick?: () => void;
+  /** Callback to add to collection */
+  onAddToCollection?: () => void;
   /** Additional class names */
   className?: string;
   /** Aspect ratio of the card image */
@@ -53,6 +56,7 @@ const CardProduct = ({
   isPo,
   discount,
   onWishlistClick,
+  onAddToCollection,
   onClick,
   className,
   aspectRatio = "portrait",
@@ -166,6 +170,23 @@ const CardProduct = ({
             color={wishlisted ? "#ef4444" : "#ffffff"}
           />
         </button>
+
+        {/* Add to Collection Button (Custom for Wishlist) */}
+        {onAddToCollection && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onAddToCollection();
+            }}
+            className={cn(
+              "absolute top-12 right-2 h-8 w-8 flex items-center justify-center rounded-full",
+              "bg-white/20 backdrop-blur-md shadow-sm text-white",
+              "transition-all duration-200 hover:bg-white hover:text-black hover:scale-110 active:scale-95",
+            )}
+          >
+            <FolderPlus size={16} />
+          </button>
+        )}
       </div>
 
       {/* Content Info */}
