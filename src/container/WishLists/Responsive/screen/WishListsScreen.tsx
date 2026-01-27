@@ -66,11 +66,11 @@ const WishListsScreen = () => {
   ): StoreWishlistItem => ({
     id: apiItem.id,
     name: apiItem.name,
-    price: Number(apiItem.price),
+    price: apiItem.discountedPrice || apiItem.price,
     image: apiItem.primaryImage,
-    isNew: apiItem.isPo, // Map isPo to isNew if appropriate or default false
-    discount: 0,
-    category: apiItem.categoryId,
+    isNew: apiItem.tags?.some((t) => t.name === "New") || false,
+    discount: apiItem.discount?.value || 0,
+    category: apiItem.category?.id || "",
   });
 
   if (isLoading || isApiLoading) {
@@ -124,10 +124,24 @@ const WishListsScreen = () => {
                     id={product.id}
                     imageSrc={product.primaryImage}
                     name={product.name}
-                    price={product.price}
+                    price={
+                      product.formattedDiscountedPrice ||
+                      product.formattedPrice ||
+                      product.price
+                    }
+                    originalPrice={
+                      product.formattedDiscountedPrice
+                        ? product.formattedPrice
+                        : undefined
+                    }
+                    discount={product.discount?.value}
+                    isNew={product.tags?.some((t) => t.name === "New")}
                     isPo={product.isPo}
                     aspectRatio="portrait"
                     onClick={() => navigate(`/outshine/product/${product.id}`)}
+                    onWishlistClick={() =>
+                      console.log("Wishlist:", product.name)
+                    }
                     onAddToCollection={() =>
                       setSelectedProductForCollection(
                         mapApiToStoreItem(product),

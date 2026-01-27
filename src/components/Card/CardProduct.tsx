@@ -143,7 +143,6 @@ const CardProduct = ({
 
         {/* Badges Container */}
         <div className="absolute top-2 left-2 flex flex-col gap-1 z-10">
-          {isPo && <Badge variant="primary">Pre-Order</Badge>}
           {isNew && <Badge variant="dark">NEW</Badge>}
           {isPo && <Badge variant="warning">Pre-Order</Badge>}
           {discount && (
