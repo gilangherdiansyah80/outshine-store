@@ -124,8 +124,10 @@ const ProductsScreen = () => {
                 id={product.id}
                 imageSrc={product.image}
                 name={product.name}
-                price={product.price}
-                originalPrice={product.originalPrice}
+                price={product.formattedPrice || product.price}
+                originalPrice={
+                  product.formattedOriginalPrice || product.originalPrice
+                }
                 discount={product.discount}
                 isNew={product.isNew}
                 isPo={product.isPo}

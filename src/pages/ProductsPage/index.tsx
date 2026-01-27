@@ -6,8 +6,6 @@ export default function ProductsPage() {
   const { isMobile } = useDevice();
   const hasMounted = useHasMounted();
 
-  console.log("Rendering ProductsPage, isMobile:", isMobile);
-
   if (!hasMounted) {
     return <Loading />;
   }

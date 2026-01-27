@@ -1,5 +1,5 @@
-import { ResponsiveRoute } from "@outshine/lib/components";
-import HomeScreen from "./screen/HomeScreen";
+import { ResponsiveRoute } from "@/lib/components";
+import HomeScreen from "@/container/Home/Responsive/screen/HomeScreen";
 
 export default function HomeResponsive() {
   return (

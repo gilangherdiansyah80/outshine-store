@@ -1,8 +1,8 @@
 import { useEffect } from "react";
-import { useNavigationActions } from "@outshine/hooks/use-responsive-navigation";
-import { useNavigationStore } from "@outshine/store/navigationStore";
-import { parseScreenSearchParam } from "@outshine/lib/utils";
-import { useDevice } from "@outshine/hooks/use-device";
+import { useNavigationActions } from "@/hooks/use-responsive-navigation";
+import { useNavigationStore } from "@/store/navigationStore";
+import { parseScreenSearchParam } from "@/lib/utils";
+import { useDevice } from "@/hooks/use-device";
 
 /**
  * Hook to handle browser back/forward navigation
@@ -37,7 +37,7 @@ export const useBrowserNavigation = () => {
         if (decodedScreen !== topOfStackPath) {
           // Check if the target screen exists in our stack
           const targetIndex = currentStack.findIndex(
-            (entry) => entry.path === decodedScreen
+            (entry) => entry.path === decodedScreen,
           );
 
           if (targetIndex !== -1) {

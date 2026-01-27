@@ -1,39 +1,144 @@
 import useSWR from "swr";
+import { fetcherOSStore } from "@/lib/axios";
+
+// Product Detail Interface used by UI
+export interface ReviewItem {
+  id: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
+  user: {
+    id: string;
+    name: string;
+  };
+}
+
+export interface ProductSize {
+  id: string;
+  name: string;
+  stock: number;
+}
 
 export interface ProductDetail {
   id: string;
   title: string;
   price: number;
+  formattedDiscounted?: string;
+  originalPrice?: number;
+  formattedOriginal?: string;
   rating: number;
   reviewCount: number;
+  ratingDistribution?: Record<string, number>;
+  reviews?: ReviewItem[];
   images: string[];
-  sizes: string[];
+  sizes: ProductSize[];
   description: string;
   fabricAndCare: string;
   deliveryAndReturns: string;
   sustainabilityImpact: string;
+  isPo?: boolean;
+  poDpPercent?: number;
+  discount?: number;
 }
 
-import { mockAPIResult as productsData } from "./useGetProducts";
-import {
-  mockAPIResult as trendingData,
-  type TrendingProductItem,
-} from "../Home/useGetTrendingProducts";
+// API Response Interfaces
+interface APISize {
+  id: string;
+  name: string;
+  stock: number;
+}
 
-const USE_MOCK = true;
+interface APIImage {
+  id: string;
+  url: string;
+  isPrimary: boolean;
+}
 
-const defaultDetail = {
-  rating: 4.8,
-  reviewCount: 124,
-  images: [
-    "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=1000&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=1000&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=1000&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1562157873-818bc0726f68?q=80&w=1000&auto=format&fit=crop",
-  ],
-  sizes: ["S", "M", "L", "XL"],
-  description:
-    "This heavyweight tee is pre-shrunk and features a luxurious carbon finish for a soft-touch hand feel.",
+interface APITag {
+  id: string;
+  name: string;
+}
+
+interface APIDiscount {
+  type: string;
+  value: number;
+  isActive: boolean;
+  startDate: string;
+  endDate: string;
+}
+
+interface APIPricing {
+  original: number;
+  discounted: number;
+  formattedOriginal: string;
+  formattedDiscounted: string;
+}
+
+interface APIRating {
+  average: number;
+  count: number;
+  distribution: Record<string, number>;
+}
+
+interface APIPo {
+  dpPercent: number;
+  dpAmount: number;
+  remainingAmount: number;
+}
+
+interface APICategory {
+  id: string;
+  name: string;
+}
+
+interface APIDetailProduct {
+  id: string;
+  name: string;
+  description: string;
+  category: APICategory;
+  basePrice: number;
+  isActive: boolean;
+  isPo: boolean;
+  poDpPercent: number;
+  tags: APITag[];
+  discount: APIDiscount | null;
+  pricing: APIPricing;
+  rating: APIRating;
+  createdAt: string;
+  po: APIPo | null;
+  images: APIImage[];
+  sizes: APISize[];
+  reviews: {
+    items: any[]; // Define properly if needed
+    pagination: {
+      page: number;
+      limit: number;
+      total: number;
+    };
+  };
+  sizeGuide: {
+    imageUrl: string;
+    description: string;
+  };
+  wishlist: {
+    isWishlisted: boolean;
+  };
+  collection: {
+    canAdd: boolean;
+  };
+  updatedAt: string;
+}
+
+interface DetailProductResponse {
+  success: boolean;
+  message: string;
+  data: APIDetailProduct;
+}
+
+const USE_MOCK = false;
+
+// Default Static Content
+const defaultStaticContent = {
   fabricAndCare:
     "Crafted from 100% organic cotton (280GSM). This heavyweight tee is pre-shrunk and features a luxurious carbon finish for a soft-touch hand feel.",
   deliveryAndReturns: "Free delivery on orders over $50. 30-day return policy.",
@@ -41,65 +146,76 @@ const defaultDetail = {
     "Made with 100% organic cotton. Reduced water consumption in production.",
 };
 
+const mapAPIDetailToProductDetail = (
+  apiProduct: APIDetailProduct,
+): ProductDetail => {
+  return {
+    id: apiProduct.id,
+    title: apiProduct.name,
+    price: apiProduct.pricing?.discounted ?? apiProduct.basePrice,
+    formattedDiscounted: apiProduct.pricing?.formattedDiscounted,
+    originalPrice: apiProduct.discount
+      ? apiProduct.pricing?.original
+      : undefined,
+    formattedOriginal: apiProduct.pricing?.formattedOriginal,
+    rating: apiProduct.rating?.average ?? 0,
+    reviewCount: apiProduct.rating?.count ?? 0,
+    ratingDistribution: apiProduct.rating?.distribution,
+    reviews: apiProduct.reviews?.items || [],
+    // Map Array of objects to Array of URL strings
+    images: apiProduct.images?.map((img) => img.url) || [],
+    // Map Array of objects
+    sizes: apiProduct.sizes || [],
+    description: apiProduct.description || "",
+    ...defaultStaticContent,
+    isPo: apiProduct.isPo,
+    poDpPercent: apiProduct.poDpPercent,
+    discount:
+      apiProduct.discount?.type === "percent"
+        ? apiProduct.discount.value
+        : undefined,
+  };
+};
+
 export const getDetailProductData = async (
-  id?: string
+  id?: string,
 ): Promise<ProductDetail> => {
   if (USE_MOCK) {
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    // Find the product in the shared list
-    const foundProduct = productsData.Data.find((p) => p.id === id);
-
-    if (foundProduct) {
-      return {
-        ...defaultDetail,
-        id: foundProduct.id,
-        title: foundProduct.name, // Map name to title
-        price: foundProduct.price,
-        // Using the image from the list as the first image
-        images: [foundProduct.image, ...defaultDetail.images.slice(1)],
-      };
-    }
-
-    // Find the product in the trending list
-    const foundTrending = trendingData.Data.find(
-      (p: TrendingProductItem) => p.id === id
-    );
-
-    if (foundTrending) {
-      return {
-        ...defaultDetail,
-        id: foundTrending.id,
-        title: foundTrending.name,
-        price: foundTrending.price,
-        images: [foundTrending.imageSrc, ...defaultDetail.images.slice(1)],
-      };
-    }
-
-    // Fallback if not found (though usually should be found)
-    return {
-      ...defaultDetail,
-      id: id || "1",
-      title: "Product Not Found",
-      price: 0,
-    };
-  } else {
-    // API Call implementation
-    if (!id) throw new Error("Product ID is required");
-    const response = await fetch(`/api/products/${id}`);
-    if (!response.ok) {
-      throw new Error("Failed to fetch product");
-    }
-    const result = await response.json();
-    return result.Data || result;
+    // Should not reach here if USE_MOCK is false, but keeping structure valid
+    throw new Error("Mock not implemented for new structure");
   }
+
+  if (!id) throw new Error("Product ID is required");
+
+  // Fetch from API
+  const response = await fetcherOSStore.get<DetailProductResponse>(
+    `/api/v1/products/${id}`,
+  );
+
+  if (!response.data.success) {
+    throw new Error(response.data.message || "Failed to fetch product");
+  }
+
+  // DEBUG LOGS
+  console.log("Raw API Review Data:", response.data.data.reviews);
+  if (response.data.data.reviews?.items) {
+    console.log(
+      "Review Items Length:",
+      response.data.data.reviews.items.length,
+    );
+  }
+
+  return mapAPIDetailToProductDetail(response.data.data);
 };
 
 export const useGetDetailProduct = (id?: string) => {
   const { data, error, isLoading } = useSWR<ProductDetail>(
-    id ? `/products/${id}` : null,
-    () => getDetailProductData(id)
+    id ? `/api/v1/products/${id}` : null,
+    () => getDetailProductData(id),
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    },
   );
 
   return {

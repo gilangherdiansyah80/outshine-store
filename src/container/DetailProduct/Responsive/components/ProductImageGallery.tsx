@@ -1,7 +1,10 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { ChevronLeft, Share2, Heart } from "lucide-react";
 import { useWishlistStore } from "@outshine/store/wishlistStore";
+import { useAuthStore } from "@outshine/store/authStore";
+import { usePostWishlists } from "@/services/WishLists/usePostWishlists";
+import { useDeleteWishlists } from "@/services/WishLists/useDeleteWishlists";
 
 interface ProductImageGalleryProps {
   id: string;
@@ -16,9 +19,22 @@ const ProductImageGallery = ({
   title,
   price,
 }: ProductImageGalleryProps) => {
+  const navigate = useNavigate();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isScrolled, setIsScrolled] = useState(false);
   const { toggleItem, isInWishlist } = useWishlistStore();
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const location = useLocation();
   const isWishlisted = isInWishlist(id);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const handleNextImage = () => {
     setCurrentImageIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
@@ -46,7 +62,21 @@ const ProductImageGallery = ({
     }
   };
 
+  const { trigger: addToWishlist } = usePostWishlists();
+  const { trigger: removeFromWishlist } = useDeleteWishlists();
+
   const handleWishlist = () => {
+    if (!isLoggedIn) {
+      navigate("/outshine/welcome", { state: { from: location } });
+      return;
+    }
+
+    if (isWishlisted) {
+      removeFromWishlist({ productId: id });
+    } else {
+      addToWishlist({ productId: id });
+    }
+
     toggleItem({
       id,
       name: title,
@@ -55,32 +85,52 @@ const ProductImageGallery = ({
     });
   };
 
-  const navigate = useNavigate();
-
   return (
     <div className="relative w-full aspect-3/4 max-h-[60vh] overflow-hidden">
       {/* Top Navigation Overlay */}
-      <div className="absolute top-0 left-0 right-0 z-10 flex justify-between items-center p-4 pt-6 bg-linear-to-b from-black/50 to-transparent">
+      <div
+        className={`fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-4 transition-all duration-300 ${
+          isScrolled
+            ? "bg-white shadow-sm py-3"
+            : "bg-linear-to-b from-black/60 to-transparent pt-6 pb-4"
+        }`}
+      >
         <button
           onClick={() => navigate(-1)}
-          className="p-2 rounded-full bg-white/10 backdrop-blur-md hover:bg-white/20 transition-colors"
+          className={`p-2 rounded-full backdrop-blur-md transition-colors ${
+            isScrolled
+              ? "bg-transparent hover:bg-gray-100 text-slate-900"
+              : "bg-white/10 hover:bg-white/20 text-white"
+          }`}
         >
-          <ChevronLeft className="w-6 h-6 text-white" />
+          <ChevronLeft className="w-6 h-6" />
         </button>
         <div className="flex gap-3">
           <button
             onClick={handleShare}
-            className="p-2 rounded-full bg-white/10 backdrop-blur-md hover:bg-white/20 transition-colors"
+            className={`p-2 rounded-full backdrop-blur-md transition-colors ${
+              isScrolled
+                ? "bg-transparent hover:bg-gray-100 text-slate-900"
+                : "bg-white/10 hover:bg-white/20 text-white"
+            }`}
           >
-            <Share2 className="w-5 h-5 text-white" />
+            <Share2 className="w-5 h-5" />
           </button>
           <button
             onClick={handleWishlist}
-            className="p-2 rounded-full bg-white/10 backdrop-blur-md hover:bg-white/20 transition-colors"
+            className={`p-2 rounded-full backdrop-blur-md transition-colors ${
+              isScrolled
+                ? "bg-transparent hover:bg-gray-100"
+                : "bg-white/10 hover:bg-white/20"
+            }`}
           >
             <Heart
               className={`w-5 h-5 transition-colors ${
-                isWishlisted ? "fill-red-500 text-red-500" : "text-white"
+                isWishlisted
+                  ? "fill-red-500 text-red-500"
+                  : isScrolled
+                    ? "text-slate-900"
+                    : "text-white"
               }`}
             />
           </button>

@@ -1,16 +1,69 @@
 import { useNavigate } from "react-router-dom";
-import { ChevronLeft, MoreHorizontal, ShoppingBag } from "lucide-react";
-import { useCartStore } from "@outshine/store/cartStore";
+import { useEffect, useMemo } from "react";
+import {
+  ChevronLeft,
+  MoreHorizontal,
+  ShoppingBag,
+  Loader2,
+} from "lucide-react";
+import {
+  useCartStore,
+  type CartItem as CartItemStore,
+} from "@outshine/store/cartStore";
+import { useAddressStore } from "@/store/addressStore";
 import CartItem from "../components/CartItem";
 import CartSummary from "../components/CartSummary";
+import { useGetCart } from "@/services/Carts/useGetCart";
 
 const CartScreen = () => {
   const navigate = useNavigate();
-  const { items, getTotalPrice } = useCartStore();
+  const { items, setItems, setBuyNowItem } = useCartStore();
+  const { actions } = useAddressStore();
+  const { cartData, isLoading } = useGetCart();
 
-  const subtotal = getTotalPrice();
-  const shipping = 0; // FREE as per design
-  const total = subtotal + shipping;
+  useEffect(() => {
+    // Reset flow items and selection
+    setBuyNowItem(null);
+    actions.resetSelection();
+  }, [setBuyNowItem, actions]);
+
+  // Sync store with backend data
+  useEffect(() => {
+    if (cartData?.items) {
+      const mappedItems = cartData.items.map((item) => ({
+        id: item.productId,
+        name: item.productName,
+        price: item.price,
+        originalPrice: Number(item.originalPrice),
+        formattedDiscounted: item.formattedPrice,
+        formattedOriginal: item.formattedOriginalPrice,
+        image: item.productImage,
+        sizeId: item.sizeId,
+        size: item.sizeName,
+        color: "Standard", // Default color
+        quantity: item.quantity,
+      }));
+      setItems(mappedItems);
+    }
+  }, [cartData, setItems]);
+
+  const subtotal = useMemo(() => {
+    return items.reduce(
+      (acc, item) => acc + (item.originalPrice || item.price) * item.quantity,
+      0,
+    );
+  }, [items]);
+
+  const total = cartData?.totalAmount || 0;
+  const discountTotal = subtotal > total ? subtotal - total : 0;
+
+  if (isLoading && items.length === 0) {
+    return (
+      <div className="min-h-screen bg-[#0B0F19] flex items-center justify-center">
+        <Loader2 className="w-10 h-10 animate-spin text-blue-500" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#0B0F19] text-white font-sans flex flex-col">
@@ -34,7 +87,7 @@ const CartScreen = () => {
           <div className="space-y-6">
             {/* Cart Items List */}
             <div className="flex flex-col gap-5">
-              {items.map((item) => (
+              {items.map((item: CartItemStore) => (
                 <CartItem
                   key={`${item.id}-${item.size}-${item.color}`}
                   {...item}
@@ -45,7 +98,7 @@ const CartScreen = () => {
             {/* Summary */}
             <CartSummary
               subtotal={subtotal}
-              shipping={shipping}
+              discount={discountTotal}
               total={total}
             />
           </div>

@@ -4,6 +4,7 @@ import DesktopLayout from "@outshine/container/Layout/DesktopLayout/DesktopLayou
 import ResponsiveLayout from "@outshine/container/Layout/ResponsiveLayout/ResponsiveLayout";
 import { ResponsiveProvider } from "@outshine/lib/provider";
 import { useLoadingStore } from "@/store/loadingStore";
+import { AuthProvider } from "@/lib/auth";
 import Loading from "@/components/Loader/Loading";
 import { useEffect } from "react";
 
@@ -25,7 +26,7 @@ const MainLayout = () => {
   if (!mounted) return null; // Avoid hydration mismatch
 
   return (
-    <>
+    <AuthProvider>
       {isLoading && <Loading />}
       {isMobile ? (
         <ResponsiveProvider basePath="/outshine">
@@ -38,7 +39,7 @@ const MainLayout = () => {
           <Outlet />
         </DesktopLayout>
       )}
-    </>
+    </AuthProvider>
   );
 };
 

@@ -1,123 +1,116 @@
 import useSWR from "swr";
+import { fetcherOSStore } from "@/lib/axios";
+import { type ProductItem } from "../Products/useGetProducts";
+import { mockProducts } from "../Products/useGetProducts";
 
-const USE_MOCK = true;
+const USE_MOCK = false;
 
-export interface TrendingProductItem {
-  id: string;
-  name: string;
-  variant: string;
-  price: number;
-  originalPrice?: number;
-  currency: string;
-  imageSrc: string;
-  isNew: boolean;
-  isSale: boolean;
-  category: string;
-}
+// Re-export ProductItem as TrendingProductItem for compatibility
+export type TrendingProductItem = ProductItem;
 
+// Mock result for compatibility (using shared mock data)
 export const mockAPIResult = {
   Message: { Code: 200, Text: "SUCCESS" },
-  Data: [
-    {
-      id: "trending-1",
-      name: "Premium Boxy Tee",
-      variant: "Stone White",
-      price: 45.0,
-      currency: "$",
-      imageSrc:
-        "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&q=80&w=800",
-      isNew: true,
-      isSale: false,
-      category: "tees",
-    },
-    {
-      id: "trending-2",
-      name: "Essential Hoodie",
-      variant: "Carbon Grey",
-      price: 89.0,
-      currency: "$",
-      imageSrc:
-        "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&q=80&w=800",
-      isNew: false,
-      isSale: false,
-      category: "hoodies",
-    },
-    {
-      id: "trending-3",
-      name: "Relaxed Cargo Pants",
-      variant: "Olive Drab",
-      price: 110.0,
-      currency: "$",
-      imageSrc:
-        "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&q=80&w=800",
-      isNew: false,
-      isSale: false,
-      category: "pants",
-    },
-    {
-      id: "trending-4",
-      name: "Phantom Runner X",
-      variant: "Hyper Red",
-      price: 125.0,
-      originalPrice: 180.0,
-      currency: "$",
-      imageSrc:
-        "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=800",
-      isNew: false,
-      isSale: true,
-      category: "shoes",
-    },
-    {
-      id: "trending-5",
-      name: "Urban Denim Jacket",
-      variant: "Washed Blue",
-      price: 145.0,
-      currency: "$",
-      imageSrc:
-        "https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&q=80&w=800",
-      isNew: true,
-      isSale: false,
-      category: "jackets",
-    },
-    {
-      id: "trending-6",
-      name: "Classic Shorts",
-      variant: "Navy Blue",
-      price: 55.0,
-      originalPrice: 75.0,
-      currency: "$",
-      imageSrc:
-        "https://images.unsplash.com/photo-1591195853828-11db59a44f6b?auto=format&fit=crop&q=80&w=800",
-      isNew: false,
-      isSale: true,
-      category: "shorts",
-    },
-  ],
+  Data: mockProducts,
 };
 
-export const getTrendingProductsData = async (): Promise<
-  TrendingProductItem[]
-> => {
-  if (USE_MOCK) {
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    return mockAPIResult.Data as TrendingProductItem[];
-  } else {
-    return [];
-  }
-};
+// API Types (Copied locally or imported if centralized)
+interface APIProduct {
+  id: string;
+  name: string;
+  description: string;
+  category: { id: string; name: string };
+  basePrice: number;
+  isActive: boolean;
+  isPo: boolean;
+  poDpPercent: number;
+  primaryImage: string;
+  tags: { id: string; name: string }[];
+  discount: { type: string; value: number } | null;
+  pricing: {
+    original: number;
+    discounted: number;
+    formattedOriginal: string;
+    formattedDiscounted: string;
+  };
+  rating: { averageRating: number; totalReview: number };
+}
 
-export const useGetTrendingProducts = () => {
-  const { data, error, isLoading, mutate } = useSWR<TrendingProductItem[]>(
-    "/trending-products",
-    getTrendingProductsData,
-    {
-      fallbackData: [],
-      revalidateOnFocus: false,
-    }
+interface ProductsResponse {
+  success: boolean;
+  message: string;
+  data: APIProduct[];
+}
+
+const mapAPIProductToProductItem = (apiProduct: APIProduct): ProductItem => {
+  const isNew = apiProduct.tags?.some(
+    (tag) => tag.name.toLowerCase() === "new",
   );
 
   return {
-    data: data ?? [],
+    id: apiProduct.id,
+    name: apiProduct.name,
+    description: apiProduct.description,
+    price: apiProduct.pricing?.discounted ?? apiProduct.basePrice,
+    originalPrice: apiProduct.discount
+      ? apiProduct.pricing?.original
+      : undefined,
+    image: apiProduct.primaryImage,
+    isNew,
+    discount:
+      apiProduct.discount?.type === "percent"
+        ? apiProduct.discount.value
+        : undefined,
+    category: apiProduct.category?.name ?? "Uncategorized",
+    rating: apiProduct.rating?.averageRating ?? 0,
+    totalReview: apiProduct.rating?.totalReview ?? 0,
+    isPo: apiProduct.isPo,
+    poDpPercent: apiProduct.poDpPercent,
+    tags: apiProduct.tags,
+    formattedPrice: apiProduct.pricing?.formattedDiscounted,
+    formattedOriginalPrice: apiProduct.pricing?.formattedOriginal,
+    // Default values for backwards compatibility
+    sizes: [],
+    colors: [],
+    isWishlisted: false,
+  };
+};
+
+export const getTrendingProductsData = async (): Promise<ProductItem[]> => {
+  if (USE_MOCK) {
+    await new Promise((resolve) => setTimeout(resolve, 800));
+    return mockProducts;
+  }
+
+  const response = await fetcherOSStore.get<ProductsResponse>(
+    "/api/v1/products?isNew=true&isTrending=true",
+  );
+
+  if (!response.data.success) {
+    throw new Error(
+      response.data.message || "Failed to fetch trending products",
+    );
+  }
+
+  return response.data.data
+    .filter((product) => product.isActive)
+    .map(mapAPIProductToProductItem);
+};
+
+export const useGetTrendingProducts = () => {
+  const { data, error, isLoading, mutate } = useSWR<ProductItem[]>(
+    "/api/v1/products?isNew=true&isTrending=true",
+    getTrendingProductsData,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      dedupingInterval: 60000,
+    },
+  );
+
+  return {
+    products: data ?? [], // Changed from 'data' to 'products' to match other hooks pattern if needed, but keeping 'data' return in hook standard
+    data: data ?? [], // Keeping 'data' for existing consumers
     isLoading,
     isError: error,
     mutate,

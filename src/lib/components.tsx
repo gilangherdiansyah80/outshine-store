@@ -5,14 +5,18 @@ import type { ResponsiveRouteProps } from "@outshine/lib/types";
  * Component that conditionally renders based on current navigation path
  */
 export const ResponsiveRoute = ({ path, component }: ResponsiveRouteProps) => {
-  const currentPath = useNavigationStore(
-    (state) => state.stack[state.stack.length - 1]?.path
-  );
+  const stack = useNavigationStore((state) => state.stack);
+  const currentPath = stack[stack.length - 1]?.path || "/";
   const isReady = useNavigationStore((state) => state.isReady);
 
-  // If sync is disabled, we might want to treat isReady as true or fix the store initialization
-  // For now, let's allow rendering if path matches
-  if (path !== currentPath || !isReady) return null;
+  const isMatch = path === currentPath;
+
+  if (!isMatch || !isReady) {
+    console.log(
+      `[ResponsiveRoute] Hidden - path: ${path}, currentPath: ${currentPath}, isReady: ${isReady}`,
+    );
+    return null;
+  }
 
   return <>{component}</>;
 };

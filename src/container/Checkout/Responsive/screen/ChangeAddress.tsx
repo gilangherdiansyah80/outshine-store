@@ -1,12 +1,24 @@
-import { ChevronLeft, MapPin, CheckCircle2, Plus, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAddressStore } from "@/store/addressStore";
+import { useGetAddresses } from "@/services/Order/useGetAddresses";
+import { setAddressDefault } from "@/services/Order/useChangeDefault";
+import { deleteAddress } from "@/services/Order/useDeleteAddresses";
 import Alert from "@/components/Alert";
 import { useState } from "react";
+import {
+  ChevronLeft,
+  MapPin,
+  CheckCircle2,
+  Plus,
+  Trash2,
+  Loader2,
+} from "lucide-react";
 
 const ChangeAddress = () => {
   const navigate = useNavigate();
-  const { addresses, selectedAddressId, actions } = useAddressStore();
+  const { selectedAddressId, actions } = useAddressStore();
+  const { addresses: dbAddresses, isLoading, mutate } = useGetAddresses();
+  const [isUpdating, setIsUpdating] = useState<string | null>(null);
   const [deleteAlert, setDeleteAlert] = useState<{
     isOpen: boolean;
     id: string | null;
@@ -28,11 +40,34 @@ const ChangeAddress = () => {
     setDeleteAlert({ isOpen: true, id });
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (deleteAlert.id) {
-      actions.removeAddress(deleteAlert.id);
+      try {
+        const response = await deleteAddress(deleteAlert.id);
+        if (response.success) {
+          actions.removeAddress(deleteAlert.id);
+          await mutate();
+        }
+      } catch (error) {
+        console.error("Failed to delete address:", error);
+      }
     }
     setDeleteAlert({ isOpen: false, id: null });
+  };
+
+  const handleSetDefault = async (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    setIsUpdating(id);
+    try {
+      const response = await setAddressDefault(id);
+      if (response.success) {
+        await mutate();
+      }
+    } catch (error) {
+      console.error("Failed to set default address:", error);
+    } finally {
+      setIsUpdating(null);
+    }
   };
 
   return (
@@ -61,57 +96,94 @@ const ChangeAddress = () => {
           </h2>
         </div>
 
-        {addresses.map((address) => (
-          <div
-            key={address.id}
-            onClick={() => handleSelect(address.id)}
-            className={`bg-[#151B28] rounded-3xl p-5 border transition-all cursor-pointer flex gap-4 ${
-              selectedAddressId === address.id
-                ? "border-blue-500 bg-blue-500/5"
-                : "border-white/5"
-            }`}
-          >
+        {isLoading ? (
+          <div className="space-y-4">
+            {[1, 2].map((n) => (
+              <div
+                key={n}
+                className="h-32 bg-[#151B28] rounded-3xl border border-white/5 animate-pulse"
+              />
+            ))}
+          </div>
+        ) : dbAddresses.length === 0 ? (
+          <div className="py-20 flex flex-col items-center justify-center text-center px-6">
+            <div className="w-20 h-20 rounded-3xl bg-[#151B28] flex items-center justify-center text-gray-600 mb-4">
+              <MapPin size={40} />
+            </div>
+            <h3 className="font-bold text-white mb-2">No Saved Addresses</h3>
+            <p className="text-sm text-gray-500 max-w-[200px]">
+              Add your shipping address to proceed with checkout.
+            </p>
+          </div>
+        ) : (
+          dbAddresses.map((address) => (
             <div
-              className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${
+              key={address.id}
+              onClick={() => handleSelect(address.id)}
+              className={`bg-[#151B28] rounded-3xl p-5 border transition-all cursor-pointer flex gap-4 ${
                 selectedAddressId === address.id
-                  ? "bg-blue-500 text-white"
-                  : "bg-[#1F2430] text-gray-400"
+                  ? "border-blue-500 bg-blue-500/5"
+                  : "border-white/5"
               }`}
             >
-              <MapPin size={24} />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex justify-between items-start">
-                <div className="flex-1 min-w-0 pr-2">
-                  <h3 className="font-bold text-white text-[15px] truncate">
-                    {address.name || "Untitled Address"}
-                  </h3>
-                </div>
-                <div className="flex items-center gap-2 shrink-0">
-                  <button
-                    onClick={(e) => handleDeleteClick(e, address.id)}
-                    className="p-1.5 rounded-lg text-gray-500 hover:text-red-500 hover:bg-red-500/10 transition-colors"
-                  >
-                    <Trash2 size={16} />
-                  </button>
-                  {selectedAddressId === address.id && (
-                    <CheckCircle2 size={18} className="text-blue-500" />
-                  )}
-                </div>
+              <div
+                className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${
+                  selectedAddressId === address.id
+                    ? "bg-blue-500 text-white"
+                    : "bg-[#1F2430] text-gray-400"
+                }`}
+              >
+                <MapPin size={24} />
               </div>
-              <p className="text-sm text-gray-400 mt-1 leading-relaxed">
-                {address.street || "Unknown Street"}
-                <br />
-                {address.district}, {address.city} {address.postalCode}
-              </p>
-              {address.isDefault && (
-                <span className="inline-block mt-3 px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-400 text-[10px] font-bold uppercase tracking-wider">
-                  Default
-                </span>
-              )}
+              <div className="flex-1 min-w-0">
+                <div className="flex justify-between items-start">
+                  <div className="flex-1 min-w-0 pr-2">
+                    <h3 className="font-bold text-white text-[15px] truncate">
+                      {address.fullName || "Untitled Address"}
+                    </h3>
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    {!address.isDefault && (
+                      <button
+                        onClick={(e) => handleSetDefault(e, address.id)}
+                        disabled={isUpdating === address.id}
+                        className="px-3 py-1.5 rounded-xl bg-blue-500/10 text-blue-500 text-[10px] font-bold uppercase tracking-wider hover:bg-blue-500 hover:text-white transition-all disabled:opacity-50"
+                      >
+                        {isUpdating === address.id ? (
+                          <Loader2 size={12} className="animate-spin" />
+                        ) : (
+                          "Set Default"
+                        )}
+                      </button>
+                    )}
+                    <button
+                      onClick={(e) => handleDeleteClick(e, address.id)}
+                      className="p-1.5 rounded-lg text-gray-500 hover:text-red-500 hover:bg-red-500/10 transition-colors"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                    {selectedAddressId === address.id && (
+                      <CheckCircle2 size={18} className="text-blue-500" />
+                    )}
+                  </div>
+                </div>
+                <p className="text-sm text-gray-400 mt-1 leading-relaxed">
+                  {address.street || "Unknown Street"}
+                  <br />
+                  {address.province}, {address.city} {address.postalCode}
+                </p>
+                {address.isDefault && (
+                  <span className="inline-block mt-3 px-2 py-0.5 rounded-md bg-blue-500/20 text-blue-400 text-[10px] font-bold uppercase tracking-wider border border-blue-500/30 shadow-[0_0_15px_rgba(59,130,246,0.1)]">
+                    <span className="flex items-center gap-1">
+                      <CheckCircle2 size={10} />
+                      Main Address
+                    </span>
+                  </span>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
 
         <button
           onClick={() => navigate("/outshine/checkout/add-address")}

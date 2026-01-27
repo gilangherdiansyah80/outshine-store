@@ -57,13 +57,15 @@ const TrendingSection = ({ onViewAll, className }: TrendingSectionProps) => {
           <CardProduct
             key={product.id}
             id={product.id}
-            imageSrc={product.imageSrc}
+            imageSrc={product.image}
             name={product.name}
-            price={product.price}
-            originalPrice={product.originalPrice}
-            currency={product.currency}
+            price={product.formattedPrice || product.price}
+            originalPrice={
+              product.formattedOriginalPrice || product.originalPrice
+            }
             isNew={product.isNew}
-            discount={product.isSale ? "SALE" : undefined}
+            isPo={product.isPo}
+            discount={product.discount}
             aspectRatio="square"
             onAddToCart={() => console.log("Add to cart:", product.name)}
             onClick={() => navigate(`/outshine/product/${product.id}`)}

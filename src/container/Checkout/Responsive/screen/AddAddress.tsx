@@ -1,40 +1,71 @@
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAddressStore } from "@/store/addressStore";
+import { postAddress } from "@/services/Order/usePostAddress";
+
+interface AddressFormData {
+  fullName: string;
+  phone: string;
+  street: string;
+  province: string;
+  city: string;
+  postalCode: string;
+}
 
 const AddAddress = () => {
   const navigate = useNavigate();
   const { actions } = useAddressStore();
   const [isDefault, setIsDefault] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [formData, setFormData] = useState<AddressFormData>({
+    fullName: "",
     phone: "",
     street: "",
-    district: "",
+    province: "",
     city: "",
     postalCode: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
+    setError(null);
 
-    actions.addAddress({
+    const payload = {
       ...formData,
       isDefault,
-    });
+    };
 
-    // Simulate saving feedback
-    setTimeout(() => {
-      navigate(-1);
-    }, 500);
+    try {
+      const response = await postAddress(payload);
+
+      if (response.success) {
+        // Update local store as well to keep UI in sync
+        actions.addAddress(payload);
+
+        navigate(-1);
+      } else {
+        setError(response.message || "Failed to save address");
+      }
+    } catch (err: unknown) {
+      const errorMessage =
+        err instanceof Error ? err.message : "An error occurred";
+      setError(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [name as keyof AddressFormData]: value,
+    }));
   };
 
   return (
@@ -55,6 +86,12 @@ const AddAddress = () => {
 
       <main className="flex-1 px-5 py-8">
         <form onSubmit={handleSubmit} className="space-y-6 pb-32">
+          {error && (
+            <div className="bg-red-500/10 border border-red-500/50 rounded-2xl p-4 text-red-500 text-xs font-bold">
+              {error}
+            </div>
+          )}
+
           {/* Section: Contact Info */}
           <div className="space-y-4">
             <h2 className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] px-1">
@@ -67,8 +104,8 @@ const AddAddress = () => {
                 </label>
                 <input
                   type="text"
-                  name="name"
-                  value={formData.name}
+                  name="fullName"
+                  value={formData.fullName}
                   onChange={handleChange}
                   placeholder="e.g. Sarah Mitchell"
                   className="w-full bg-transparent border-none focus:outline-none text-white text-[15px] placeholder:text-gray-600 font-medium"
@@ -116,28 +153,28 @@ const AddAddress = () => {
               <div className="grid grid-cols-2 gap-3">
                 <div className="bg-[#151B28] rounded-2xl p-4 border border-white/5 focus-within:border-blue-500/50 transition-all">
                   <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1 px-1">
-                    District
+                    Province
                   </label>
                   <input
                     type="text"
-                    name="district"
-                    value={formData.district}
+                    name="province"
+                    value={formData.province}
                     onChange={handleChange}
-                    placeholder="e.g. Downtown"
+                    placeholder="e.g. DKI Jakarta"
                     className="w-full bg-transparent border-none focus:outline-none text-white text-[15px] placeholder:text-gray-600 font-medium"
                     required
                   />
                 </div>
                 <div className="bg-[#151B28] rounded-2xl p-4 border border-white/5 focus-within:border-blue-500/50 transition-all">
                   <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1 px-1">
-                    City / State
+                    City
                   </label>
                   <input
                     type="text"
                     name="city"
                     value={formData.city}
                     onChange={handleChange}
-                    placeholder="e.g. Los Angeles"
+                    placeholder="e.g. South Jakarta"
                     className="w-full bg-transparent border-none focus:outline-none text-white text-[15px] placeholder:text-gray-600 font-medium"
                     required
                   />
@@ -153,7 +190,7 @@ const AddAddress = () => {
                   name="postalCode"
                   value={formData.postalCode}
                   onChange={handleChange}
-                  placeholder="e.g. 90015"
+                  placeholder="e.g. 12345"
                   className="w-full bg-transparent border-none focus:outline-none text-white text-[15px] placeholder:text-gray-600 font-medium"
                   required
                 />
@@ -194,9 +231,17 @@ const AddAddress = () => {
       <div className="fixed bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-[#0B0F19] via-[#0B0F19] to-transparent">
         <button
           onClick={handleSubmit}
-          className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white cursor-pointer font-bold rounded-2xl shadow-[0_10px_30px_-10px_rgba(37,99,235,0.5)] active:scale-[0.98] transition-all"
+          disabled={isLoading}
+          className="w-full py-4 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-600/50 disabled:cursor-not-allowed text-white cursor-pointer font-bold rounded-2xl shadow-[0_10px_30px_-10px_rgba(37,99,235,0.5)] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
         >
-          Save Address
+          {isLoading ? (
+            <>
+              <Loader2 className="w-5 h-5 animate-spin" />
+              Saving Address...
+            </>
+          ) : (
+            "Save Address"
+          )}
         </button>
       </div>
     </div>

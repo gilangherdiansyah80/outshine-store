@@ -1,26 +1,26 @@
-import Loading from "@/components/Loader/Loading";
-import { useWishlistStore } from "@outshine/store/wishlistStore";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import Loading from "@/components/Loader/Loading";
 import WishlistEmpty from "../components/WishlistEmpty";
 import CardProduct from "@/components/Card/CardProduct";
 import WishlistTabs from "../components/WishlistTabs";
 import CollectionCard from "../components/CollectionCard";
-import type { WishlistItem } from "@outshine/store/wishlistStore";
 import Alert from "@/components/Alert/Alert";
+import { useGetWishLists } from "@/services/WishLists/useGetWishLists";
+import type { WishlistItem as ServiceWishlistItem } from "@/services/WishLists/useGetWishLists";
+import { useWishlistStore } from "@/store/wishlistStore";
+import type { WishlistItem as StoreWishlistItem } from "@/store/wishlistStore";
 
 const WishListsScreen = () => {
-  const {
-    items: wishlists,
-    collections,
-    createCollection,
-    addItemToCollection,
-  } = useWishlistStore();
+  const { wishlists, isLoading: isApiLoading } = useGetWishLists();
+  const { collections, createCollection, addItemToCollection } =
+    useWishlistStore();
+
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<"items" | "collections">("items");
   const [openedCollection, setOpenedCollection] = useState<string | null>(null);
   const [selectedProductForCollection, setSelectedProductForCollection] =
-    useState<WishlistItem | null>(null);
+    useState<StoreWishlistItem | null>(null);
 
   // Alert Prompt State
   const [isAlertOpen, setIsAlertOpen] = useState(false);
@@ -61,7 +61,19 @@ const WishListsScreen = () => {
     }
   };
 
-  if (isLoading) {
+  const mapApiToStoreItem = (
+    apiItem: ServiceWishlistItem,
+  ): StoreWishlistItem => ({
+    id: apiItem.id,
+    name: apiItem.name,
+    price: Number(apiItem.price),
+    image: apiItem.primaryImage,
+    isNew: apiItem.isPo, // Map isPo to isNew if appropriate or default false
+    discount: 0,
+    category: apiItem.categoryId,
+  });
+
+  if (isLoading || isApiLoading) {
     return <Loading />;
   }
 
@@ -90,6 +102,7 @@ const WishListsScreen = () => {
         confirmText="Great"
         onConfirm={() => setShowSuccessAlert(false)}
       />
+
       <WishlistTabs
         activeTab={activeTab}
         onTabChange={(tab) => {
@@ -109,16 +122,16 @@ const WishListsScreen = () => {
                   <CardProduct
                     key={product.id}
                     id={product.id}
-                    imageSrc={product.image}
+                    imageSrc={product.primaryImage}
                     name={product.name}
                     price={product.price}
-                    originalPrice={product.originalPrice}
-                    discount={product.discount}
-                    isNew={product.isNew}
+                    isPo={product.isPo}
                     aspectRatio="portrait"
                     onClick={() => navigate(`/outshine/product/${product.id}`)}
                     onAddToCollection={() =>
-                      setSelectedProductForCollection(product)
+                      setSelectedProductForCollection(
+                        mapApiToStoreItem(product),
+                      )
                     }
                   />
                 ))}
@@ -129,7 +142,7 @@ const WishListsScreen = () => {
 
             {/* Collection Selection Overlay/Modal */}
             {selectedProductForCollection && (
-              <div className="fixed inset-0 z-100 flex items-end justify-center bg-black/40 backdrop-blur-sm px-4 pb-8">
+              <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-sm px-4 pb-8">
                 <div className="w-full max-w-sm bg-white rounded-[32px] p-8 animate-in slide-in-from-bottom-full duration-300">
                   <div className="flex justify-between items-center mb-6">
                     <h3 className="text-xl font-bold text-black">
