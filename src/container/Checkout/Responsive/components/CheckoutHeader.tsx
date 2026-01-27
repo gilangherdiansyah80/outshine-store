@@ -1,12 +1,17 @@
 import { ChevronLeft, Lock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useAddressStore } from "@/store/addressStore";
 
 const CheckoutHeader = () => {
   const navigate = useNavigate();
+  const { actions } = useAddressStore();
   return (
     <header className="px-5 py-6 flex items-center justify-between sticky top-0 bg-[#0B0F19] z-20 border-b border-white/5">
       <button
-        onClick={() => navigate(-1)}
+        onClick={() => {
+          actions.resetSelection();
+          navigate(-1);
+        }}
         className="w-10 h-10 flex items-center justify-center rounded-xl bg-[#1F2430] text-gray-300 hover:bg-[#2A3040] transition-colors"
       >
         <ChevronLeft size={24} />

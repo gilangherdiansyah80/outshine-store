@@ -1,11 +1,12 @@
 import { Star } from "lucide-react";
+import { formatIDR } from "@/lib/utils";
 
 interface ProductInfoProps {
   title: string;
   price: number;
-  formattedPrice?: string;
+  formattedDiscounted?: string;
   originalPrice?: number;
-  formattedOriginalPrice?: string;
+  formattedOriginal?: string;
   rating: number;
   reviewCount: number;
 }
@@ -13,8 +14,8 @@ interface ProductInfoProps {
 const ProductInfo = ({
   title,
   price,
-  formattedPrice,
-  formattedOriginalPrice,
+  formattedDiscounted,
+  formattedOriginal,
   rating,
   reviewCount,
 }: ProductInfoProps) => {
@@ -26,11 +27,11 @@ const ProductInfo = ({
         </h1>
         <div className="flex items-center gap-2">
           <span className="text-xl font-bold text-[#0F172A]">
-            {formattedPrice || `$${price.toFixed(2)}`}
+            {formattedDiscounted || formatIDR(price)}
           </span>
-          {formattedOriginalPrice && (
+          {formattedOriginal && formattedOriginal !== formattedDiscounted && (
             <span className="text-sm text-gray-400 line-through">
-              {formattedOriginalPrice}
+              {formattedOriginal}
             </span>
           )}
         </div>

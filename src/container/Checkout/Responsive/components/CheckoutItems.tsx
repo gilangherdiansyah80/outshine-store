@@ -1,3 +1,4 @@
+import { formatIDR } from "@/lib/utils";
 import type { CartItem } from "@/store/cartStore";
 
 interface CheckoutItemsProps {
@@ -35,9 +36,17 @@ const CheckoutItems = ({ items }: CheckoutItemsProps) => {
               <p className="text-[10px] font-bold text-gray-500 mt-0.5">
                 {item.color} • Size {item.size}
               </p>
-              <span className="text-sm font-bold text-white mt-1">
-                ${item.price.toFixed(2)}
-              </span>
+              <div className="flex items-baseline gap-2 mt-1">
+                <span className="text-sm font-bold text-white">
+                  {item.formattedDiscounted || formatIDR(item.price)}
+                </span>
+                {item.formattedOriginal &&
+                  item.formattedOriginal !== item.formattedDiscounted && (
+                    <span className="text-[10px] text-gray-500 line-through">
+                      {item.formattedOriginal}
+                    </span>
+                  )}
+              </div>
             </div>
           </div>
         ))}

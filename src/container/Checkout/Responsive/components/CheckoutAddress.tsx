@@ -39,7 +39,14 @@ const CheckoutAddress = ({ address }: CheckoutAddressProps) => {
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex justify-between items-start">
-            <h3 className="font-bold text-white text-[15px]">{address.name}</h3>
+            <article className="flex flex-col gap-1">
+              <h3 className="font-bold text-white text-[15px]">
+                {address.fullName}
+              </h3>
+              <h4 className="font-bold text-white text-[15px]">
+                {address.phone}
+              </h4>
+            </article>
             <button
               onClick={() => navigate("/outshine/checkout/change-address")}
               className="text-sm font-bold text-blue-500 hover:text-blue-400"
@@ -50,7 +57,7 @@ const CheckoutAddress = ({ address }: CheckoutAddressProps) => {
           <p className="text-sm text-gray-400 mt-1 leading-relaxed">
             {address.street}
             <br />
-            {address.district}, {address.city} {address.postalCode}
+            {address.city} {address.postalCode}
           </p>
         </div>
       </div>

@@ -13,19 +13,25 @@ export interface ReviewItem {
   };
 }
 
+export interface ProductSize {
+  id: string;
+  name: string;
+  stock: number;
+}
+
 export interface ProductDetail {
   id: string;
   title: string;
   price: number;
-  formattedPrice?: string;
+  formattedDiscounted?: string;
   originalPrice?: number;
-  formattedOriginalPrice?: string;
+  formattedOriginal?: string;
   rating: number;
   reviewCount: number;
   ratingDistribution?: Record<string, number>;
   reviews?: ReviewItem[];
   images: string[];
-  sizes: string[];
+  sizes: ProductSize[];
   description: string;
   fabricAndCare: string;
   deliveryAndReturns: string;
@@ -147,19 +153,19 @@ const mapAPIDetailToProductDetail = (
     id: apiProduct.id,
     title: apiProduct.name,
     price: apiProduct.pricing?.discounted ?? apiProduct.basePrice,
-    formattedPrice: apiProduct.pricing?.formattedDiscounted,
+    formattedDiscounted: apiProduct.pricing?.formattedDiscounted,
     originalPrice: apiProduct.discount
       ? apiProduct.pricing?.original
       : undefined,
-    formattedOriginalPrice: apiProduct.pricing?.formattedOriginal,
+    formattedOriginal: apiProduct.pricing?.formattedOriginal,
     rating: apiProduct.rating?.average ?? 0,
     reviewCount: apiProduct.rating?.count ?? 0,
     ratingDistribution: apiProduct.rating?.distribution,
     reviews: apiProduct.reviews?.items || [],
     // Map Array of objects to Array of URL strings
     images: apiProduct.images?.map((img) => img.url) || [],
-    // Map Array of objects to Array of size names
-    sizes: apiProduct.sizes?.map((size) => size.name) || [],
+    // Map Array of objects
+    sizes: apiProduct.sizes || [],
     description: apiProduct.description || "",
     ...defaultStaticContent,
     isPo: apiProduct.isPo,

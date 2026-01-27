@@ -19,20 +19,25 @@ const ResponsiveLayout = ({ children }: ResponsiveLayoutProps) => {
     currentPath === "/sort" ||
     pathname?.includes("/cart") ||
     pathname?.includes("/checkout") ||
-    pathname?.includes("/outshine/product/") ||
-    pathname?.includes("/product/saas/") ||
-    pathname?.includes("/product/template/");
+    pathname?.includes("/outshine/product/");
+
+  const hideHeader =
+    isFullScreen ||
+    pathname?.includes("/outshine/orders") ||
+    pathname?.includes("/outshine/setting");
+  const hideFooter = isFullScreen || pathname?.includes("/outshine/setting");
 
   return (
     <main
       className={cn(
         "transition-all duration-300",
-        !isFullScreen ? "pt-16 pb-24" : "pt-0 pb-0"
+        !hideHeader ? "pt-16" : "pt-0",
+        !hideFooter ? "pb-24" : "pb-0",
       )}
     >
-      {!isFullScreen && <ResponsiveHeader />}
+      {!hideHeader && <ResponsiveHeader />}
       {children}
-      {!isFullScreen && <ResponsiveFooter />}
+      {!hideFooter && <ResponsiveFooter />}
     </main>
   );
 };

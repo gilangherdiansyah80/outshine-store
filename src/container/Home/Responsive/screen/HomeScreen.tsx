@@ -6,12 +6,19 @@ import ShippingBanner from "../components/ShippingBanner";
 import { useEffect, useState } from "react";
 import Loading from "@/components/Loader/Loading";
 import { useFilterSortStore } from "@outshine/store/filterSortStore";
+import { useAddressStore } from "@/store/addressStore";
 import { useNavigate } from "react-router-dom";
 
 export default function HomeScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const { clearFilters, toggleCategory } = useFilterSortStore();
+  const { actions } = useAddressStore();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Reset address selection when entering home
+    actions.resetSelection();
+  }, [actions]);
 
   useEffect(() => {
     const timer = setTimeout(() => {

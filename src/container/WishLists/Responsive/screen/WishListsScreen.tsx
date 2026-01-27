@@ -1,23 +1,15 @@
 import Loading from "@/components/Loader/Loading";
-import { useWishlistStore } from "@outshine/store/wishlistStore";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import WishlistEmpty from "../components/WishlistEmpty";
 import CardProduct from "@/components/Card/CardProduct";
 import WishlistTabs from "../components/WishlistTabs";
+import { useGetWishLists } from "@/services/WishLists/useGetWishLists";
 
 const WishListsScreen = () => {
-  const { items: wishlists } = useWishlistStore();
-  const [isLoading, setIsLoading] = useState(true);
+  const { wishlists, isLoading } = useGetWishLists();
   const [activeTab, setActiveTab] = useState<"items" | "collections">("items");
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
-    return () => clearTimeout(timer);
-  }, []);
 
   if (isLoading) {
     return <Loading />;
@@ -40,12 +32,10 @@ const WishListsScreen = () => {
                 <CardProduct
                   key={product.id}
                   id={product.id}
-                  imageSrc={product.image}
+                  imageSrc={product.primaryImage}
                   name={product.name}
                   price={product.price}
-                  originalPrice={product.originalPrice}
-                  discount={product.discount}
-                  isNew={product.isNew}
+                  isPo={product.isPo}
                   aspectRatio="portrait"
                   onClick={() => navigate(`/outshine/product/${product.id}`)}
                 />

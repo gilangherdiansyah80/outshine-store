@@ -95,7 +95,7 @@ const ProfileScreen = () => {
     {
       icon: <Settings size={20} />,
       label: "Pengaturan",
-      path: "/outshine/settings",
+      path: "/outshine/setting",
     },
   ];
 

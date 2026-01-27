@@ -12,6 +12,8 @@ import ProtectedRoute from "@outshine/components/ProtectedRoute/ProtectedRoute";
 import WelcomePage from "@outshine/pages/WelcomePage";
 import RegisterPage from "@outshine/pages/Auth/RegisterPage";
 import LoginPage from "@outshine/pages/Auth/LoginPage";
+import OrdersPage from "@outshine/pages/OrdersPage";
+import SettingPage from "@outshine/pages/SettingPage";
 
 const route = createBrowserRouter([
   {
@@ -51,6 +53,22 @@ const route = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <CartPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "orders",
+        element: (
+          <ProtectedRoute>
+            <OrdersPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "setting",
+        element: (
+          <ProtectedRoute>
+            <SettingPage />
           </ProtectedRoute>
         ),
       },

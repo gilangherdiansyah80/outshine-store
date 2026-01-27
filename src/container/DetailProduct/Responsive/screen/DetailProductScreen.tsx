@@ -29,8 +29,8 @@ const DetailProductScreen: React.FC<DetailProductScreenProps> = ({
         <ProductInfo
           title={product.title}
           price={product.price}
-          formattedPrice={product.formattedPrice}
-          formattedOriginalPrice={product.formattedOriginalPrice}
+          formattedDiscounted={product.formattedDiscounted}
+          formattedOriginal={product.formattedOriginal}
           rating={product.rating}
           reviewCount={product.reviewCount}
         />
@@ -39,14 +39,6 @@ const DetailProductScreen: React.FC<DetailProductScreenProps> = ({
           sizes={product.sizes}
           selectedSize={selectedSize}
           onSizeChange={setSelectedSize}
-        />
-
-        <ProductActions
-          id={product.id}
-          name={product.title}
-          price={product.price}
-          image={product.images[0]}
-          selectedSize={selectedSize}
         />
 
         <ProductDetails fabricAndCare={product.fabricAndCare} />
@@ -58,6 +50,20 @@ const DetailProductScreen: React.FC<DetailProductScreenProps> = ({
           reviews={product.reviews}
         />
       </div>
+
+      <ProductActions
+        id={product.id}
+        name={product.title}
+        price={product.price}
+        originalPrice={product.originalPrice || product.price}
+        formattedDiscounted={product.formattedDiscounted || ""}
+        formattedOriginal={product.formattedOriginal || ""}
+        isPo={product.isPo}
+        poDpPercent={product.poDpPercent}
+        image={product.images[0]}
+        selectedSize={selectedSize}
+        sizeId={product.sizes.find((s) => s.name === selectedSize)?.id}
+      />
     </div>
   );
 };

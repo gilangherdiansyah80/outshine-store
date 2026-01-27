@@ -36,7 +36,7 @@ export const isValidScreenPath = (path: unknown): path is string => {
     if (code < 32 || code === 127) {
       console.warn(
         "[ResponsiveNavigation] Control character detected at index:",
-        i
+        i,
       );
       return false;
     }
@@ -50,7 +50,7 @@ export const isValidScreenPath = (path: unknown): path is string => {
   if (path.includes("..")) {
     console.warn(
       "[ResponsiveNavigation] Path traversal attempt detected (..):",
-      path
+      path,
     );
     return false;
   }
@@ -65,7 +65,7 @@ export const createScreenSearchParam = (path: string): string => {
   if (!isValidScreenPath(path)) {
     console.warn(
       "[ResponsiveNavigation] Attempted to encode invalid path:",
-      path
+      path,
     );
     return encodeURIComponent("/");
   }
@@ -91,4 +91,15 @@ export const parseScreenSearchParam = (searchParam: string | null): string => {
     console.error("[ResponsiveNavigation] Decoding error:", error);
     return "/";
   }
+};
+/**
+ * Formats a number to Indonesian Rupiah currency format.
+ */
+export const formatIDR = (amount: number): string => {
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(amount);
 };

@@ -5,6 +5,8 @@ import { HeartIcon } from "@programmer-molor/my-icons";
 import Badge from "@outshine/ui/Badge/Badge";
 import { useWishlistStore } from "@outshine/store/wishlistStore";
 import { useAuth } from "@/lib/auth";
+import { usePostWishlists } from "@/services/WishLists/usePostWishlists";
+import { useDeleteWishlists } from "@/services/WishLists/useDeleteWishlists";
 
 export interface CardProductProps {
   /** Product image URL */
@@ -56,6 +58,8 @@ const CardProduct = ({
   aspectRatio = "portrait",
   id, // Need ID for wishlist
 }: CardProductProps & { id?: string }) => {
+  const { trigger: addToWishlist } = usePostWishlists();
+  const { trigger: removeFromWishlist } = useDeleteWishlists();
   const { toggleItem, isInWishlist } = useWishlistStore();
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
@@ -70,6 +74,13 @@ const CardProduct = ({
     }
 
     if (id) {
+      // Trigger API call based on current state
+      if (wishlisted) {
+        removeFromWishlist({ productId: id });
+      } else {
+        addToWishlist({ productId: id });
+      }
+
       toggleItem({
         id,
         name,
