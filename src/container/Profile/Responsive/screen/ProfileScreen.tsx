@@ -77,7 +77,7 @@ const ProfileScreen = () => {
       // Even if API fails, still clear local session
       clearToken();
       clearUser();
-      navigate("/outshine/home", { replace: true });
+      navigate("/outshine/welcome", { replace: true });
     }
   };
 
