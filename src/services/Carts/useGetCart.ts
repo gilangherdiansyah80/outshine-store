@@ -1,5 +1,6 @@
 import useSWR from "swr";
 import { fetcherOSStore } from "@/lib/axios";
+import { useAuth } from "@/lib/auth";
 
 export interface CartBackendItem {
   cartId: string;
@@ -38,8 +39,10 @@ export interface GetCartResponse {
 }
 
 export const useGetCart = () => {
+  const { isLoggedIn } = useAuth();
+
   const { data, error, isLoading, mutate } = useSWR<GetCartResponse>(
-    "/api/v1/cart",
+    isLoggedIn ? "/api/v1/cart" : null,
     (url: string) => fetcherOSStore.get(url).then((res) => res.data),
   );
 

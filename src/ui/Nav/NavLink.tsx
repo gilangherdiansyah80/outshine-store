@@ -16,7 +16,7 @@ export interface NavLinkProps {
 const NavLink = ({
   href,
   children,
-  activeClassName = "text-[#135BEC] after:scale-x-100",
+  activeClassName = "text-white after:scale-x-100",
   className,
 }: NavLinkProps) => {
   const { pathname } = useLocation();
@@ -26,9 +26,9 @@ const NavLink = ({
     <Link
       to={href}
       className={cn(
-        "relative text-sm font-semibold text-[#0A2665]/70 transition-all duration-300 hover:text-[#0A2665] py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-[#135BEC] after:origin-left after:transition-transform after:duration-300 after:scale-x-0 group",
+        "relative text-sm font-semibold text-white/70 transition-all duration-300 hover:text-white py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-white after:origin-left after:transition-transform after:duration-300 after:scale-x-0 group",
         isActive && activeClassName,
-        className
+        className,
       )}
     >
       {children}

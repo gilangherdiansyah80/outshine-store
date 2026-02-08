@@ -1,7 +1,11 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useCartStore } from "@outshine/store/cartStore";
-import { useUserStore } from "@/lib/auth-adapter/userStore";
+import { useAuth } from "@/lib/auth";
+import { useGetCart } from "@/services/Carts/useGetCart";
+import { useEffect } from "react";
+
 import Input from "@outshine/ui/Form/Input/Input";
+
 import {
   SearchIcon,
   ChevronLeftIcon,
@@ -15,9 +19,32 @@ const ResponsiveHeader = () => {
   const location = useLocation();
   const { pop, stack } = useResponsiveNavigation();
   const { searchQuery, setSearchQuery } = useSearchStore();
-  const { items } = useCartStore();
-  const dataUser = useUserStore((state) => state.dataUser);
-  const isLoggedIn = dataUser?.isLoggedIn;
+  const { items, setItems } = useCartStore();
+  const { isLoggedIn } = useAuth();
+  const { cartData } = useGetCart();
+
+  // Sync cart items with store for count consistency
+  useEffect(() => {
+    if (isLoggedIn && cartData?.items) {
+      const mappedItems = cartData.items.map((item) => ({
+        id: item.productId,
+        name: item.productName,
+        price: item.price,
+        originalPrice: Number(item.originalPrice),
+        formattedDiscounted: item.formattedPrice,
+        formattedOriginal: item.formattedOriginalPrice,
+        image: item.productImage,
+        sizeId: item.sizeId,
+        size: item.sizeName,
+        color: "Standard",
+        quantity: item.quantity,
+      }));
+      setItems(mappedItems);
+    } else if (!isLoggedIn) {
+      // Clear items if not logged in
+      setItems([]);
+    }
+  }, [cartData, setItems, isLoggedIn]);
 
   const itemCount = items.reduce((total, item) => total + item.quantity, 0);
 

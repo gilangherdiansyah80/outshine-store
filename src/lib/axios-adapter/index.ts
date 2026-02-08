@@ -3,6 +3,7 @@ import type { XiorInstance as BaseXiorInstance } from "xior";
 
 import { useTokenStore } from "@/lib/auth-adapter/tokenStore";
 import { useUserStore } from "@/lib/auth-adapter/userStore";
+import { useWishlistStore } from "@/store/wishlistStore";
 import {
   DEFAULT_PUBLIC_ROUTES,
   getIsPublicRoute,
@@ -60,7 +61,9 @@ export const createAxiosAdapter = ({
   clearSession = () => {
     useTokenStore.getState().actions.clearToken();
     useUserStore.getState().actions.clearUser();
+    useWishlistStore.getState().clearWishlist();
   },
+
   getLanguageId = () => "",
   maintenance: maintenanceProps,
   guard: guardProps,
