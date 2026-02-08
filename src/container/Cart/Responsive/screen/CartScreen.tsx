@@ -40,7 +40,7 @@ const CartScreen = () => {
         image: item.productImage,
         sizeId: item.sizeId,
         size: item.sizeName,
-        color: "Standard", // Default color
+        color: "Standard",
         quantity: item.quantity,
       }));
       setItems(mappedItems);

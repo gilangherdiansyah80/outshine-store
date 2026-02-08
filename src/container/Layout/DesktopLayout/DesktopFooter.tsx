@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const DesktopFooter = () => {
   return (
-    <footer className="bg-[#0A2665] text-white pt-16 pb-8 font-[Poppins,sans-serif]">
+    <footer className="bg-[#0F172A] text-white pt-16 pb-8 font-[Poppins,sans-serif]">
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between gap-12 mb-12">
           {/* Brand Section */}

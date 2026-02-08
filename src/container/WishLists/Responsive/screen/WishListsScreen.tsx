@@ -13,7 +13,7 @@ import type { WishlistItem as StoreWishlistItem } from "@/store/wishlistStore";
 
 const WishListsScreen = () => {
   const { wishlists, isLoading: isApiLoading } = useGetWishLists();
-  const { collections, createCollection, addItemToCollection } =
+  const { collections, createCollection, addItemToCollection, setWishlist } =
     useWishlistStore();
 
   const [isLoading, setIsLoading] = useState(true);
@@ -33,12 +33,31 @@ const WishListsScreen = () => {
     (c) => c.id === openedCollection,
   );
 
+  const mapApiToStoreItem = (
+    apiItem: ServiceWishlistItem,
+  ): StoreWishlistItem => ({
+    id: apiItem.id,
+    name: apiItem.name,
+    price: apiItem.discountedPrice || apiItem.price,
+    image: apiItem.primaryImage,
+    isNew: apiItem.tags?.some((t) => t.name === "New") || false,
+    discount: apiItem.discount?.value || 0,
+    category: apiItem.category?.id || "",
+  });
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 1000);
     return () => clearTimeout(timer);
   }, []);
+
+  // Sync API wishlists with store for heart icon color consistency
+  useEffect(() => {
+    if (wishlists && wishlists.length > 0) {
+      setWishlist(wishlists.map(mapApiToStoreItem));
+    }
+  }, [wishlists, setWishlist]);
 
   const handleCreateCollection = () => {
     setIsAlertOpen(true);
@@ -60,18 +79,6 @@ const WishListsScreen = () => {
       setShowSuccessAlert(true);
     }
   };
-
-  const mapApiToStoreItem = (
-    apiItem: ServiceWishlistItem,
-  ): StoreWishlistItem => ({
-    id: apiItem.id,
-    name: apiItem.name,
-    price: apiItem.discountedPrice || apiItem.price,
-    image: apiItem.primaryImage,
-    isNew: apiItem.tags?.some((t) => t.name === "New") || false,
-    discount: apiItem.discount?.value || 0,
-    category: apiItem.category?.id || "",
-  });
 
   if (isLoading || isApiLoading) {
     return <Loading />;
