@@ -73,11 +73,11 @@ const HeroBanner = ({ className }: HeroBannerProps) => {
           </div>
 
           {/* Content */}
-          <div className="relative h-full flex flex-col justify-end p-6 pb-8">
+          <div className="relative h-full flex flex-col justify-end p-6 pb-8 gap-y-3">
             {/* Exclusive Badge */}
             <span
               className={cn(
-                "text-[10px] font-bold uppercase tracking-[0.2em] text-blue-400 mb-3 transition-all duration-700 delay-300",
+                "text-[10px] font-bold uppercase tracking-[0.2em] text-blue-400 transition-all duration-700 delay-300",
                 index === currentIndex
                   ? "opacity-100 translate-y-0"
                   : "opacity-0 translate-y-4",
@@ -89,7 +89,7 @@ const HeroBanner = ({ className }: HeroBannerProps) => {
             {/* Title */}
             <h1
               className={cn(
-                "text-3xl font-extrabold text-white leading-tight mb-6 whitespace-pre-line transition-all duration-700 delay-500",
+                "text-3xl font-extrabold text-white leading-tight whitespace-pre-line transition-all duration-700 delay-500",
                 index === currentIndex
                   ? "opacity-100 translate-y-0"
                   : "opacity-0 translate-y-4",
