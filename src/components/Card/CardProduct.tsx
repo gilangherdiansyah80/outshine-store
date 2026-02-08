@@ -197,12 +197,13 @@ const CardProduct = ({
             {currency}
             {formattedPrice}
           </span>
-          {formattedOriginalPrice && (
-            <span className="text-xs text-gray-500 line-through dark:text-gray-400">
-              {currency}
-              {formattedOriginalPrice}
-            </span>
-          )}
+          {formattedOriginalPrice &&
+            formattedOriginalPrice !== formattedPrice && (
+              <span className="text-xs text-gray-500 line-through dark:text-gray-400">
+                {currency}
+                {formattedOriginalPrice}
+              </span>
+            )}
         </div>
       </div>
     </div>

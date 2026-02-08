@@ -3,7 +3,7 @@ import { cn } from "@outshine/lib/utils";
 import {
   useGetCategory,
   type CategoryItem,
-} from "@/services/Home/useGetCategory";
+} from "@/services/Category/useGetCategory";
 
 interface CategoryChipsProps {
   onCategorySelect?: (category: CategoryItem | null) => void;
@@ -42,7 +42,7 @@ const CategoryChips = ({ onCategorySelect, className }: CategoryChipsProps) => {
       ref={scrollRef}
       className={cn(
         "flex gap-3 overflow-x-auto py-2 scrollbar-hide",
-        className
+        className,
       )}
       style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
     >
@@ -51,14 +51,19 @@ const CategoryChips = ({ onCategorySelect, className }: CategoryChipsProps) => {
           key={category.id}
           onClick={() => handleCategoryClick(category)}
           className={cn(
-            "shrink-0 px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300",
+            "shrink-0 px-5 py-2.5 rounded-2xl text-sm font-medium transition-all duration-300 flex flex-col items-center gap-2",
             "border border-gray-300",
             selectedCategory === category.id
               ? "bg-[#0F172A] text-white border-[#0F172A]"
-              : "bg-white text-gray-800 hover:bg-gray-100"
+              : "bg-white text-gray-800 hover:bg-gray-100",
           )}
         >
-          {category.name}
+          <img
+            src={category.imageUrl}
+            alt={category.name}
+            className="w-10 h-10 object-cover"
+          />
+          <h1>{category.name}</h1>
         </button>
       ))}
     </div>
