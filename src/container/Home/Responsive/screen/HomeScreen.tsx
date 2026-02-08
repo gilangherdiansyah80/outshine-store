@@ -7,13 +7,13 @@ import { useEffect, useState } from "react";
 import Loading from "@/components/Loader/Loading";
 import { useFilterSortStore } from "@outshine/store/filterSortStore";
 import { useAddressStore } from "@/store/addressStore";
-import { useNavigate } from "react-router-dom";
+import { useResponsiveNavigation } from "@/hooks/use-responsive-navigation";
 
 export default function HomeScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const { clearFilters, toggleCategory } = useFilterSortStore();
   const { actions } = useAddressStore();
-  const navigate = useNavigate();
+  const { push } = useResponsiveNavigation();
 
   useEffect(() => {
     // Reset address selection when entering home
@@ -41,9 +41,9 @@ export default function HomeScreen() {
         onCategorySelect={(category) => {
           clearFilters();
           if (category) {
-            toggleCategory(category.id);
+            toggleCategory(category.name);
           }
-          navigate("/outshine/products");
+          push("/detail-category", { categoryName: category?.name });
         }}
       />
 
@@ -51,7 +51,7 @@ export default function HomeScreen() {
       <TrendingSection
         onViewAll={() => {
           clearFilters();
-          navigate("/outshine/products");
+          push("/outshine/products");
         }}
       />
 

@@ -1,12 +1,13 @@
 import { ResponsiveRoute } from "@/lib/components";
 import HomeScreen from "@/container/Home/Responsive/screen/HomeScreen";
+import CategoryScreen from "@/container/Home/Responsive/screen/CategoryScreen";
 
 export default function HomeResponsive() {
   return (
     <>
       {/* <HomeScreen /> */}
       <ResponsiveRoute path="/" component={<HomeScreen />} />
-      {/* Add more routes here if needed, e.g. <ResponsiveRoute path="/details" component={<DetailScreen />} /> */}
+      <ResponsiveRoute path="/detail-category" component={<CategoryScreen />} />
     </>
   );
 }
