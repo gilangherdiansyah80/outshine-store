@@ -106,12 +106,12 @@ const ProductReviews = ({
                   <button
                     key={image}
                     onClick={() => setSelectedImage(image)}
-                    className="w-10 h-10 border-dashed border-2 border-gray-300 rounded overflow-hidden shrink-0"
+                    className="w-14 border-dashed border-2 border-gray-300 rounded overflow-hidden shrink-0"
                   >
                     <img
                       src={image}
                       alt={review.user?.name}
-                      className="w-full h-full"
+                      className="w-14 h-14"
                     />
                   </button>
                 ))}
