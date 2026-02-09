@@ -1,4 +1,4 @@
-import { X, RotateCcw, ChevronRight, Check } from "lucide-react";
+import { X, RotateCcw, ChevronRight, Check, Star } from "lucide-react";
 import {
   useFilterSortStore,
   PRICE_RANGES,
@@ -6,17 +6,16 @@ import {
 import { cn } from "@outshine/lib/utils";
 import { useResponsiveNavigation } from "@outshine/hooks/use-responsive-navigation";
 import { useSearchStore } from "@outshine/store/searchStore";
+import { useGetCategory } from "@/services/Category/useGetCategory";
 
 const FilterScreen = () => {
   const {
     selectedCategories,
-    selectedSizes,
-    selectedColors,
     selectedPriceRange,
+    selectedRating,
     toggleCategory,
-    toggleSize,
-    toggleColor,
     setPriceRange,
+    setRating,
     clearFilters,
   } = useFilterSortStore();
   const { setSearchQuery } = useSearchStore();
@@ -27,18 +26,15 @@ const FilterScreen = () => {
   };
 
   const { pop, popToTop } = useResponsiveNavigation();
+  const { data: categories, isLoading: isCategoriesLoading } = useGetCategory();
 
-  const categories = [
-    { id: "all", label: "Semua Kategori" },
-    { id: "Jackets", label: "Jackets" },
-    { id: "T-Shirts", label: "T-Shirts" },
-    { id: "Hoodies", label: "Hoodies" },
-    { id: "Pants", label: "Pants" },
-    { id: "Sweaters", label: "Sweaters" },
+  const ratingOptions = [
+    { value: 5, label: "5" },
+    { value: 4, label: "4" },
+    { value: 3, label: "3" },
+    { value: 2, label: "2" },
+    { value: 1, label: "1" },
   ];
-
-  const sizes = ["S", "M", "L", "XL", "XXL"];
-  const colors = ["Black", "White", "Grey", "Blue", "Navy", "Brown", "Orange"];
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans">
@@ -69,37 +65,35 @@ const FilterScreen = () => {
           </div>
 
           <div className="space-y-3">
-            {categories.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => toggleCategory(cat.id === "all" ? "" : cat.id)}
-                className={cn(
-                  "w-full flex items-center justify-between p-5 rounded-2xl transition-all duration-300 cursor-pointer",
-                  (
-                    cat.id === "all"
-                      ? selectedCategories.length === 0
-                      : selectedCategories.includes(cat.id)
-                  )
-                    ? "bg-[#0F172A] text-white shadow-lg border-transparent"
-                    : "bg-white text-gray-700 border border-gray-100 shadow-sm hover:border-[#0F172A]"
-                )}
-              >
-                <span className="font-bold text-[15px]">{cat.label}</span>
-                <ChevronRight
-                  size={18}
+            {isCategoriesLoading ? (
+              <div className="flex justify-center py-4">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#0F172A]"></div>
+              </div>
+            ) : (
+              categories.map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => toggleCategory(cat.name)}
                   className={cn(
-                    "transition-colors",
-                    (
-                      cat.id === "all"
-                        ? selectedCategories.length === 0
-                        : selectedCategories.includes(cat.id)
-                    )
-                      ? "text-white"
-                      : "text-gray-400"
+                    "w-full flex items-center justify-between p-5 rounded-2xl transition-all duration-300 cursor-pointer",
+                    selectedCategories.includes(cat.name)
+                      ? "bg-[#0F172A] text-white shadow-lg border-transparent"
+                      : "bg-white text-gray-700 border border-gray-100 shadow-sm hover:border-[#0F172A]",
                   )}
-                />
-              </button>
-            ))}
+                >
+                  <span className="font-bold text-[15px]">{cat.name}</span>
+                  <ChevronRight
+                    size={18}
+                    className={cn(
+                      "transition-colors",
+                      selectedCategories.includes(cat.name)
+                        ? "text-white"
+                        : "text-gray-400",
+                    )}
+                  />
+                </button>
+              ))
+            )}
           </div>
         </section>
 
@@ -113,108 +107,89 @@ const FilterScreen = () => {
           </div>
 
           <div className="space-y-3">
-            {PRICE_RANGES.map((range) => (
+            {PRICE_RANGES.map(
+              (range) =>
+                range.id !== "all" && (
+                  <button
+                    key={range.id}
+                    onClick={() =>
+                      setPriceRange(
+                        selectedPriceRange === range.id ? null : range.id,
+                      )
+                    }
+                    className={cn(
+                      "w-full flex items-center gap-4 p-5 rounded-2xl border transition-all duration-300 cursor-pointer",
+                      selectedPriceRange === range.id
+                        ? "bg-[#0F172A] text-white border-transparent shadow-lg"
+                        : "bg-white text-gray-700 border-gray-100 shadow-sm hover:border-[#0F172A]",
+                    )}
+                  >
+                    <div
+                      className={cn(
+                        "w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-colors",
+                        selectedPriceRange === range.id
+                          ? "border-white/30 bg-white/20"
+                          : "border-gray-200",
+                      )}
+                    >
+                      {selectedPriceRange === range.id && (
+                        <Check size={14} className="text-white" />
+                      )}
+                    </div>
+                    <span className="font-bold text-[15px]">{range.label}</span>
+                  </button>
+                ),
+            )}
+          </div>
+        </section>
+
+        {/* Rating Section */}
+        <section className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-bold text-gray-900">Rating</h2>
+            <span className="text-[10px] font-bold text-[#0F172A] border border-[#0F172A] px-2.5 py-1 rounded-full uppercase tracking-wider">
+              PILIH SATU
+            </span>
+          </div>
+
+          <div className="space-y-3">
+            {ratingOptions.map((opt) => (
               <button
-                key={range.id}
-                onClick={() => setPriceRange(range.id)}
+                key={opt.value}
+                onClick={() =>
+                  setRating(selectedRating === opt.value ? null : opt.value)
+                }
                 className={cn(
                   "w-full flex items-center gap-4 p-5 rounded-2xl border transition-all duration-300 cursor-pointer",
-                  selectedPriceRange === range.id
+                  selectedRating === opt.value
                     ? "bg-[#0F172A] text-white border-transparent shadow-lg"
-                    : "bg-white text-gray-700 border-gray-100 shadow-sm hover:border-[#0F172A]"
+                    : "bg-white text-gray-700 border-gray-100 shadow-sm hover:border-[#0F172A]",
                 )}
               >
                 <div
                   className={cn(
                     "w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-colors",
-                    selectedPriceRange === range.id
+                    selectedRating === opt.value
                       ? "border-white/30 bg-white/20"
-                      : "border-gray-200"
+                      : "border-gray-200",
                   )}
                 >
-                  {selectedPriceRange === range.id && (
+                  {selectedRating === opt.value && (
                     <Check size={14} className="text-white" />
                   )}
                 </div>
-                <span className="font-bold text-[15px]">{range.label}</span>
-              </button>
-            ))}
-          </div>
-        </section>
-
-        {/* Ukuran Section */}
-        <section className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold text-gray-900">Ukuran</h2>
-            <span className="text-[10px] font-bold text-[#0F172A] border border-[#0F172A] px-2.5 py-1 rounded-full uppercase tracking-wider">
-              BANYAK PILIHAN
-            </span>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            {sizes.map((size) => (
-              <button
-                key={size}
-                onClick={() => toggleSize(size)}
-                className={cn(
-                  "flex items-center gap-4 p-5 rounded-2xl border transition-all duration-300 cursor-pointer",
-                  selectedSizes.includes(size)
-                    ? "bg-[#0F172A] text-white border-transparent shadow-lg"
-                    : "bg-white text-gray-700 border-gray-100 shadow-sm hover:border-[#0F172A]"
-                )}
-              >
-                <div
-                  className={cn(
-                    "w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-colors",
-                    selectedSizes.includes(size)
-                      ? "border-white/30 bg-white/20"
-                      : "border-gray-200"
-                  )}
-                >
-                  {selectedSizes.includes(size) && (
-                    <Check size={14} className="text-white" />
-                  )}
+                <div className="flex items-center gap-2">
+                  <Star
+                    size={16}
+                    className={cn(
+                      "transition-colors",
+                      selectedRating === opt.value
+                        ? "fill-yellow-400 text-yellow-400"
+                        : "fill-gray-200 text-gray-200",
+                    )}
+                  />
+                  <span className="font-bold text-[15px]">{opt.label}</span>
                 </div>
-                <span className="font-bold text-[15px]">{size}</span>
-              </button>
-            ))}
-          </div>
-        </section>
-
-        {/* Warna Section */}
-        <section className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold text-gray-900">Warna</h2>
-            <span className="text-[10px] font-bold text-[#0F172A] border border-[#0F172A] px-2.5 py-1 rounded-full uppercase tracking-wider">
-              BANYAK PILIHAN
-            </span>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            {colors.map((color) => (
-              <button
-                key={color}
-                onClick={() => toggleColor(color)}
-                className={cn(
-                  "flex items-center gap-4 p-5 rounded-2xl border transition-all duration-300",
-                  selectedColors.includes(color)
-                    ? "bg-[#0F172A] text-white border-transparent shadow-lg"
-                    : "bg-white text-gray-700 border-gray-100 shadow-sm hover:border-[#0F172A]"
-                )}
-              >
-                <div
-                  className={cn(
-                    "w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-colors",
-                    selectedColors.includes(color)
-                      ? "border-white/30 bg-white/20"
-                      : "border-gray-200"
-                  )}
-                >
-                  {selectedColors.includes(color) && (
-                    <Check size={14} className="text-white" />
-                  )}
-                </div>
-                <span className="font-bold text-[15px]">{color}</span>
               </button>
             ))}
           </div>

@@ -63,6 +63,7 @@ const CategoryProductList = ({ className }: CategoryProductListProps) => {
           discount={product.discount}
           isNew={product.isNew}
           isPo={product.isPo}
+          rating={product.rating}
           aspectRatio="portrait"
           onClick={() => navigate(`/outshine/product/${product.id}`)}
         />

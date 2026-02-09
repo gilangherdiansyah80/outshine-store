@@ -18,10 +18,9 @@ const ProductsScreen = () => {
   const [minLoading, setMinLoading] = useState(true);
 
   const {
-    selectedSizes,
-    selectedColors,
     selectedCategories,
     selectedPriceRange,
+    selectedRating,
     sortOption,
     clearFilters,
   } = useFilterSortStore();
@@ -46,26 +45,19 @@ const ProductsScreen = () => {
     }
 
     // Filtering logic
-    if (selectedSizes.length > 0) {
-      result = result.filter((p) =>
-        p.sizes.some((s) => selectedSizes.includes(s)),
-      );
-    }
-    if (selectedColors.length > 0) {
-      result = result.filter((p) =>
-        p.colors.some((c) => selectedColors.includes(c)),
-      );
-    }
     if (selectedCategories.length > 0) {
       result = result.filter((p) => selectedCategories.includes(p.category));
     }
-    if (selectedPriceRange !== "all") {
+    if (selectedPriceRange !== null) {
       const range = PRICE_RANGES.find((r) => r.id === selectedPriceRange);
       if (range) {
         result = result.filter(
           (p) => p.price >= range.min && p.price <= range.max,
         );
       }
+    }
+    if (selectedRating !== null) {
+      result = result.filter((p) => Math.floor(p.rating) === selectedRating);
     }
 
     // Sorting logic
@@ -89,10 +81,9 @@ const ProductsScreen = () => {
   }, [
     products,
     searchQuery,
-    selectedSizes,
-    selectedColors,
     selectedCategories,
     selectedPriceRange,
+    selectedRating,
     sortOption,
   ]);
 
@@ -131,6 +122,7 @@ const ProductsScreen = () => {
                 discount={product.discount}
                 isNew={product.isNew}
                 isPo={product.isPo}
+                rating={product.rating}
                 aspectRatio="portrait"
                 onClick={() => navigate(`/outshine/product/${product.id}`)}
                 onWishlistClick={() => console.log("Wishlist:", product.name)}
@@ -143,10 +135,9 @@ const ProductsScreen = () => {
             description="Maaf, tidak ada produk yang sesuai dengan pencarian atau filter Anda. Silakan coba atur ulang pencarian atau filter Anda."
             resetLabel={
               searchQuery.trim() &&
-              (selectedSizes.length > 0 ||
-                selectedColors.length > 0 ||
-                selectedCategories.length > 0 ||
-                selectedPriceRange !== "all")
+              (selectedCategories.length > 0 ||
+                selectedPriceRange !== null ||
+                selectedRating !== null)
                 ? "Clear All Results"
                 : searchQuery.trim()
                   ? "Clear All Search"

@@ -11,49 +11,47 @@ export type SortOption = (typeof SORT_OPTIONS)[number];
 
 export const PRICE_RANGES = [
   { id: "all", label: "Semua Harga", min: 0, max: Infinity },
-  { id: "under-50", label: "Di bawah $50", min: 0, max: 50 },
-  { id: "50-100", label: "$50 - $100", min: 50, max: 100 },
-  { id: "100-200", label: "$100 - $200", min: 100, max: 200 },
-  { id: "above-200", label: "Di atas $200", min: 200, max: Infinity },
+  { id: "under-100000", label: "Di bawah Rp. 100.000", min: 0, max: 100000 },
+  {
+    id: "100000-150000",
+    label: "Rp. 100.000 - Rp. 150.000",
+    min: 100000,
+    max: 150000,
+  },
+  {
+    id: "150000-200000",
+    label: "Rp. 150.000 - Rp. 200.000",
+    min: 150000,
+    max: 200000,
+  },
+  {
+    id: "above-200000",
+    label: "Di atas Rp. 200.000",
+    min: 200000,
+    max: Infinity,
+  },
 ] as const;
 
 export type PriceRangeRecord = (typeof PRICE_RANGES)[number];
 
 interface FilterSortState {
-  selectedSizes: string[];
-  selectedColors: string[];
   selectedCategories: string[];
-  selectedPriceRange: string; // ID of the price range
+  selectedPriceRange: string | null; // ID of the price range
+  selectedRating: number | null;
   sortOption: SortOption;
 
-  toggleSize: (size: string) => void;
-  toggleColor: (color: string) => void;
   toggleCategory: (category: string) => void;
-  setPriceRange: (rangeId: string) => void;
+  setPriceRange: (rangeId: string | null) => void;
+  setRating: (rating: number | null) => void;
   setSortOption: (option: SortOption) => void;
   clearFilters: () => void;
 }
 
 export const useFilterSortStore = create<FilterSortState>((set) => ({
-  selectedSizes: [],
-  selectedColors: [],
   selectedCategories: [],
-  selectedPriceRange: "all",
+  selectedPriceRange: null,
+  selectedRating: null,
   sortOption: "Recommended",
-
-  toggleSize: (size) =>
-    set((state) => ({
-      selectedSizes: state.selectedSizes.includes(size)
-        ? state.selectedSizes.filter((s) => s !== size)
-        : [...state.selectedSizes, size],
-    })),
-
-  toggleColor: (color) =>
-    set((state) => ({
-      selectedColors: state.selectedColors.includes(color)
-        ? state.selectedColors.filter((c) => c !== color)
-        : [...state.selectedColors, color],
-    })),
 
   toggleCategory: (category) =>
     set((state) => ({
@@ -64,14 +62,15 @@ export const useFilterSortStore = create<FilterSortState>((set) => ({
 
   setPriceRange: (rangeId) => set({ selectedPriceRange: rangeId }),
 
+  setRating: (rating) => set({ selectedRating: rating }),
+
   setSortOption: (option) => set({ sortOption: option }),
 
   clearFilters: () =>
     set({
-      selectedSizes: [],
-      selectedColors: [],
       selectedCategories: [],
-      selectedPriceRange: "all",
+      selectedPriceRange: null,
+      selectedRating: null,
       sortOption: "Recommended",
     }),
 }));

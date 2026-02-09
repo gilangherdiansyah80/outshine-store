@@ -21,14 +21,14 @@ export default function CategoryScreen() {
   return (
     <div className="flex flex-col bg-white min-h-screen">
       {/* Simple Header */}
-      <div className="sticky top-0 z-20 bg-white px-4 py-4 flex items-center gap-4 border-b">
+      <div className="sticky top-0 z-20 bg-[#0F172A] px-4 py-4 flex items-center gap-4 border-b">
         <button
           onClick={() => pop()}
-          className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+          className="p-1 hover:bg-gray-100 rounded-full bg-white transition-colors"
         >
-          <ChevronLeftIcon size={24} />
+          <ChevronLeftIcon size={22} color="#0F172A" />
         </button>
-        <h1 className="text-lg font-bold text-gray-900">{categoryTitle}</h1>
+        <h1 className="text-lg font-bold text-white">{categoryTitle}</h1>
       </div>
 
       <div className="px-4 py-6">

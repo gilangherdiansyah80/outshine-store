@@ -7,7 +7,7 @@ import { useWishlistStore } from "@outshine/store/wishlistStore";
 import { useAuth } from "@/lib/auth";
 import { usePostWishlists } from "@/services/WishLists/usePostWishlists";
 import { useDeleteWishlists } from "@/services/WishLists/useDeleteWishlists";
-import { FolderPlus } from "lucide-react";
+import { FolderPlus, Star } from "lucide-react";
 
 export interface CardProductProps {
   /** Product image URL */
@@ -40,6 +40,8 @@ export interface CardProductProps {
   className?: string;
   /** Aspect ratio of the card image */
   aspectRatio?: "square" | "portrait";
+  /** Average rating */
+  rating?: number;
 }
 
 /**
@@ -60,6 +62,7 @@ const CardProduct = ({
   onClick,
   className,
   aspectRatio = "portrait",
+  rating,
   id, // Need ID for wishlist
 }: CardProductProps & { id?: string }) => {
   const { trigger: addToWishlist } = usePostWishlists();
@@ -192,18 +195,28 @@ const CardProduct = ({
       {/* Content Info */}
       <div className="flex flex-col gap-1">
         <h3 className="text-sm font-semibold text-gray-500 truncate">{name}</h3>
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-bold text-[#0F172A]">
-            {currency}
-            {formattedPrice}
-          </span>
-          {formattedOriginalPrice &&
-            formattedOriginalPrice !== formattedPrice && (
-              <span className="text-xs text-gray-500 line-through dark:text-gray-400">
-                {currency}
-                {formattedOriginalPrice}
+        <div className="flex justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-bold text-[#0F172A]">
+              {currency}
+              {formattedPrice}
+            </span>
+            {formattedOriginalPrice &&
+              formattedOriginalPrice !== formattedPrice && (
+                <span className="text-xs text-gray-500 line-through dark:text-gray-400">
+                  {currency}
+                  {formattedOriginalPrice}
+                </span>
+              )}
+          </div>
+          {rating !== undefined && (
+            <div className="flex items-center gap-1 -mt-12">
+              <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+              <span className="text-xs font-medium text-gray-600">
+                {rating.toFixed(1)}
               </span>
-            )}
+            </div>
+          )}
         </div>
       </div>
     </div>
