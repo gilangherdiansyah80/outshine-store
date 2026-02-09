@@ -19,6 +19,12 @@ export interface ProductSize {
   stock: number;
 }
 
+export interface ProductSpec {
+  id: string;
+  key: string;
+  value: string;
+}
+
 export interface ProductDetail {
   id: string;
   title: string;
@@ -36,6 +42,7 @@ export interface ProductDetail {
   fabricAndCare: string;
   deliveryAndReturns: string;
   sustainabilityImpact: string;
+  specs: ProductSpec[];
   isPo?: boolean;
   poDpPercent?: number;
   discount?: number;
@@ -108,8 +115,9 @@ interface APIDetailProduct {
   po: APIPo | null;
   images: APIImage[];
   sizes: APISize[];
+  specs: ProductSpec[];
   reviews: {
-    items: any[]; // Define properly if needed
+    items: ReviewItem[]; // Define properly if needed
     pagination: {
       page: number;
       limit: number;
@@ -167,6 +175,7 @@ const mapAPIDetailToProductDetail = (
     // Map Array of objects
     sizes: apiProduct.sizes || [],
     description: apiProduct.description || "",
+    specs: Array.isArray(apiProduct.specs) ? apiProduct.specs : [],
     ...defaultStaticContent,
     isPo: apiProduct.isPo,
     poDpPercent: apiProduct.poDpPercent,

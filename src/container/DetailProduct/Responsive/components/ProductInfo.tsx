@@ -44,13 +44,13 @@ const ProductInfo = ({
               key={star}
               className={`w-4 h-4 ${
                 star <= Math.round(rating)
-                  ? "text-blue-500 fill-blue-500"
+                  ? "text-yellow-400 fill-yellow-400"
                   : "text-gray-600 fill-gray-600"
               }`}
             />
           ))}
         </div>
-        <span className="text-sm text-gray-400">({reviewCount} reviews)</span>
+        <span className="text-sm text-gray-400">({reviewCount} ulasan)</span>
       </div>
     </>
   );

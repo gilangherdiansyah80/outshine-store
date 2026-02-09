@@ -1,11 +1,18 @@
 import { useState } from "react";
 import { AccordionItem } from "@outshine/ui/Accordion/Accordion";
+import type { ProductSpec } from "@outshine/services/Products/useGetDetailProduct";
 
 interface ProductDetailsProps {
+  description: string;
+  specs: ProductSpec[];
   fabricAndCare: string;
 }
 
-const ProductDetails = ({ fabricAndCare }: ProductDetailsProps) => {
+const ProductDetails = ({
+  description,
+  specs,
+  fabricAndCare,
+}: ProductDetailsProps) => {
   const [openSection, setOpenSection] = useState<string | null>("description");
 
   const toggleSection = (section: string) => {
@@ -15,7 +22,7 @@ const ProductDetails = ({ fabricAndCare }: ProductDetailsProps) => {
   return (
     <div className="mt-8 border-b border-slate-200">
       <AccordionItem
-        title="Product Description"
+        title="Deskripsi Produk"
         isOpen={openSection === "description"}
         onClick={() => toggleSection("description")}
         className="border-slate-200"
@@ -23,17 +30,7 @@ const ProductDetails = ({ fabricAndCare }: ProductDetailsProps) => {
         iconClassName="text-slate-900"
       >
         <div className="space-y-4 text-[15px] text-slate-600 leading-relaxed font-light">
-          <p>
-            Elevate your everyday rotation with our Heavyweight Sculpt Tee.
-            Engineered from premium 320GSM organic cotton, this piece features a
-            drop-shoulder silhouette with a structured fit that retains its
-            shape wash after wash.
-          </p>
-          <ul className="space-y-2 list-disc list-inside marker:text-slate-300">
-            <li>Custom boxy fit</li>
-            <li>High-density screen print logo</li>
-            <li>Reinforced double-stitched seams</li>
-          </ul>
+          <p>{description}</p>
         </div>
       </AccordionItem>
 
@@ -51,7 +48,7 @@ const ProductDetails = ({ fabricAndCare }: ProductDetailsProps) => {
       </AccordionItem>
 
       <AccordionItem
-        title="Shipping & Returns"
+        title="Spesifikasi Produk"
         isOpen={openSection === "shipping"}
         onClick={() => toggleSection("shipping")}
         className="border-slate-200"
@@ -59,10 +56,17 @@ const ProductDetails = ({ fabricAndCare }: ProductDetailsProps) => {
         iconClassName="text-slate-900"
       >
         <div className="text-[15px] text-slate-600 leading-relaxed font-light">
-          <p>
-            Standard shipping takes 3-5 business days. Returns are accepted
-            within 14 days of receipt for unused items in original packaging.
-          </p>
+          <ul className="space-y-2">
+            {specs?.map((spec: ProductSpec) => (
+              <li
+                key={spec.id}
+                className="flex justify-between border-b border-slate-100 pb-2 last:border-0 last:pb-0"
+              >
+                <span className="font-medium text-slate-900">{spec.key}</span>
+                <span className="text-slate-600">{spec.value}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       </AccordionItem>
     </div>

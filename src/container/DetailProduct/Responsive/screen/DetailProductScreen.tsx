@@ -41,7 +41,11 @@ const DetailProductScreen: React.FC<DetailProductScreenProps> = ({
           onSizeChange={setSelectedSize}
         />
 
-        <ProductDetails fabricAndCare={product.fabricAndCare} />
+        <ProductDetails
+          description={product.description}
+          specs={product.specs}
+          fabricAndCare={product.fabricAndCare}
+        />
 
         <ProductReviews
           rating={product.rating}

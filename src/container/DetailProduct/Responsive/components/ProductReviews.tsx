@@ -1,4 +1,4 @@
-import { Star, User } from "lucide-react";
+import { Star } from "lucide-react";
 import type { ReviewItem } from "@/services/Products/useGetDetailProduct";
 
 interface ProductReviewsProps {
@@ -32,11 +32,11 @@ const ProductReviews = ({
           <div className="text-5xl font-bold text-[#0F172A] leading-none">
             {rating}
           </div>
-          <div className="flex gap-1 mt-2 text-blue-500">
+          <div className="flex gap-1 mt-2 text-yellow-400">
             {[1, 2, 3, 4, 5].map((s) => (
               <Star
                 key={s}
-                className="w-4 h-4 fill-blue-500"
+                className="w-4 h-4 fill-yellow-400"
                 size={16}
                 strokeWidth={0}
               />
@@ -54,7 +54,7 @@ const ProductReviews = ({
                 <span className="font-bold text-[#0F172A] w-2">{star}</span>
                 <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-blue-600 rounded-full transition-all duration-500"
+                    className="h-full bg-yellow-400 rounded-full transition-all duration-500"
                     style={{ width: pct }}
                   />
                 </div>
@@ -78,7 +78,11 @@ const ProductReviews = ({
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
-                  <User className="w-4 h-4 text-gray-500" />
+                  <img
+                    src={review.userAvatar}
+                    alt={review.user?.name}
+                    className="w-8 h-8 rounded-full"
+                  />
                 </div>
                 <span className="font-semibold text-[#0F172A] text-sm">
                   {review.user?.name || "Anonymous"}
@@ -88,6 +92,7 @@ const ProductReviews = ({
                 {new Date(review.createdAt).toLocaleDateString()}
               </span>
             </div>
+            <div></div>
             <div className="flex gap-0.5 mb-2">
               {[1, 2, 3, 4, 5].map((s) => (
                 <Star
