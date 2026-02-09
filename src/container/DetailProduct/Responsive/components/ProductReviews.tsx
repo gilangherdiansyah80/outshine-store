@@ -29,7 +29,7 @@ const ProductReviews = ({
   return (
     <div className="pt-6 pb-8">
       <h3 className="text-lg font-bold text-[#0F172A] mb-4">
-        Customer Reviews
+        Ulasan Pelanggan
       </h3>
       <div className="flex items-center gap-6 mb-8">
         <div>
@@ -46,7 +46,7 @@ const ProductReviews = ({
               />
             ))}
           </div>
-          <p className="text-sm text-gray-400 mt-1">{reviewCount} reviews</p>
+          <p className="text-sm text-gray-400 mt-1">{reviewCount} ulasan</p>
         </div>
 
         {/* Rating Bars */}
@@ -106,12 +106,12 @@ const ProductReviews = ({
                   <button
                     key={image}
                     onClick={() => setSelectedImage(image)}
-                    className="w-14 border-dashed border-2 border-gray-300 rounded overflow-hidden shrink-0"
+                    className="w-14 rounded-lg border-dashed border-2 border-gray-300 overflow-hidden shrink-0"
                   >
                     <img
                       src={image}
                       alt={review.user?.name}
-                      className="w-14 h-14"
+                      className="w-14 h-14 rounded-lg"
                     />
                   </button>
                 ))}
