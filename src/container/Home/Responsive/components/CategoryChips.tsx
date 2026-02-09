@@ -51,7 +51,7 @@ const CategoryChips = ({ onCategorySelect, className }: CategoryChipsProps) => {
           key={category.id}
           onClick={() => handleCategoryClick(category)}
           className={cn(
-            "shrink-0 px-5 py-2.5 rounded-2xl text-sm font-medium transition-all duration-300 flex flex-col items-center gap-2",
+            "shrink-0 px-5 py-2.5 rounded-2xl text-sm font-medium transition-all duration-300 flex flex-col items-center gap-2 cursor-pointer",
             "border border-gray-300",
             selectedCategory === category.id
               ? "bg-[#0F172A] text-white border-[#0F172A]"
