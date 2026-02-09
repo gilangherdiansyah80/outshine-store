@@ -1,4 +1,6 @@
-import { Star } from "lucide-react";
+import { useState } from "react";
+import { Star, User } from "lucide-react";
+import ImagePreview from "@outshine/ui/Image/ImagePreview";
 import type { ReviewItem } from "@/services/Products/useGetDetailProduct";
 
 interface ProductReviewsProps {
@@ -14,6 +16,8 @@ const ProductReviews = ({
   ratingDistribution,
   reviews,
 }: ProductReviewsProps) => {
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
   const getPercentage = (star: number) => {
     if (!ratingDistribution || reviewCount === 0) return "0%";
     // Access using both number and string key to be safe
@@ -78,11 +82,15 @@ const ProductReviews = ({
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
-                  <img
-                    src={review.userAvatar}
-                    alt={review.user?.name}
-                    className="w-8 h-8 rounded-full"
-                  />
+                  {review.userAvatar ? (
+                    <img
+                      src={review.userAvatar}
+                      alt={review.user?.name}
+                      className="w-8 h-8 rounded-full"
+                    />
+                  ) : (
+                    <User className="w-8 h-8 rounded-full bg-gray-100" />
+                  )}
                 </div>
                 <span className="font-semibold text-[#0F172A] text-sm">
                   {review.user?.name || "Anonymous"}
@@ -92,25 +100,46 @@ const ProductReviews = ({
                 {new Date(review.createdAt).toLocaleDateString()}
               </span>
             </div>
-            <div></div>
-            <div className="flex gap-0.5 mb-2">
-              {[1, 2, 3, 4, 5].map((s) => (
-                <Star
-                  key={s}
-                  className={`w-3 h-3 ${
-                    s <= review.rating
-                      ? "fill-yellow-400 text-yellow-400"
-                      : "fill-gray-200 text-gray-200"
-                  }`}
-                />
-              ))}
-            </div>
-            <p className="text-sm text-gray-600 leading-relaxed">
-              {review.comment}
-            </p>
+            <section className="flex flex-col gap-y-1">
+              <div className="flex gap-x-1">
+                {review.images.map((image) => (
+                  <button
+                    key={image}
+                    onClick={() => setSelectedImage(image)}
+                    className="w-10 h-10 border-dashed border-2 border-gray-300 rounded overflow-hidden shrink-0"
+                  >
+                    <img
+                      src={image}
+                      alt={review.user?.name}
+                      className="w-full h-full"
+                    />
+                  </button>
+                ))}
+              </div>
+              <div className="flex gap-0.5">
+                {[1, 2, 3, 4, 5].map((s) => (
+                  <Star
+                    key={s}
+                    className={`w-3 h-3 ${
+                      s <= review.rating
+                        ? "fill-yellow-400 text-yellow-400"
+                        : "fill-gray-200 text-gray-200"
+                    }`}
+                  />
+                ))}
+              </div>
+              <p className="text-sm text-gray-600">{review.comment}</p>
+            </section>
           </div>
         ))}
       </div>
+
+      {/* Image Preview Overlay */}
+      <ImagePreview
+        src={selectedImage}
+        onClose={() => setSelectedImage(null)}
+        alt="Review preview"
+      />
     </div>
   );
 };
