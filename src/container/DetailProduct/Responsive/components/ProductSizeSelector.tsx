@@ -15,11 +15,11 @@ const ProductSizeSelector = ({
   return (
     <div className="space-y-3">
       <div className="flex justify-between items-center">
-        <span className="text-sm font-semibold text-gray-300 tracking-wider">
-          SELECT SIZE
+        <span className="text-sm font-semibold text-gray-400 tracking-wider">
+          PILIH UKURAN
         </span>
         <button className="flex items-center gap-1 text-sm text-blue-500 font-medium">
-          Size Guide <Ruler className="w-3 h-3" />
+          Panduan Ukuran <Ruler className="w-3 h-3" />
         </button>
       </div>
       <div className="grid grid-cols-4 gap-3">

@@ -22,7 +22,7 @@ const ProductDetails = ({
   return (
     <div className="mt-8 border-b border-slate-200">
       <AccordionItem
-        title="Deskripsi Produk"
+        title="Filosofi Produk"
         isOpen={openSection === "description"}
         onClick={() => toggleSection("description")}
         className="border-slate-200"
