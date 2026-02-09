@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { X } from "lucide-react";
+// import { X } from "lucide-react";
 
 interface BottomSheetProps {
   isOpen: boolean;
@@ -52,18 +52,18 @@ const BottomSheet = ({
       >
         {/* Handle */}
         <div
-          className="w-12 h-1.5 bg-white/10 rounded-full mx-auto mb-8 cursor-pointer"
+          className="w-18 h-1.5 bg-[#0B0F19] rounded-full mx-auto mb-4 cursor-pointer"
           onClick={onClose}
         />
 
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-2xl font-bold text-[#0B0F19]">{title}</h2>
-          <button
+          {/* <button
             onClick={onClose}
             className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
           >
             <X size={20} />
-          </button>
+          </button> */}
         </div>
 
         <div className="pb-10">{children}</div>
