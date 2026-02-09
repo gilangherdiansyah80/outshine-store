@@ -11,6 +11,8 @@ export interface ReviewItem {
     id: string;
     name: string;
   };
+  userAvatar: string;
+  images: string[];
 }
 
 export interface ProductSize {
