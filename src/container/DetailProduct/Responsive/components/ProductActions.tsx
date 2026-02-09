@@ -24,6 +24,7 @@ interface ProductActionsProps {
   image: string;
   selectedSize: string | null;
   sizeId: string | undefined;
+  onOpenSizeSelector: () => void;
 }
 
 const ProductActions = ({
@@ -38,6 +39,7 @@ const ProductActions = ({
   poDpPercent,
   image,
   selectedSize,
+  onOpenSizeSelector,
 }: ProductActionsProps) => {
   const navigate = useNavigate();
   const { addItem, setBuyNowItem } = useCartStore();
@@ -57,13 +59,7 @@ const ProductActions = ({
 
   const handleAddToBag = async () => {
     if (!selectedSize || !sizeId) {
-      setCartAlert({
-        isOpen: true,
-        title: "Pilih Ukuran",
-        message:
-          "Harap pilih ukuran terlebih dahulu sebelum menambahkan ke keranjang.",
-        type: "warning",
-      });
+      onOpenSizeSelector();
       return;
     }
 
@@ -117,12 +113,7 @@ const ProductActions = ({
 
   const handleBuyNow = () => {
     if (!selectedSize) {
-      setCartAlert({
-        isOpen: true,
-        title: "Pilih Ukuran",
-        message: "Harap pilih ukuran terlebih dahulu sebelum melanjutkan.",
-        type: "warning",
-      });
+      onOpenSizeSelector();
       return;
     }
 
@@ -149,12 +140,7 @@ const ProductActions = ({
 
   const handleChatWhatsApp = () => {
     if (!selectedSize) {
-      setCartAlert({
-        isOpen: true,
-        title: "Pilih Ukuran",
-        message: "Harap pilih ukuran terlebih dahulu sebelum bertanya.",
-        type: "warning",
-      });
+      onOpenSizeSelector();
       return;
     }
 

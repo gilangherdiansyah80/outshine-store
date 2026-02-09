@@ -6,6 +6,7 @@ import ProductImageGallery from "../components/ProductImageGallery";
 import ProductInfo from "../components/ProductInfo";
 import ProductReviews from "../components/ProductReviews";
 import ProductSizeSelector from "../components/ProductSizeSelector";
+import BottomSheet from "@outshine/ui/BottomSheet/BottomSheet";
 
 interface DetailProductScreenProps {
   product: ProductDetail;
@@ -15,6 +16,7 @@ const DetailProductScreen: React.FC<DetailProductScreenProps> = ({
   product,
 }) => {
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [isSizeSheetOpen, setIsSizeSheetOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-white pb-24 font-sans">
@@ -33,12 +35,6 @@ const DetailProductScreen: React.FC<DetailProductScreenProps> = ({
           formattedOriginal={product.formattedOriginal}
           rating={product.rating}
           reviewCount={product.reviewCount}
-        />
-
-        <ProductSizeSelector
-          sizes={product.sizes}
-          selectedSize={selectedSize}
-          onSizeChange={setSelectedSize}
         />
 
         <ProductDetails
@@ -67,7 +63,23 @@ const DetailProductScreen: React.FC<DetailProductScreenProps> = ({
         image={product.images[0]}
         selectedSize={selectedSize}
         sizeId={product.sizes.find((s) => s.name === selectedSize)?.id}
+        onOpenSizeSelector={() => setIsSizeSheetOpen(true)}
       />
+
+      <BottomSheet
+        isOpen={isSizeSheetOpen}
+        onClose={() => setIsSizeSheetOpen(false)}
+        title="Pilih Ukuran"
+      >
+        <ProductSizeSelector
+          sizes={product.sizes}
+          selectedSize={selectedSize}
+          onSizeChange={(size) => {
+            setSelectedSize(size);
+            setIsSizeSheetOpen(false);
+          }}
+        />
+      </BottomSheet>
     </div>
   );
 };
