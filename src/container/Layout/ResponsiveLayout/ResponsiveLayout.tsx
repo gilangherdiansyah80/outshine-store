@@ -23,6 +23,7 @@ const ResponsiveLayout = ({ children }: ResponsiveLayoutProps) => {
 
   const hideHeader =
     isFullScreen ||
+    currentPath === "/detail-category" ||
     pathname?.includes("/outshine/orders") ||
     pathname?.includes("/outshine/setting");
   const hideFooter = isFullScreen || pathname?.includes("/outshine/setting");
