@@ -1,74 +1,46 @@
-import { useState } from "react";
-import { AccordionItem } from "@outshine/ui/Accordion/Accordion";
+import { ChevronRight } from "lucide-react";
 import type { ProductSpec } from "@outshine/services/Products/useGetDetailProduct";
 
 interface ProductDetailsProps {
   description: string;
   specs: ProductSpec[];
-  fabricAndCare: string;
+  onOpenSpecs: () => void;
 }
 
 const ProductDetails = ({
   description,
   specs,
-  fabricAndCare,
+  onOpenSpecs,
 }: ProductDetailsProps) => {
-  const [openSection, setOpenSection] = useState<string | null>("description");
-
-  const toggleSection = (section: string) => {
-    setOpenSection(openSection === section ? null : section);
-  };
+  // Preview of specs for the row
+  const specsPreview = specs
+    .slice(0, 3)
+    .map((s) => s.key)
+    .join(", ");
 
   return (
-    <div className="mt-8 border-b border-slate-200">
-      <AccordionItem
-        title="Filosofi Produk"
-        isOpen={openSection === "description"}
-        onClick={() => toggleSection("description")}
-        className="border-slate-200"
-        titleClassName="text-slate-900"
-        iconClassName="text-slate-900"
+    <div className="divide-y divide-gray-50">
+      {/* Specifications Row */}
+      <button
+        onClick={onOpenSpecs}
+        className="w-full flex items-center justify-between p-4 bg-white active:bg-gray-50 transition-colors"
       >
-        <div className="space-y-4 text-[15px] text-slate-600 leading-relaxed font-light">
-          <p>{description}</p>
+        <span className="text-sm font-medium text-gray-900">Spesifikasi</span>
+        <div className="flex items-center gap-2 overflow-hidden">
+          <span className="text-sm text-gray-400 truncate max-w-[150px]">
+            {specsPreview || "Detail produk"}...
+          </span>
+          <ChevronRight className="w-4 h-4 text-gray-400" />
         </div>
-      </AccordionItem>
+      </button>
 
-      <AccordionItem
-        title="Care Instructions"
-        isOpen={openSection === "care"}
-        onClick={() => toggleSection("care")}
-        className="border-slate-200"
-        titleClassName="text-slate-900"
-        iconClassName="text-slate-900"
-      >
-        <div className="text-[15px] text-slate-600 leading-relaxed font-light">
-          <p>{fabricAndCare}</p>
+      {/* Description Section */}
+      <div className="p-4 bg-white space-y-3">
+        <h3 className="text-sm font-medium text-gray-900">Deskripsi</h3>
+        <div className="text-sm text-gray-600 leading-relaxed whitespace-pre-wrap">
+          {description}
         </div>
-      </AccordionItem>
-
-      <AccordionItem
-        title="Spesifikasi Produk"
-        isOpen={openSection === "shipping"}
-        onClick={() => toggleSection("shipping")}
-        className="border-slate-200"
-        titleClassName="text-slate-900"
-        iconClassName="text-slate-900"
-      >
-        <div className="text-[15px] text-slate-600 leading-relaxed font-light">
-          <ul className="space-y-2">
-            {specs?.map((spec: ProductSpec) => (
-              <li
-                key={spec.id}
-                className="flex justify-between border-b border-slate-100 pb-2 last:border-0 last:pb-0"
-              >
-                <span className="font-medium text-slate-900">{spec.key}</span>
-                <span className="text-slate-600">{spec.value}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </AccordionItem>
+      </div>
     </div>
   );
 };

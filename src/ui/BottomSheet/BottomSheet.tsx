@@ -45,7 +45,7 @@ const BottomSheet = ({
       onClick={onClose}
     >
       <div
-        className={`w-full max-w-lg bg-[#0B0F19] rounded-t-[40px] border-t border-white/10 p-8 pt-4 transition-all duration-300 transform ${
+        className={`w-full max-w-lg bg-white rounded-t-[40px] border-t border-white/10 p-8 pt-4 transition-all duration-300 transform ${
           isOpen ? "translate-y-0" : "translate-y-full"
         }`}
         onClick={(e) => e.stopPropagation()}
@@ -57,7 +57,7 @@ const BottomSheet = ({
         />
 
         <div className="flex justify-between items-center mb-8">
-          <h2 className="text-2xl font-bold text-white">{title}</h2>
+          <h2 className="text-2xl font-bold text-[#0B0F19]">{title}</h2>
           <button
             onClick={onClose}
             className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:text-white transition-colors"

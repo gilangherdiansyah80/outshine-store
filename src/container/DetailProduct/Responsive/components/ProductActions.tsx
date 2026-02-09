@@ -1,12 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import {
-  ChevronRight,
-  MessageCircle,
-  ShoppingBag,
-  Loader2,
-} from "lucide-react";
+import { MessageCircle, ShoppingBag, Loader2 } from "lucide-react";
 import { useCartStore } from "@outshine/store/cartStore";
-import Button from "@outshine/ui/Button/Button";
 import { useState } from "react";
 import Alert from "@outshine/components/Alert/Alert";
 import { useAddressStore } from "@/store/addressStore";
@@ -161,35 +155,36 @@ const ProductActions = ({
 
   return (
     <>
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-t border-gray-100 p-4">
-        <div className="flex gap-3 max-w-md mx-auto">
-          <Button
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-100 h-14">
+        <div className="flex w-full h-full max-w-md mx-auto">
+          {/* Chat WhatsApp */}
+          <button
+            onClick={handleChatWhatsApp}
+            className="shrink-0 w-16 h-full flex flex-col items-center justify-center gap-1 border-r border-gray-50 text-[20px] text-[#00BFA5] bg-white transition-colors hover:bg-gray-50"
+          >
+            <MessageCircle className="w-5 h-5" />
+          </button>
+
+          {/* Add to Bag */}
+          <button
             onClick={handleAddToBag}
-            size="icon"
             disabled={isAddingToCart}
-            className="w-14 h-14 shrink-0 bg-[#1F2430] text-gray-300 hover:bg-[#2A3040] rounded-2xl disabled:opacity-50"
+            className="shrink-0 w-20 h-full flex flex-col items-center justify-center gap-1 border-r border-gray-50 text-[20px] text-[#00BFA5] bg-white transition-colors hover:bg-gray-50 disabled:opacity-50"
           >
             {isAddingToCart ? (
-              <Loader2 className="w-6 h-6 animate-spin" />
+              <Loader2 className="w-5 h-5 animate-spin" />
             ) : (
-              <ShoppingBag className="w-6 h-6" />
+              <ShoppingBag className="w-5 h-5" />
             )}
-          </Button>
-          <Button
-            onClick={handleChatWhatsApp}
-            size="icon"
-            className="w-14 h-14 shrink-0 bg-[#1F2430] text-gray-300 hover:bg-[#2A3040] rounded-2xl"
-          >
-            <MessageCircle className="w-6 h-6" />
-          </Button>
-          <Button
+          </button>
+
+          {/* Buy Now */}
+          <button
             onClick={handleBuyNow}
-            size="lg"
-            className="flex-1 h-14 gap-2 bg-blue-600 hover:bg-blue-700 rounded-2xl shadow-lg shadow-blue-600/20"
+            className="flex-1 h-full bg-[#EE4D2D] text-white text-sm font-medium transition-colors hover:bg-[#d73211]"
           >
-            Buy Now
-            <ChevronRight className="w-5 h-5" />
-          </Button>
+            Beli Sekarang
+          </button>
         </div>
       </div>
 

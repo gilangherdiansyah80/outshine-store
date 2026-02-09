@@ -48,6 +48,7 @@ export interface ProductDetail {
   isPo?: boolean;
   poDpPercent?: number;
   discount?: number;
+  totalBuyers: number;
 }
 
 // API Response Interfaces
@@ -136,6 +137,7 @@ interface APIDetailProduct {
   collection: {
     canAdd: boolean;
   };
+  totalBuyers: number;
   updatedAt: string;
 }
 
@@ -185,6 +187,7 @@ const mapAPIDetailToProductDetail = (
       apiProduct.discount?.type === "percent"
         ? apiProduct.discount.value
         : undefined,
+    totalBuyers: apiProduct.totalBuyers,
   };
 };
 

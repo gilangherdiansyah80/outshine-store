@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Star, User } from "lucide-react";
+import { Star, User, Sparkles, Search, ChevronRight } from "lucide-react";
 import ImagePreview from "@outshine/ui/Image/ImagePreview";
 import type { ReviewItem } from "@/services/Products/useGetDetailProduct";
 
@@ -13,128 +13,148 @@ interface ProductReviewsProps {
 const ProductReviews = ({
   rating,
   reviewCount,
-  ratingDistribution,
-  reviews,
+  reviews = [],
 }: ProductReviewsProps) => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
-  const getPercentage = (star: number) => {
-    if (!ratingDistribution || reviewCount === 0) return "0%";
-    // Access using both number and string key to be safe
-    const count =
-      ratingDistribution[star] || ratingDistribution[String(star)] || 0;
-    return `${Math.round((count / reviewCount) * 100)}%`;
-  };
+  // Take first few images for the showcase
+  const showcaseImages = reviews.flatMap((r) => r.images).slice(0, 3);
 
   return (
-    <div className="pt-6 pb-8">
-      <h3 className="text-lg font-bold text-[#0F172A] mb-4">
-        Ulasan Pelanggan
-      </h3>
-      <div className="flex items-center gap-6 mb-8">
-        <div>
-          <div className="text-5xl font-bold text-[#0F172A] leading-none">
-            {rating}
-          </div>
-          <div className="flex gap-1 mt-2 text-yellow-400">
-            {[1, 2, 3, 4, 5].map((s) => (
-              <Star
-                key={s}
-                className="w-4 h-4 fill-yellow-400"
-                size={16}
-                strokeWidth={0}
-              />
-            ))}
-          </div>
-          <p className="text-sm text-gray-400 mt-1">{reviewCount} ulasan</p>
-        </div>
-
-        {/* Rating Bars */}
-        <div className="flex-1 space-y-2">
-          {[5, 4, 3, 2, 1].map((star) => {
-            const pct = getPercentage(star);
-            return (
-              <div key={star} className="flex items-center gap-3 text-xs">
-                <span className="font-bold text-[#0F172A] w-2">{star}</span>
-                <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-yellow-400 rounded-full transition-all duration-500"
-                    style={{ width: pct }}
-                  />
-                </div>
-                <span className="text-gray-400 w-8 text-right">{pct}</span>
-              </div>
-            );
-          })}
+    <div className="bg-white" title={`Rating: ${rating}`}>
+      {/* Header */}
+      <div className="flex items-center justify-between p-4 border-b border-gray-50">
+        <h3 className="text-sm font-medium text-gray-900">
+          Penilaian Produk ({reviewCount > 1000 ? "1,1RB" : reviewCount})
+        </h3>
+        <div className="flex items-center gap-1 text-xs text-[#EE4D2D]">
+          <span>Lihat Semua</span>
+          <ChevronRight className="w-4 h-4" />
         </div>
       </div>
 
-      {/* Reviews List */}
-      <div className="space-y-6">
-        {(!reviews || reviews.length === 0) && (
-          <p className="text-gray-400 text-sm">No reviews yet.</p>
-        )}
-        {reviews?.map((review) => (
-          <div
-            key={review.id}
-            className="border-b border-gray-100 pb-6 last:border-0 last:pb-0"
-          >
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
-                  {review.userAvatar ? (
-                    <img
-                      src={review.userAvatar}
-                      alt={review.user?.name}
-                      className="w-8 h-8 rounded-full"
-                    />
-                  ) : (
-                    <User className="w-8 h-8 rounded-full bg-gray-100" />
-                  )}
+      <div className="px-4 py-3 space-y-4">
+        {/* Rating Summary Box */}
+        <div className="bg-gray-50/50 rounded-lg p-3 space-y-2 border border-blue-50">
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-blue-500" />
+            <span className="text-xs font-bold text-gray-900">
+              Rangkuman Penilaian
+            </span>
+            <Sparkles className="w-4 h-4 text-blue-500" />
+          </div>
+          <p className="text-[11px] text-gray-600 leading-normal">
+            Gasing ini memiliki desain yang keren dan mirip dengan aslinya.
+            Bahan besi yang digunakan kuat dan tahan adu. Spin track dan
+            bottomnya mungkin sedikit berbeda, tapi tetap bagus.
+          </p>
+        </div>
+
+        {/* Showcase Images */}
+        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+          {showcaseImages.map((img, idx) => (
+            <div
+              key={idx}
+              className="relative w-24 h-24 shrink-0 rounded-md overflow-hidden bg-gray-100"
+              onClick={() => setSelectedImage(img)}
+            >
+              <img
+                src={img}
+                alt="Showcase"
+                className="w-full h-full object-cover"
+              />
+              {idx === 2 && (
+                <div className="absolute inset-0 bg-black/40 flex items-center justify-center text-white text-sm font-bold">
+                  +249
                 </div>
-                <span className="font-semibold text-[#0F172A] text-sm">
-                  {review.user?.name || "Anonymous"}
-                </span>
-              </div>
-              <span className="text-xs text-gray-400">
-                {new Date(review.createdAt).toLocaleDateString()}
-              </span>
+              )}
             </div>
-            <section className="flex flex-col gap-y-1">
-              <div className="flex gap-x-1">
-                {review.images.map((image) => (
-                  <button
-                    key={image}
-                    onClick={() => setSelectedImage(image)}
-                    className="w-14 rounded-lg border-dashed border-2 border-gray-300 overflow-hidden shrink-0"
-                  >
-                    <img
-                      src={image}
-                      alt={review.user?.name}
-                      className="w-14 h-14 rounded-lg"
-                    />
-                  </button>
-                ))}
+          ))}
+        </div>
+
+        {/* Search Bar */}
+        <div className="relative">
+          <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+            <Search className="w-3 h-3 text-gray-400" />
+          </div>
+          <input
+            type="text"
+            placeholder="Cari ulasan"
+            className="w-full h-8 pl-8 pr-4 bg-gray-50 border border-gray-100 rounded-md text-xs focus:outline-none focus:ring-1 focus:ring-[#EE4D2D]"
+          />
+        </div>
+
+        {/* Individual Reviews */}
+        <div className="space-y-6 pt-2">
+          {reviews.slice(0, 2).map((review) => (
+            <div
+              key={review.id}
+              className="space-y-2 pb-4 border-b border-gray-50 last:border-0 last:pb-0"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center">
+                    <User size={14} className="text-gray-400" />
+                  </div>
+                  <span className="text-xs text-gray-700 font-medium">
+                    vin.2799
+                  </span>
+                </div>
+                <div className="flex items-center gap-1 text-[10px] text-gray-400">
+                  <span>Membantu (86)</span>
+                  {/* Thumb icon mock if needed */}
+                </div>
               </div>
+
               <div className="flex gap-0.5">
-                {[1, 2, 3, 4, 5].map((s) => (
+                {[1, 2, 3, 4, 5].map((star) => (
                   <Star
-                    key={s}
-                    className={`w-3 h-3 ${
-                      s <= review.rating
-                        ? "fill-yellow-400 text-yellow-400"
-                        : "fill-gray-200 text-gray-200"
+                    key={star}
+                    className={`w-2.5 h-2.5 ${
+                      star <= review.rating
+                        ? "text-[#EE4D2D] fill-[#EE4D2D]"
+                        : "text-gray-200 fill-gray-200"
                     }`}
                   />
                 ))}
               </div>
-              <p className="text-sm text-gray-600">{review.comment}</p>
-            </section>
-          </div>
-        ))}
+
+              <div className="text-[10px] text-gray-400">
+                Variasi: BEY ONLY MF 48, BEY ONLY MF 106
+              </div>
+
+              <p className="text-xs text-gray-800 leading-relaxed">
+                {review.comment}
+              </p>
+
+              {review.images.length > 0 && (
+                <div className="flex gap-1 pt-1">
+                  {review.images.map((image, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setSelectedImage(image)}
+                      className="w-16 h-16 rounded overflow-hidden shrink-0 bg-gray-50 border border-gray-100"
+                    >
+                      <img
+                        src={image}
+                        alt="Review"
+                        className="w-full h-full object-cover"
+                      />
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* View All Button */}
+        <button className="w-full py-3 flex items-center justify-center gap-1 text-xs text-gray-500 hover:text-gray-700 transition-colors">
+          <span>Lihat Semua</span>
+          <ChevronRight className="w-4 h-4" />
+        </button>
       </div>
 
-      {/* Image Preview Overlay */}
       <ImagePreview
         src={selectedImage}
         onClose={() => setSelectedImage(null)}
