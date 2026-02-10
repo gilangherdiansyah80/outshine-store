@@ -41,9 +41,9 @@ const ProductInfo = ({
           <button
             key={index}
             onClick={() => onSelectImage(index)}
-            className="focus:outline-none"
+            className="focus:outline-none w-14 h-14"
           >
-            <img src={image} alt={title} className="w-10 h-10 rounded-sm" />
+            <img src={image} alt={title} className="w-full h-full rounded-sm" />
           </button>
         ))}
       </div>
