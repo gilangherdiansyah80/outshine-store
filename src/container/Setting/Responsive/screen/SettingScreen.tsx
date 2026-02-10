@@ -1,4 +1,4 @@
-import { User, Bell, Shield, HelpCircle, FileText, LogOut } from "lucide-react";
+import { User, Shield, HelpCircle, FileText, LogOut } from "lucide-react";
 import SettingHeader from "../components/SettingHeader";
 import SettingSection from "../components/SettingSection";
 import SettingItem from "../components/SettingItem";
@@ -28,13 +28,13 @@ const SettingScreen = () => {
             path="/edit-profile"
             useInternal
           />
-          <SettingItem
+          {/* <SettingItem
             icon={<Bell size={20} />}
             label="Notifikasi"
             description="Atur preferensi notifikasi"
             path="/notification"
             useInternal
-          />
+          /> */}
         </SettingSection>
 
         <SettingSection title="Preferensi">

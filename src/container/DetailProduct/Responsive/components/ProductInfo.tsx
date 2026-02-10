@@ -58,7 +58,7 @@ const ProductInfo = ({
             )}
           </div>
           <div className="flex items-center gap-2">
-            <span className="bg-[#EE4D2D]/10 text-[#0B0F19] text-[10px] font-bold px-1 rounded">
+            <span className="bg-[#0B0F19]/10 text-[#0B0F19] text-[10px] font-bold px-1 rounded">
               {isPo ? "Pre Order" : "Ready Stock"}
             </span>
             <h1 className="text-base text-gray-800 line-clamp-2 leading-snug">
@@ -82,7 +82,7 @@ const ProductInfo = ({
         {/* Quality Control */}
         <div className="flex items-start justify-between group">
           <div className="flex items-start gap-3">
-            <ShieldCheck className="w-5 h-5 text-[#EE4D2D] shrink-0 mt-0.5" />
+            <ShieldCheck className="w-5 h-5 text-[#0B0F19] shrink-0 mt-0.5" />
             <div className="space-y-0.5">
               <span className="text-sm font-semibold text-gray-900 block">
                 Outshine Quality Control
@@ -98,7 +98,7 @@ const ProductInfo = ({
         {/* Fast Handling */}
         <div className="flex items-start justify-between group">
           <div className="flex items-start gap-3">
-            <Truck className="w-5 h-5 text-[#EE4D2D] shrink-0 mt-0.5" />
+            <Truck className="w-5 h-5 text-[#0B0F19] shrink-0 mt-0.5" />
             <div className="space-y-0.5">
               <span className="text-sm font-semibold text-gray-900 block">
                 Outshine Fast Handling
@@ -114,7 +114,7 @@ const ProductInfo = ({
         {/* Customer Support */}
         <div className="flex items-start justify-between group">
           <div className="flex items-start gap-3">
-            <Headset className="w-5 h-5 text-[#EE4D2D] shrink-0 mt-0.5" />
+            <Headset className="w-5 h-5 text-[#0B0F19] shrink-0 mt-0.5" />
             <div className="space-y-0.5">
               <span className="text-sm font-semibold text-gray-900 block">
                 Outshine Customer Support

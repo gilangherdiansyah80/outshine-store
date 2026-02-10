@@ -24,25 +24,34 @@ const faqData = {
   pembayaran: [
     {
       question: "Metode pembayaran apa saja yang tersedia?",
-      answer:
-        "Kami menerima pembayaran via Transfer Bank, E-Wallet (GoPay, OVO, DANA), Kartu Kredit/Debit, dan COD untuk area tertentu.",
+      answer: "Kami menerima pembayaran via Transfer Bank, E-Wallet (DANA).",
     },
     {
       question: "Bagaimana jika pembayaran saya gagal?",
       answer:
         "Jika pembayaran gagal, silakan coba lagi atau gunakan metode pembayaran lain. Pastikan saldo/limit mencukupi dan koneksi internet stabil.",
     },
-  ],
-  pengembalian: [
     {
-      question: "Bagaimana cara mengajukan pengembalian barang?",
+      question: "Apakah Pre Order harus bayar full atau bisa DP?",
       answer:
-        "Pengembalian dapat diajukan dalam 7 hari setelah barang diterima. Buka detail pesanan > Ajukan Pengembalian > Pilih alasan > Kirim.",
+        "Untuk Pre Order, Anda cukup membayar DP sebesar 80% dari total harga saat memesan. Sisa pembayaran 80% dilunasi sebelum barang dikirim.",
+    },
+  ],
+  preOrder: [
+    {
+      question: "Apa itu Pre Order?",
+      answer:
+        "Pre Order adalah sistem pemesanan di mana Anda memesan produk sebelum barang tersedia. Produk akan diproduksi atau disiapkan setelah periode Pre Order berakhir.",
     },
     {
-      question: "Berapa lama proses refund?",
+      question: "Berapa lama waktu tunggu Pre Order?",
       answer:
-        "Proses refund membutuhkan waktu 3-7 hari kerja setelah pengembalian barang diverifikasi.",
+        "Waktu tunggu Pre Order bervariasi tergantung produk, biasanya berkisar antara 7-14 hari kerja. Estimasi waktu akan tertera pada halaman produk.",
+    },
+    {
+      question: "Apakah pesanan Pre Order bisa dibatalkan?",
+      answer:
+        "Pesanan Pre Order hanya dapat dibatalkan sebelum masa Pre Order berakhir. Setelah masuk proses produksi, pesanan tidak dapat dibatalkan.",
     },
   ],
 };
@@ -50,7 +59,7 @@ const faqData = {
 const FaqScreen = () => {
   const handleContactSupport = () => {
     // Open WhatsApp or chat
-    window.open("https://wa.me/6281234567890", "_blank");
+    window.open("https://wa.me/628135374168", "_blank");
   };
 
   return (
@@ -70,8 +79,8 @@ const FaqScreen = () => {
           ))}
         </SettingSection>
 
-        <SettingSection title="Pengembalian & Refund">
-          {faqData.pengembalian.map((faq, index) => (
+        <SettingSection title="Pre Order">
+          {faqData.preOrder.map((faq, index) => (
             <FaqItem key={index} question={faq.question} answer={faq.answer} />
           ))}
         </SettingSection>
