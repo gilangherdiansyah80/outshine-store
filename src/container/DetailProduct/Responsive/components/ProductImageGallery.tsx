@@ -11,6 +11,8 @@ interface ProductImageGalleryProps {
   images: string[];
   title: string;
   price: number;
+  currentIndex: number;
+  onIndexChange: (index: number) => void;
 }
 
 const ProductImageGallery = ({
@@ -18,9 +20,10 @@ const ProductImageGallery = ({
   images,
   title,
   price,
+  currentIndex,
+  onIndexChange,
 }: ProductImageGalleryProps) => {
   const navigate = useNavigate();
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
   const { toggleItem, isInWishlist } = useWishlistStore();
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
@@ -37,11 +40,11 @@ const ProductImageGallery = ({
   }, []);
 
   const handleNextImage = () => {
-    setCurrentImageIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+    onIndexChange(currentIndex === images.length - 1 ? 0 : currentIndex + 1);
   };
 
   const handlePrevImage = () => {
-    setCurrentImageIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+    onIndexChange(currentIndex === 0 ? images.length - 1 : currentIndex - 1);
   };
 
   const handleShare = async () => {
@@ -140,7 +143,7 @@ const ProductImageGallery = ({
       {/* Carousel Images */}
       <div
         className="flex transition-transform duration-500 ease-out h-full w-full"
-        style={{ transform: `translateX(-${currentImageIndex * 100}%)` }}
+        style={{ transform: `translateX(-${currentIndex * 100}%)` }}
       >
         {images.map((img, index) => (
           <img
@@ -167,9 +170,9 @@ const ProductImageGallery = ({
         {images.map((_, index) => (
           <button
             key={index}
-            onClick={() => setCurrentImageIndex(index)}
+            onClick={() => onIndexChange(index)}
             className={`h-1.5 rounded-full transition-all duration-300 ${
-              index === currentImageIndex ? "w-6 bg-white" : "w-1.5 bg-white/50"
+              index === currentIndex ? "w-6 bg-white" : "w-1.5 bg-white/50"
             }`}
           />
         ))}

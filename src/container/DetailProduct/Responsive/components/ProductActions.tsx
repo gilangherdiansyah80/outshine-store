@@ -181,7 +181,7 @@ const ProductActions = ({
           {/* Buy Now */}
           <button
             onClick={handleBuyNow}
-            className="flex-1 h-full bg-[#EE4D2D] text-white text-sm font-medium transition-colors hover:bg-[#d73211]"
+            className="flex-1 h-full bg-[#0B0F19] text-white text-sm font-medium transition-colors hover:bg-[#d73211]"
           >
             Beli Sekarang
           </button>

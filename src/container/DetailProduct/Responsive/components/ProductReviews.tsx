@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Star, User, Sparkles, Search, ChevronRight } from "lucide-react";
+import { Star, User, ChevronRight } from "lucide-react";
 import ImagePreview from "@outshine/ui/Image/ImagePreview";
 import type { ReviewItem } from "@/services/Products/useGetDetailProduct";
 
@@ -18,16 +18,20 @@ const ProductReviews = ({
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   // Take first few images for the showcase
-  const showcaseImages = reviews.flatMap((r) => r.images).slice(0, 3);
+  // const showcaseImages = reviews.flatMap((r) => r.images).slice(0, 3);
 
   return (
     <div className="bg-white" title={`Rating: ${rating}`}>
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-50">
-        <h3 className="text-sm font-medium text-gray-900">
-          Penilaian Produk ({reviewCount > 1000 ? "1,1RB" : reviewCount})
-        </h3>
-        <div className="flex items-center gap-1 text-xs text-[#EE4D2D]">
+        <section className="flex items-center gap-1">
+          <h2 className="text-sm font-medium text-gray-900">{rating}</h2>
+          <Star className={`w-3 h-3 text-yellow-400 fill-yellow-400`} />
+          <h3 className="text-sm font-medium text-gray-900">
+            Penilaian Produk ({reviewCount > 1000 ? "1,1RB" : reviewCount})
+          </h3>
+        </section>
+        <div className="flex items-center gap-1 text-xs text-[#0B0F19]">
           <span>Lihat Semua</span>
           <ChevronRight className="w-4 h-4" />
         </div>
@@ -35,7 +39,7 @@ const ProductReviews = ({
 
       <div className="px-4 py-3 space-y-4">
         {/* Rating Summary Box */}
-        <div className="bg-gray-50/50 rounded-lg p-3 space-y-2 border border-blue-50">
+        {/* <div className="bg-gray-50/50 rounded-lg p-3 space-y-2 border border-blue-50">
           <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-blue-500" />
             <span className="text-xs font-bold text-gray-900">
@@ -48,10 +52,10 @@ const ProductReviews = ({
             Bahan besi yang digunakan kuat dan tahan adu. Spin track dan
             bottomnya mungkin sedikit berbeda, tapi tetap bagus.
           </p>
-        </div>
+        </div> */}
 
         {/* Showcase Images */}
-        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+        {/* <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
           {showcaseImages.map((img, idx) => (
             <div
               key={idx}
@@ -70,19 +74,19 @@ const ProductReviews = ({
               )}
             </div>
           ))}
-        </div>
+        </div> */}
 
         {/* Search Bar */}
-        <div className="relative">
+        {/* <div className="relative">
           <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
             <Search className="w-3 h-3 text-gray-400" />
           </div>
           <input
             type="text"
             placeholder="Cari ulasan"
-            className="w-full h-8 pl-8 pr-4 bg-gray-50 border border-gray-100 rounded-md text-xs focus:outline-none focus:ring-1 focus:ring-[#EE4D2D]"
+            className="w-full h-8 pl-8 pr-4 bg-gray-50 border border-gray-100 rounded-md text-xs focus:outline-none focus:ring-1 focus:ring-yellow-400"
           />
-        </div>
+        </div> */}
 
         {/* Individual Reviews */}
         <div className="space-y-6 pt-2">
@@ -94,14 +98,22 @@ const ProductReviews = ({
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <div className="w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center">
-                    <User size={14} className="text-gray-400" />
+                    {review.userAvatar ? (
+                      <img
+                        src={review.userAvatar}
+                        alt="Avatar"
+                        className="w-full h-full object-cover rounded-full"
+                      />
+                    ) : (
+                      <User size={14} className="text-gray-400" />
+                    )}
                   </div>
                   <span className="text-xs text-gray-700 font-medium">
-                    vin.2799
+                    {review.user.name}
                   </span>
                 </div>
                 <div className="flex items-center gap-1 text-[10px] text-gray-400">
-                  <span>Membantu (86)</span>
+                  <span>{review.createdAt.slice(0, 10)}</span>
                   {/* Thumb icon mock if needed */}
                 </div>
               </div>
@@ -112,16 +124,16 @@ const ProductReviews = ({
                     key={star}
                     className={`w-2.5 h-2.5 ${
                       star <= review.rating
-                        ? "text-[#EE4D2D] fill-[#EE4D2D]"
+                        ? "text-yellow-400 fill-yellow-400"
                         : "text-gray-200 fill-gray-200"
                     }`}
                   />
                 ))}
               </div>
 
-              <div className="text-[10px] text-gray-400">
+              {/* <div className="text-[10px] text-gray-400">
                 Variasi: BEY ONLY MF 48, BEY ONLY MF 106
-              </div>
+              </div> */}
 
               <p className="text-xs text-gray-800 leading-relaxed">
                 {review.comment}
@@ -149,10 +161,10 @@ const ProductReviews = ({
         </div>
 
         {/* View All Button */}
-        <button className="w-full py-3 flex items-center justify-center gap-1 text-xs text-gray-500 hover:text-gray-700 transition-colors">
+        {/* <button className="w-full py-3 flex items-center justify-center gap-1 text-xs text-gray-500 hover:text-gray-700 transition-colors">
           <span>Lihat Semua</span>
           <ChevronRight className="w-4 h-4" />
-        </button>
+        </button> */}
       </div>
 
       <ImagePreview

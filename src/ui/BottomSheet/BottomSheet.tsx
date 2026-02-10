@@ -56,8 +56,9 @@ const BottomSheet = ({
           onClick={onClose}
         />
 
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col gap-2 mb-3">
           <h2 className="text-2xl font-bold text-[#0B0F19]">{title}</h2>
+          <div className="w-full h-0.5 bg-gray-100 rounded-full"></div>
           {/* <button
             onClick={onClose}
             className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
@@ -66,7 +67,7 @@ const BottomSheet = ({
           </button> */}
         </div>
 
-        <div className="pb-10">{children}</div>
+        <div className="flex flex-col gap-y-3">{children}</div>
       </div>
     </div>
   );

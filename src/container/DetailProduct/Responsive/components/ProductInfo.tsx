@@ -1,10 +1,10 @@
 import {
   Star,
-  ShieldCheck,
-  Undo2,
-  CreditCard,
-  ChevronRight,
-  Heart,
+  // ShieldCheck,
+  // Undo2,
+  // CreditCard,
+  // ChevronRight,
+  // Heart,
 } from "lucide-react";
 import { formatIDR } from "@/lib/utils";
 
@@ -17,6 +17,9 @@ interface ProductInfoProps {
   rating: number;
   reviewCount: number;
   totalBuyers: number;
+  images: string[];
+  isPo?: boolean;
+  onSelectImage: (index: number) => void;
 }
 
 const ProductInfo = ({
@@ -26,15 +29,29 @@ const ProductInfo = ({
   formattedOriginal,
   rating,
   reviewCount,
+  isPo,
+  images,
   totalBuyers,
+  onSelectImage,
 }: ProductInfoProps) => {
   return (
-    <div className="px-4 py-3 space-y-3">
+    <div className="px-4 py-3 space-y-2">
+      <div className="flex gap-x-2">
+        {images.map((image, index) => (
+          <button
+            key={index}
+            onClick={() => onSelectImage(index)}
+            className="focus:outline-none"
+          >
+            <img src={image} alt={title} className="w-10 h-10 rounded-sm" />
+          </button>
+        ))}
+      </div>
       {/* Price Section */}
       <div className="flex justify-between items-start">
         <div className="space-y-1">
           <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-[#EE4D2D]">
+            <span className="text-2xl font-bold text-[#0B0F19]">
               {formattedDiscounted || formatIDR(price)}
             </span>
             {formattedOriginal && formattedOriginal !== formattedDiscounted && (
@@ -44,17 +61,17 @@ const ProductInfo = ({
             )}
           </div>
           <div className="flex items-center gap-2">
-            <span className="bg-[#EE4D2D]/10 text-[#EE4D2D] text-[10px] font-bold px-1 rounded">
-              Star+
+            <span className="bg-[#EE4D2D]/10 text-[#0B0F19] text-[10px] font-bold px-1 rounded">
+              {isPo ? "Pre Order" : "Ready Stock"}
             </span>
             <h1 className="text-base text-gray-800 line-clamp-2 leading-snug">
               {title}
             </h1>
           </div>
         </div>
-        <button className="p-2 text-gray-400 hover:text-[#EE4D2D] transition-colors">
+        {/* <button className="p-2 text-gray-400 hover:text-[#EE4D2D] transition-colors">
           <Heart className="w-6 h-6" />
-        </button>
+        </button> */}
       </div>
 
       {/* Stats Section */}
@@ -69,7 +86,7 @@ const ProductInfo = ({
                 key={star}
                 className={`w-3 h-3 ${
                   star <= Math.round(rating)
-                    ? "text-[#EE4D2D] fill-[#EE4D2D]"
+                    ? "text-yellow-400 fill-yellow-400"
                     : "text-gray-300 fill-gray-300"
                 }`}
               />
@@ -95,7 +112,7 @@ const ProductInfo = ({
       </div>
 
       {/* Services Section */}
-      <div className="pt-2 border-t border-gray-50 space-y-3">
+      {/* <div className="pt-2 border-t border-gray-50 space-y-3">
         <div className="flex items-center justify-between group">
           <div className="flex items-center gap-3">
             <ShieldCheck className="w-4 h-4 text-[#EE4D2D]" />
@@ -123,7 +140,7 @@ const ProductInfo = ({
           </div>
           <ChevronRight className="w-4 h-4 text-gray-400" />
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

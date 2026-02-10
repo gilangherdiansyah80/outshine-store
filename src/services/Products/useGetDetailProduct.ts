@@ -45,6 +45,7 @@ export interface ProductDetail {
   deliveryAndReturns: string;
   sustainabilityImpact: string;
   specs: ProductSpec[];
+  tags?: Array<{ id: string; name: string }>;
   isPo?: boolean;
   poDpPercent?: number;
   discount?: number;

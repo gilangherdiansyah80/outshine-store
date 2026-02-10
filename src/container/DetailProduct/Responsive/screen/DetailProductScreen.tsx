@@ -7,6 +7,7 @@ import ProductInfo from "../components/ProductInfo";
 import ProductReviews from "../components/ProductReviews";
 import ProductSizeSelector from "../components/ProductSizeSelector";
 import BottomSheet from "@outshine/ui/BottomSheet/BottomSheet";
+import { ChevronRight, Ruler } from "lucide-react";
 
 interface DetailProductScreenProps {
   product: ProductDetail;
@@ -16,6 +17,7 @@ const DetailProductScreen: React.FC<DetailProductScreenProps> = ({
   product,
 }) => {
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isSizeSheetOpen, setIsSizeSheetOpen] = useState(false);
   const [isSpecsSheetOpen, setIsSpecsSheetOpen] = useState(false);
 
@@ -27,6 +29,8 @@ const DetailProductScreen: React.FC<DetailProductScreenProps> = ({
           images={product.images}
           title={product.title}
           price={product.price}
+          currentIndex={activeImageIndex}
+          onIndexChange={setActiveImageIndex}
         />
 
         <ProductInfo
@@ -37,6 +41,9 @@ const DetailProductScreen: React.FC<DetailProductScreenProps> = ({
           rating={product.rating}
           reviewCount={product.reviewCount}
           totalBuyers={product.totalBuyers}
+          isPo={product.isPo}
+          images={product.images}
+          onSelectImage={setActiveImageIndex}
         />
       </div>
 
@@ -77,6 +84,11 @@ const DetailProductScreen: React.FC<DetailProductScreenProps> = ({
         onClose={() => setIsSizeSheetOpen(false)}
         title="Pilih Ukuran"
       >
+        <button className="flex gap-x-1 self-end cursor-pointer items-center">
+          <Ruler className="w-3 h-3 text-blue-600" />
+          <h1 className="text-xs font-medium text-blue-600">Panduan Ukuran</h1>
+          <ChevronRight className="w-4 h-4 text-blue-600" />
+        </button>
         <ProductSizeSelector
           sizes={product.sizes}
           selectedSize={selectedSize}
@@ -92,7 +104,7 @@ const DetailProductScreen: React.FC<DetailProductScreenProps> = ({
         onClose={() => setIsSpecsSheetOpen(false)}
         title="Spesifikasi"
       >
-        <div className="space-y-4 pb-4">
+        <div className="space-y-4">
           <ul className="divide-y divide-gray-100 px-1">
             {product.specs.map((spec) => (
               <li key={spec.id} className="flex justify-between py-4 text-sm">
@@ -101,12 +113,12 @@ const DetailProductScreen: React.FC<DetailProductScreenProps> = ({
               </li>
             ))}
           </ul>
-          <button
+          {/* <button
             onClick={() => setIsSpecsSheetOpen(false)}
             className="w-full py-3 bg-[#EE4D2D] text-white font-bold rounded-lg mt-4 uppercase"
           >
             OK
-          </button>
+          </button> */}
         </div>
       </BottomSheet>
     </div>
