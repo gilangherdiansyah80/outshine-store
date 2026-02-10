@@ -12,7 +12,7 @@ const WishlistEmpty = () => {
       </p>
       <Link
         to="/outshine/products"
-        className="mt-4 px-6 py-2.5 bg-blue-600 rounded-lg text-sm font-bold shadow-lg shadow-blue-900/40"
+        className="mt-4 px-6 py-2.5 bg-blue-600 rounded-lg text-sm font-bold shadow-lg shadow-blue-900/40 text-white"
       >
         Start Shopping
       </Link>

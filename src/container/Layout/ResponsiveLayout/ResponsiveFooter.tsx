@@ -3,9 +3,14 @@ import { HomeIcon } from "@programmer-molor/my-icons";
 import { ShoppingBagIcon, InfoIcon, User } from "lucide-react";
 import Image from "@outshine/ui/Image/Image";
 
+import { useNavigationStore } from "@/store/navigationStore";
+
 const ResponsiveFooter = () => {
   const { pathname } = useLocation();
-  console.log("FOOTER RENDERED - PATH:", pathname);
+  const isFooterVisible = useNavigationStore((state) => state.isFooterVisible);
+  console.log("FOOTER RENDERED - PATH:", pathname, "VISIBLE:", isFooterVisible);
+
+  if (!isFooterVisible) return null;
 
   const isActive = (path: string) => {
     if (path === "/outshine/home") return pathname === path;

@@ -10,10 +10,12 @@ import type {
 interface InternalNavigationState extends NavigationState {
   navigationAttempts: number;
   lastNavigationTime: number;
+  isFooterVisible: boolean;
   actions: NavigationActions & {
     setHasHydrated: () => void;
     setHasReady: () => void;
     setIsDoingRealNavigation: (value: boolean) => void;
+    setFooterVisible: (visible: boolean) => void;
     resetNavigationSafety: () => void;
     setNavigationAttempts: (attempts: number) => void;
   };
@@ -29,6 +31,7 @@ const useNavigationStore = create<InternalNavigationState>()(
       isHydrated: false,
       isReady: false, // Set to true after initial sync is complete
       isDoingRealNavigation: true,
+      isFooterVisible: true,
       navigationAttempts: 0,
       lastNavigationTime: 0,
       actions: {
@@ -82,6 +85,8 @@ const useNavigationStore = create<InternalNavigationState>()(
         setHasReady: () => set({ isReady: true }),
         setIsDoingRealNavigation: (value: boolean) =>
           set({ isDoingRealNavigation: value }),
+        setFooterVisible: (visible: boolean) =>
+          set({ isFooterVisible: visible }),
         resetNavigationSafety: () =>
           set({ navigationAttempts: 0, lastNavigationTime: 0 }),
         setNavigationAttempts: (attempts: number) =>
