@@ -1,6 +1,6 @@
 import AboutContact from "../components/AboutContact";
 import AboutHero from "../components/AboutHero";
-import AboutLocation from "../components/AboutLocation";
+// import AboutLocation from "../components/AboutLocation";
 import AboutSocials from "../components/AboutSocials";
 import AboutStory from "../components/AboutStory";
 
@@ -28,7 +28,7 @@ const AboutUsScreen = () => {
       {/* Main Content */}
       <div className="px-5 space-y-10 mt-8 pb-10">
         <AboutStory />
-        <AboutLocation />
+        {/* <AboutLocation /> */}
         <AboutContact />
         <AboutSocials />
       </div>

@@ -36,7 +36,7 @@ const ProductDetails = ({
 
       {/* Description Section */}
       <div className="p-4 bg-white space-y-3">
-        <h3 className="text-sm font-medium text-gray-900">Deskripsi</h3>
+        <h3 className="text-sm font-medium text-gray-900">Filosofi</h3>
         <div className="text-sm text-gray-600 leading-relaxed whitespace-pre-wrap">
           {description}
         </div>
