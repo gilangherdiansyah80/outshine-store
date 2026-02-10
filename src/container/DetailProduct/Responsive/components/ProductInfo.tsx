@@ -72,6 +72,15 @@ const ProductInfo = ({
         {/* <button className="p-2 text-gray-400 hover:text-[#EE4D2D] transition-colors">
           <Heart className="w-6 h-6" />
         </button> */}
+
+        <div className="pl-3">
+          <span className="text-sm text-gray-500">
+            <span className="text-gray-900 font-medium">
+              {totalBuyers > 1000 ? "1,1RB" : totalBuyers}
+            </span>{" "}
+            Terjual
+          </span>
+        </div>
       </div>
 
       {/* Stats Section */}
@@ -99,14 +108,6 @@ const ProductInfo = ({
               {reviewCount > 1000 ? "1,1RB" : reviewCount}
             </span>{" "}
             Penilaian
-          </span>
-        </div>
-        <div className="pl-3">
-          <span className="text-sm text-gray-500">
-            <span className="text-gray-900 font-medium">
-              {totalBuyers > 1000 ? "1,1RB" : totalBuyers}
-            </span>{" "}
-            Terjual
           </span>
         </div>
       </div>
