@@ -25,8 +25,22 @@ const ProductReviews = ({
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-50">
         <section className="flex items-center gap-1">
-          <h2 className="text-sm font-medium text-gray-900">{rating}</h2>
-          <Star className={`w-3 h-3 text-yellow-400 fill-yellow-400`} />
+          <h2 className="text-sm font-bold text-gray-900 border-b border-gray-900 leading-none">
+            {rating}
+          </h2>
+          <div className="flex">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <Star
+                key={star}
+                className={`w-3 h-3 ${
+                  star <= Math.round(rating)
+                    ? "text-yellow-400 fill-yellow-400"
+                    : "text-gray-300 fill-gray-300"
+                }`}
+              />
+            ))}
+          </div>
+          {/* <Star className={`w-3 h-3 text-yellow-400 fill-yellow-400`} /> */}
           <h3 className="text-sm font-medium text-gray-900">
             Penilaian Produk ({reviewCount > 1000 ? "1,1RB" : reviewCount})
           </h3>

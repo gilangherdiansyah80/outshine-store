@@ -1,11 +1,4 @@
-import {
-  Star,
-  // ShieldCheck,
-  // Undo2,
-  // CreditCard,
-  // ChevronRight,
-  // Heart,
-} from "lucide-react";
+import { ShieldCheck, ChevronRight, Truck, Headset } from "lucide-react";
 import { formatIDR } from "@/lib/utils";
 
 interface ProductInfoProps {
@@ -27,8 +20,8 @@ const ProductInfo = ({
   price,
   formattedDiscounted,
   formattedOriginal,
-  rating,
-  reviewCount,
+  // rating,
+  // reviewCount,
   isPo,
   images,
   totalBuyers,
@@ -43,7 +36,11 @@ const ProductInfo = ({
             onClick={() => onSelectImage(index)}
             className="focus:outline-none w-14 h-14"
           >
-            <img src={image} alt={title} className="w-full h-full rounded-sm" />
+            <img
+              src={image}
+              alt={title}
+              className="w-full h-full rounded-sm object-cover"
+            />
           </button>
         ))}
       </div>
@@ -69,9 +66,6 @@ const ProductInfo = ({
             </h1>
           </div>
         </div>
-        {/* <button className="p-2 text-gray-400 hover:text-[#EE4D2D] transition-colors">
-          <Heart className="w-6 h-6" />
-        </button> */}
 
         <div className="pl-3">
           <span className="text-sm text-gray-500">
@@ -83,65 +77,56 @@ const ProductInfo = ({
         </div>
       </div>
 
-      {/* Stats Section */}
-      <div className="flex items-center gap-3 divide-x divide-gray-100 py-1">
-        <div className="flex items-center gap-1">
-          <span className="text-sm font-bold text-gray-900 border-b border-gray-900 leading-none">
-            {rating}
-          </span>
-          <div className="flex">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <Star
-                key={star}
-                className={`w-3 h-3 ${
-                  star <= Math.round(rating)
-                    ? "text-yellow-400 fill-yellow-400"
-                    : "text-gray-300 fill-gray-300"
-                }`}
-              />
-            ))}
+      {/* Services Section */}
+      <div className="pt-2 border-t border-gray-50 space-y-4">
+        {/* Quality Control */}
+        <div className="flex items-start justify-between group">
+          <div className="flex items-start gap-3">
+            <ShieldCheck className="w-5 h-5 text-[#EE4D2D] shrink-0 mt-0.5" />
+            <div className="space-y-0.5">
+              <span className="text-sm font-semibold text-gray-900 block">
+                Outshine Quality Control
+              </span>
+              <span className="text-xs text-gray-500 block">
+                Setiap produk melalui pengecekan detail sebelum dikirim.
+              </span>
+            </div>
           </div>
+          <ChevronRight className="w-4 h-4 text-gray-400 self-center" />
         </div>
-        <div className="pl-3">
-          <span className="text-sm text-gray-500">
-            <span className="text-gray-900 font-medium">
-              {reviewCount > 1000 ? "1,1RB" : reviewCount}
-            </span>{" "}
-            Penilaian
-          </span>
+
+        {/* Fast Handling */}
+        <div className="flex items-start justify-between group">
+          <div className="flex items-start gap-3">
+            <Truck className="w-5 h-5 text-[#EE4D2D] shrink-0 mt-0.5" />
+            <div className="space-y-0.5">
+              <span className="text-sm font-semibold text-gray-900 block">
+                Outshine Fast Handling
+              </span>
+              <span className="text-xs text-gray-500 block">
+                Pesanan diproses cepat & aman oleh tim Outshine.
+              </span>
+            </div>
+          </div>
+          <ChevronRight className="w-4 h-4 text-gray-400 self-center" />
+        </div>
+
+        {/* Customer Support */}
+        <div className="flex items-start justify-between group">
+          <div className="flex items-start gap-3">
+            <Headset className="w-5 h-5 text-[#EE4D2D] shrink-0 mt-0.5" />
+            <div className="space-y-0.5">
+              <span className="text-sm font-semibold text-gray-900 block">
+                Outshine Customer Support
+              </span>
+              <span className="text-xs text-gray-500 block">
+                Siap bantu sebelum & sesudah pembelian.
+              </span>
+            </div>
+          </div>
+          <ChevronRight className="w-4 h-4 text-gray-400 self-center" />
         </div>
       </div>
-
-      {/* Services Section */}
-      {/* <div className="pt-2 border-t border-gray-50 space-y-3">
-        <div className="flex items-center justify-between group">
-          <div className="flex items-center gap-3">
-            <ShieldCheck className="w-4 h-4 text-[#EE4D2D]" />
-            <span className="text-sm text-gray-600">
-              Garansi tiba 11 - 12 Februari
-            </span>
-          </div>
-          <ChevronRight className="w-4 h-4 text-gray-400" />
-        </div>
-
-        <div className="flex items-center justify-between group">
-          <div className="flex items-center gap-3">
-            <Undo2 className="w-4 h-4 text-[#EE4D2D]" />
-            <span className="text-sm text-gray-600">Bebas Pengembalian</span>
-          </div>
-          <ChevronRight className="w-4 h-4 text-gray-400" />
-        </div>
-
-        <div className="flex items-center justify-between group">
-          <div className="flex items-center gap-3">
-            <CreditCard className="w-4 h-4 text-[#EE4D2D]" />
-            <span className="text-sm text-gray-600">
-              SPayLater: Cicilan Pasti 0% + Diskon 50RB
-            </span>
-          </div>
-          <ChevronRight className="w-4 h-4 text-gray-400" />
-        </div>
-      </div> */}
     </div>
   );
 };

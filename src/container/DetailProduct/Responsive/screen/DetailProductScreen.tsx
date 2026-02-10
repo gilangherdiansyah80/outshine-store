@@ -48,19 +48,19 @@ const DetailProductScreen: React.FC<DetailProductScreenProps> = ({
       </div>
 
       <div className="mt-2 bg-white">
-        <ProductDetails
-          description={product.description}
-          specs={product.specs}
-          onOpenSpecs={() => setIsSpecsSheetOpen(true)}
-        />
-      </div>
-
-      <div className="mt-2 bg-white">
         <ProductReviews
           rating={product.rating}
           reviewCount={product.reviewCount}
           ratingDistribution={product.ratingDistribution}
           reviews={product.reviews}
+        />
+      </div>
+
+      <div className="mt-2 bg-white">
+        <ProductDetails
+          description={product.description}
+          specs={product.specs}
+          onOpenSpecs={() => setIsSpecsSheetOpen(true)}
         />
       </div>
 
