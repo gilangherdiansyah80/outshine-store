@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { ArrowLeft, Star, Image as ImageIcon } from "lucide-react";
 import { useGetReviews } from "@/services/Reviews/useGetReviews";
 import ReviewCard from "../components/ReviewCard";
@@ -6,6 +6,7 @@ import Loading from "@/components/Loader/Loading";
 import { useState } from "react";
 import ImagePreview from "@outshine/ui/Image/ImagePreview";
 import type { ProductDetail } from "@/services/Products/useGetDetailProduct";
+import { useResponsiveNavigation } from "@/hooks/use-responsive-navigation";
 
 interface AllReviewsScreenProps {
   product?: ProductDetail;
@@ -13,9 +14,10 @@ interface AllReviewsScreenProps {
 
 const AllReviewsScreen = ({ product }: AllReviewsScreenProps) => {
   const { id } = useParams();
-  const navigate = useNavigate();
+  const { pop } = useResponsiveNavigation();
   const { reviews, isLoading } = useGetReviews(id);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedRating, setSelectedRating] = useState<number | null>(null);
 
   if (isLoading) {
     return <Loading />;
@@ -30,12 +32,16 @@ const AllReviewsScreen = ({ product }: AllReviewsScreenProps) => {
 
   const reviewCount = product?.reviewCount ?? reviews.length;
 
+  const filteredReviews = selectedRating
+    ? reviews.filter((r) => Math.round(r.rating) === selectedRating)
+    : reviews;
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Header */}
       <div className="sticky top-0 z-40 bg-white border-b border-gray-100 px-4 h-14 flex items-center gap-3">
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => pop()}
           className="p-1 -ml-1 hover:bg-gray-100 rounded-full transition-colors"
         >
           <ArrowLeft className="w-6 h-6 text-gray-800" />
@@ -48,7 +54,7 @@ const AllReviewsScreen = ({ product }: AllReviewsScreenProps) => {
       {/* Content */}
       <div className="flex-1 pb-8">
         {/* Statistics Banner */}
-        <div className="bg-white px-4 py-6 mb-2 border-b border-gray-50">
+        <div className="bg-white px-4 py-6 border-b border-gray-50">
           <h2 className="text-lg font-bold text-gray-900 mb-4">
             Customer Reviews
           </h2>
@@ -106,11 +112,43 @@ const AllReviewsScreen = ({ product }: AllReviewsScreenProps) => {
           </div>
         </div>
 
+        {/* Filters */}
+        <div className="bg-white px-4 py-4 mb-2 border-b border-gray-100">
+          <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+            <button
+              onClick={() => setSelectedRating(null)}
+              className={`px-4 py-2 rounded-full text-xs font-medium border transition-colors whitespace-nowrap ${
+                selectedRating === null
+                  ? "bg-yellow-400 border-yellow-400 text-black"
+                  : "bg-white border-gray-200 text-gray-600 hover:bg-gray-50"
+              }`}
+            >
+              Semua
+            </button>
+            {[5, 4, 3, 2, 1].map((star) => (
+              <button
+                key={star}
+                onClick={() => setSelectedRating(star)}
+                className={`px-4 py-2 rounded-full text-xs font-medium border transition-colors whitespace-nowrap flex items-center gap-1 ${
+                  selectedRating === star
+                    ? "bg-yellow-400 border-yellow-400 text-black"
+                    : "bg-white border-gray-200 text-gray-600 hover:bg-gray-50"
+                }`}
+              >
+                {star}{" "}
+                <Star
+                  className={`w-3 h-3 ${selectedRating === star ? "fill-black" : "fill-gray-400 text-gray-400"}`}
+                />
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Review List */}
         <div className="bg-white px-4 min-h-[50vh]">
-          {reviews.length > 0 ? (
+          {filteredReviews.length > 0 ? (
             <div className="divide-y divide-gray-50">
-              {reviews.map((review) => (
+              {filteredReviews.map((review) => (
                 <div key={review.id} className="py-4">
                   <ReviewCard review={review} onImageClick={setSelectedImage} />
                 </div>
@@ -121,7 +159,11 @@ const AllReviewsScreen = ({ product }: AllReviewsScreenProps) => {
               <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center">
                 <ImageIcon className="w-8 h-8 text-gray-300" />
               </div>
-              <p className="text-sm">Belum ada ulasan untuk produk ini</p>
+              <p className="text-sm">
+                Belum ada ulasan{" "}
+                {selectedRating ? `dengan ${selectedRating} bintang ` : ""}untuk
+                produk ini
+              </p>
             </div>
           )}
         </div>
