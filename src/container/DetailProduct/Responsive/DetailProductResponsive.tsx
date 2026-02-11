@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { ResponsiveRoute } from "@outshine/lib/components";
 import { useGetDetailProduct } from "@outshine/services/Products/useGetDetailProduct";
 import DetailProductScreen from "./screen/DetailProductScreen";
+import AllReviewsScreen from "./screen/AllReviewsScreen";
 
 import { useEffect, useState } from "react";
 import Loading from "@/components/Loader/Loading";
@@ -33,10 +34,20 @@ const DetailProductResponsive = () => {
   }
 
   return (
-    <ResponsiveRoute
-      path="/"
-      component={<DetailProductScreen product={product} />}
-    />
+    <>
+      <ResponsiveRoute
+        path="/"
+        component={<DetailProductScreen product={product} />}
+      />
+      <ResponsiveRoute
+        path={`/outshine/product/${id}`}
+        component={<DetailProductScreen product={product} />}
+      />
+      <ResponsiveRoute
+        path={`/outshine/product/${id}/all-reviews`}
+        component={<AllReviewsScreen product={product} />}
+      />
+    </>
   );
 };
 

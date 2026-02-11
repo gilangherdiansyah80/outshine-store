@@ -83,7 +83,7 @@ export const getTrendingProductsData = async (): Promise<ProductItem[]> => {
   }
 
   const response = await fetcherOSStore.get<ProductsResponse>(
-    "/api/v1/products?isNew=true&isTrending=true",
+    "/api/v1/products?isTrending=true",
   );
 
   if (!response.data.success) {
@@ -99,7 +99,7 @@ export const getTrendingProductsData = async (): Promise<ProductItem[]> => {
 
 export const useGetTrendingProducts = () => {
   const { data, error, isLoading, mutate } = useSWR<ProductItem[]>(
-    "/api/v1/products?isNew=true&isTrending=true",
+    "/api/v1/products?isTrending=true",
     getTrendingProductsData,
     {
       revalidateOnFocus: false,

@@ -8,6 +8,7 @@ import ProductReviews from "../components/ProductReviews";
 import ProductSizeSelector from "../components/ProductSizeSelector";
 import BottomSheet from "@outshine/ui/BottomSheet/BottomSheet";
 import { ChevronRight, Ruler } from "lucide-react";
+import ProductGuideSize from "../components/ProductGuideSize";
 
 interface DetailProductScreenProps {
   product: ProductDetail;
@@ -20,6 +21,7 @@ const DetailProductScreen: React.FC<DetailProductScreenProps> = ({
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isSizeSheetOpen, setIsSizeSheetOpen] = useState(false);
   const [isSpecsSheetOpen, setIsSpecsSheetOpen] = useState(false);
+  const [isGuideSizeOpen, setIsGuideSizeOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-gray-100 pb-24 font-sans">
@@ -84,7 +86,10 @@ const DetailProductScreen: React.FC<DetailProductScreenProps> = ({
         onClose={() => setIsSizeSheetOpen(false)}
         title="Pilih Ukuran"
       >
-        <button className="flex gap-x-1 self-end cursor-pointer items-center">
+        <button
+          className="flex gap-x-1 self-end cursor-pointer items-center"
+          onClick={() => setIsGuideSizeOpen(true)}
+        >
           <Ruler className="w-3 h-3 text-blue-600" />
           <h1 className="text-xs font-medium text-blue-600">Panduan Ukuran</h1>
           <ChevronRight className="w-4 h-4 text-blue-600" />
@@ -121,6 +126,13 @@ const DetailProductScreen: React.FC<DetailProductScreenProps> = ({
           </button> */}
         </div>
       </BottomSheet>
+
+      <ProductGuideSize
+        isOpen={isGuideSizeOpen}
+        onClose={() => setIsGuideSizeOpen(false)}
+        title="Panduan Ukuran"
+        guideSize={product.sizeGuide || []}
+      />
     </div>
   );
 };

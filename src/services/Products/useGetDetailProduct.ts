@@ -27,6 +27,11 @@ export interface ProductSpec {
   value: string;
 }
 
+export interface SizeGuide {
+  imageUrl: string;
+  description: string;
+}
+
 export interface ProductDetail {
   id: string;
   title: string;
@@ -47,6 +52,7 @@ export interface ProductDetail {
   specs: ProductSpec[];
   tags?: Array<{ id: string; name: string }>;
   isPo?: boolean;
+  sizeGuide?: SizeGuide[];
   poDpPercent?: number;
   discount?: number;
   totalBuyers: number;
@@ -128,10 +134,7 @@ interface APIDetailProduct {
       total: number;
     };
   };
-  sizeGuide: {
-    imageUrl: string;
-    description: string;
-  };
+  sizeGuide: SizeGuide[] | SizeGuide | null;
   wishlist: {
     isWishlisted: boolean;
   };
@@ -189,6 +192,11 @@ const mapAPIDetailToProductDetail = (
         ? apiProduct.discount.value
         : undefined,
     totalBuyers: apiProduct.totalBuyers,
+    sizeGuide: apiProduct.sizeGuide
+      ? Array.isArray(apiProduct.sizeGuide)
+        ? apiProduct.sizeGuide
+        : [apiProduct.sizeGuide]
+      : [],
   };
 };
 
