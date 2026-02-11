@@ -48,43 +48,60 @@ const AllReviewsScreen = ({ product }: AllReviewsScreenProps) => {
       {/* Content */}
       <div className="flex-1 pb-8">
         {/* Statistics Banner */}
-        <div className="bg-white px-4 py-4 mb-2 flex items-center gap-4 border-b border-gray-50">
-          <div className="flex flex-col items-center justify-center pr-4 border-r border-gray-100">
-            <div className="text-2xl font-bold text-gray-900 leading-none">
-              {averageRating.toFixed(1)}
-              <span className="text-xs text-gray-500 font-normal ml-0.5">
-                /5
-              </span>
-            </div>
-            <div className="flex mt-1">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <Star
-                  key={star}
-                  className={`w-3 h-3 ${
-                    star <= Math.round(averageRating)
-                      ? "text-yellow-400 fill-yellow-400"
-                      : "text-gray-200 fill-gray-200"
-                  }`}
-                />
-              ))}
-            </div>
-            <div className="text-[10px] text-gray-500 mt-1">
-              {reviewCount} Ulasan
-            </div>
-          </div>
+        <div className="bg-white px-4 py-6 mb-2 border-b border-gray-50">
+          <h2 className="text-lg font-bold text-gray-900 mb-4">
+            Customer Reviews
+          </h2>
 
-          <div className="flex-1">
-            {/* Filter tags could go here (e.g. "With Photo", "5 Stars") */}
-            <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
-              <button className="px-3 py-1.5 rounded-full bg-green-50 text-green-700 text-xs font-medium border border-green-100 whitespace-nowrap">
-                Semua
-              </button>
-              <button className="px-3 py-1.5 rounded-full bg-white text-gray-600 text-xs font-medium border border-gray-200 whitespace-nowrap hover:bg-gray-50">
-                Dengan Foto
-              </button>
-              <button className="px-3 py-1.5 rounded-full bg-white text-gray-600 text-xs font-medium border border-gray-200 whitespace-nowrap hover:bg-gray-50 flex items-center gap-1">
-                5 <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
-              </button>
+          <div className="flex items-start gap-8">
+            {/* Left: Average Rating */}
+            <div className="flex flex-col items-center">
+              <div className="text-5xl font-bold text-[#0B0F19] leading-none">
+                {averageRating % 1 === 0
+                  ? averageRating
+                  : averageRating.toFixed(1)}
+              </div>
+              <div className="flex gap-1 my-2">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <Star
+                    key={star}
+                    className={`w-4 h-4 ${
+                      star <= Math.round(averageRating)
+                        ? "text-yellow-400 fill-yellow-400"
+                        : "text-gray-200 fill-gray-200"
+                    }`}
+                  />
+                ))}
+              </div>
+              <div className="text-sm text-gray-500">{reviewCount} reviews</div>
+            </div>
+
+            {/* Right: Progress Bars */}
+            <div className="flex-1 space-y-2">
+              {[5, 4, 3, 2, 1].map((star) => {
+                const count = reviews.filter(
+                  (r) => Math.round(r.rating) === star,
+                ).length;
+                const percentage =
+                  reviews.length > 0 ? (count / reviews.length) * 100 : 0;
+
+                return (
+                  <div key={star} className="flex items-center gap-3 text-sm">
+                    <span className="w-3 font-medium text-gray-900">
+                      {star}
+                    </span>
+                    <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-yellow-400 rounded-full"
+                        style={{ width: `${percentage}%` }}
+                      />
+                    </div>
+                    <span className="w-8 text-right text-gray-500 text-xs">
+                      {percentage > 0 ? `${Math.round(percentage)}%` : "0%"}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
