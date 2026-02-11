@@ -102,6 +102,7 @@ const CheckoutScreen = () => {
         addressId: activeAddress.id,
         paymentType: paymentType,
         paymentMethod: selectedPaymentMethod!,
+        paymentProvider: "manual",
       };
 
       // Condition B: Buy Now
@@ -205,7 +206,7 @@ const CheckoutScreen = () => {
         />
 
         <PaymentMethodSelector
-          selectedId={selectedPaymentMethod}
+          selectedCode={selectedPaymentMethod}
           onSelect={setSelectedPaymentMethod}
         />
 

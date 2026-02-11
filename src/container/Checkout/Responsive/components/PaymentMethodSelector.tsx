@@ -1,69 +1,98 @@
 import { CreditCard, QrCode, Wallet, type LucideIcon } from "lucide-react";
+import { useGetPaymentMethod } from "@/services/Payment/useGetPaymentMethod";
 
-interface PaymentMethod {
-  id: string;
+interface PaymentMethodDisplay {
+  code: string;
   name: string;
   type: "va" | "e-wallet" | "qris";
   icon: LucideIcon;
   description?: string;
 }
 
-const paymentMethods: PaymentMethod[] = [
-  { id: "bca", name: "BCA Virtual Account", type: "va", icon: CreditCard },
-  { id: "bni", name: "BNI Virtual Account", type: "va", icon: CreditCard },
-  { id: "bri", name: "BRI Virtual Account", type: "va", icon: CreditCard },
-  {
-    id: "permata",
-    name: "Permata Virtual Account",
-    type: "va",
-    icon: CreditCard,
-  },
-  {
-    id: "qris",
-    name: "QRIS",
-    type: "qris",
-    icon: QrCode,
-    description: "Scan QR Code with any payment app",
-  },
-  {
-    id: "gopay",
-    name: "GoPay",
+const getPaymentMethodDisplay = (
+  code: string,
+  name: string,
+): PaymentMethodDisplay => {
+  const normalizedCode = code.toLowerCase();
+
+  if (
+    normalizedCode.includes("va") ||
+    ["bca", "bni", "bri", "mandiri", "permata"].includes(normalizedCode)
+  ) {
+    return {
+      code,
+      name,
+      type: "va",
+      icon: CreditCard,
+      description: `Virtual Account ${name.split(" ")[0]}`,
+    };
+  }
+
+  if (normalizedCode === "qris") {
+    return {
+      code,
+      name,
+      type: "qris",
+      icon: QrCode,
+      description: "Scan QR Code with any payment app",
+    };
+  }
+
+  // Default to e-wallet
+  return {
+    code,
+    name,
     type: "e-wallet",
     icon: Wallet,
-    description: "Pay with GoPay mobile app",
-  },
-  {
-    id: "shopeepay",
-    name: "ShopeePay",
-    type: "e-wallet",
-    icon: Wallet,
-    description: "Pay with Shopee app",
-  },
-];
+    description: `Pay with ${name} mobile app`,
+  };
+};
 
 interface PaymentMethodSelectorProps {
-  selectedId: string | null;
-  onSelect: (id: string) => void;
+  selectedCode: string | null;
+  onSelect: (code: string) => void;
 }
 
 const PaymentMethodSelector = ({
-  selectedId,
+  selectedCode,
   onSelect,
 }: PaymentMethodSelectorProps) => {
+  const { paymentMethods, isLoading } = useGetPaymentMethod();
+
+  const displayMethods = paymentMethods.map((method) =>
+    getPaymentMethodDisplay(method.code, method.name),
+  );
+
+  if (isLoading) {
+    return (
+      <div className="space-y-4">
+        <div className="h-4 w-24 bg-white/5 animate-pulse rounded" />
+        <div className="space-y-3">
+          {[1, 2, 3].map((i) => (
+            <div
+              key={i}
+              className="h-20 w-full bg-white/5 animate-pulse rounded-3xl"
+            />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <section className="space-y-4">
       <h2 className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-1">
         Payment Method
       </h2>
       <div className="space-y-3">
-        {paymentMethods.map((method) => {
+        {displayMethods.map((method) => {
           const Icon = method.icon;
-          const isSelected = selectedId === method.id;
+          const isSelected = selectedCode === method.code;
 
           return (
             <button
-              key={method.id}
-              onClick={() => onSelect(method.id)}
+              key={method.code}
+              onClick={() => onSelect(method.code)}
               className={`w-full p-4 rounded-3xl border transition-all flex items-center gap-4 text-left ${
                 isSelected
                   ? "bg-blue-600/10 border-blue-500 shadow-[0_0_20px_rgba(59,130,246,0.1)]"

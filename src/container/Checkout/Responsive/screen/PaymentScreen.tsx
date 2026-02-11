@@ -42,7 +42,7 @@ const PaymentScreen = () => {
         </div>
 
         <PaymentMethodSelector
-          selectedId={selectedMethod}
+          selectedCode={selectedMethod}
           onSelect={setSelectedMethod}
         />
 

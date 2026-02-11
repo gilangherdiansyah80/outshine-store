@@ -4,9 +4,15 @@ export interface PostOrderPayload {
   addressId: string;
   paymentType: "full" | "dp";
   paymentMethod: string; // e.g., 'bca', 'qris', 'gopay'
+  paymentProvider: "manual"; // Defaulted to manual as requested
   productId?: string; // Optional for Cart checkout
   sizeId?: string; // Optional for Cart checkout
   quantity?: number; // Optional for Cart checkout
+}
+
+export interface Instruction {
+  step: number;
+  text: string;
 }
 
 export interface PostOrderResponse {
@@ -15,18 +21,21 @@ export interface PostOrderResponse {
   data: {
     order: {
       id: string;
-      userId: string;
       totalPrice: number;
-      expiredAt: string;
+      paidAmount: number; // For DP/Full payment price display
+      status: string;
     };
     payment: {
       paymentId: string;
-      method: string;
-      vaNumber?: string;
-      bankName?: string;
-      qrUrl?: string; // For QRIS
-      deepLink?: string; // For E-wallet
-      status: string;
+      transactionId: string;
+      amount: number;
+      expiredAt: string;
+      bank: {
+        name: string;
+        accountNumber: string;
+        accountHolder: string;
+      };
+      instructions: Instruction[]; // Array of Instruction objects instead of string array
     };
   };
 }
