@@ -16,9 +16,13 @@ export interface CartItem {
   quantity: number;
 }
 
+export type AddCartItem = Omit<CartItem, "quantity"> & {
+  quantity?: number;
+};
+
 interface CartState {
   items: CartItem[];
-  addItem: (item: Omit<CartItem, "quantity">) => void;
+  addItem: (item: AddCartItem) => void;
   removeItem: (id: string, size: string, color: string) => void;
   updateQuantity: (
     id: string,
@@ -37,8 +41,9 @@ export const useCartStore = create<CartState>((set, get) => ({
   items: [],
   buyNowItem: null,
   setBuyNowItem: (item) => set({ buyNowItem: item }),
-  addItem: (newItem) => {
+  addItem: (newItem: AddCartItem) => {
     const { items } = get();
+    const quantityToAdd = newItem.quantity || 1;
     const existingItem = items.find(
       (i) =>
         i.id === newItem.id &&
@@ -52,13 +57,13 @@ export const useCartStore = create<CartState>((set, get) => ({
           i.id === newItem.id &&
           i.size === newItem.size &&
           i.color === newItem.color
-            ? { ...i, quantity: i.quantity + 1 }
+            ? { ...i, quantity: i.quantity + quantityToAdd }
             : i,
         ),
       });
     } else {
       set({
-        items: [...items, { ...newItem, quantity: 1 }],
+        items: [...items, { ...newItem, quantity: quantityToAdd }],
       });
     }
   },

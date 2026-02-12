@@ -3,6 +3,7 @@ import { fetcherOSStore } from "@/lib/axios";
 export interface PostCartPayload {
   productId: string;
   sizeId: string;
+  quantity?: number;
 }
 
 export interface PostCartResponse {

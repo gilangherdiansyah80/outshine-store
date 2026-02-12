@@ -29,8 +29,15 @@ const ProductGuideSize = ({
         setIsRendered(false);
         document.body.style.overflow = "unset";
       }, 300);
-      return () => clearTimeout(timer);
+      return () => {
+        clearTimeout(timer);
+        document.body.style.overflow = "unset";
+      };
     }
+
+    return () => {
+      document.body.style.overflow = "unset";
+    };
   }, [isOpen, isRendered]);
 
   if (!isRendered) return null;
