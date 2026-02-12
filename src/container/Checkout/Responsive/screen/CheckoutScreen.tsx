@@ -185,7 +185,7 @@ const CheckoutScreen = () => {
     return (
       <PaymentInstruction
         orderData={orderSuccessData}
-        onDone={() => navigate("/outshine/profile/orders")}
+        onDone={() => navigate("/outshine/orders")}
       />
     );
   }
