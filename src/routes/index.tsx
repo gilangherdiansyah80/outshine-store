@@ -14,6 +14,7 @@ import RegisterPage from "@outshine/pages/Auth/RegisterPage";
 import LoginPage from "@outshine/pages/Auth/LoginPage";
 import OrdersPage from "@outshine/pages/OrdersPage";
 import SettingPage from "@outshine/pages/SettingPage";
+import DetailOrderPage from "@outshine/pages/DetailOrderPage";
 
 const route = createBrowserRouter([
   {
@@ -95,6 +96,10 @@ const route = createBrowserRouter([
       {
         path: "product/:id",
         element: <DetailProductPage />,
+      },
+      {
+        path: "order/:id",
+        element: <DetailOrderPage />,
       },
     ],
   },

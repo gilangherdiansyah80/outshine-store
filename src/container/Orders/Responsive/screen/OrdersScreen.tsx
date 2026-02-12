@@ -31,6 +31,7 @@ const OrdersScreen = () => {
       totalAmount: Number(order.totalPrice),
       itemsCount: Number(order.totalItems),
       firstItem: {
+        id: firstItem?.productId,
         name: firstItem?.productName || `Pesanan #${order.id.slice(0, 5)}`,
         image:
           firstItem?.productImage ||

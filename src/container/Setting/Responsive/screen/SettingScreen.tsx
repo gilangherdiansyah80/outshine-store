@@ -3,16 +3,76 @@ import SettingHeader from "../components/SettingHeader";
 import SettingSection from "../components/SettingSection";
 import SettingItem from "../components/SettingItem";
 import { useNavigate } from "react-router-dom";
+import { usePostLogout } from "@/services/Auth/usePostLogout";
+import { useTokenActions } from "@/lib/auth-adapter/tokenStore";
+import { useUserActions } from "@/lib/auth-adapter/userStore";
+import { useWishlistStore } from "@/store/wishlistStore";
+import { useCartStore } from "@/store/cartStore";
+import { useState } from "react";
+import Alert from "@/components/Alert";
 
 const SettingScreen = () => {
   const navigate = useNavigate();
+  const { trigger: logout, isLoading: isLogoutLoading } = usePostLogout();
+  const { clearToken } = useTokenActions();
+  const { clearUser } = useUserActions();
 
-  const handleLogout = () => {
-    // Clear auth tokens
-    localStorage.removeItem("token");
-    localStorage.removeItem("refreshToken");
-    // Navigate to login
-    navigate("/outshine/login");
+  const [alertConfig, setAlertConfig] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    type: "success" | "error" | "warning" | "info";
+  }>({
+    isOpen: false,
+    title: "",
+    message: "",
+    type: "info",
+  });
+
+  const showAlert = (
+    title: string,
+    message: string,
+    type: "success" | "error" | "warning" | "info" = "info",
+  ) => {
+    setAlertConfig({ isOpen: true, title, message, type });
+  };
+
+  const closeAlert = () => {
+    setAlertConfig((prev) => ({ ...prev, isOpen: false }));
+  };
+
+  const handleLogout = async () => {
+    try {
+      const result = await logout();
+
+      if (result?.success) {
+        // Clear local session
+        clearToken();
+        clearUser();
+        useWishlistStore.getState().clearWishlist();
+        useCartStore.getState().clearCart();
+
+        showAlert("Logout Berhasil", "Anda telah keluar dari akun.", "success");
+
+        // Redirect to home after a short delay
+        setTimeout(() => {
+          navigate("/outshine/home", { replace: true });
+        }, 1500);
+      } else {
+        showAlert(
+          "Logout Gagal",
+          result?.message || "Terjadi kesalahan saat logout.",
+          "error",
+        );
+      }
+    } catch (_error) {
+      // Even if API fails, still clear local session
+      clearToken();
+      clearUser();
+      useWishlistStore.getState().clearWishlist();
+      useCartStore.getState().clearCart();
+      navigate("/outshine/home", { replace: true });
+    }
   };
 
   return (
@@ -66,10 +126,11 @@ const SettingScreen = () => {
         <SettingSection>
           <SettingItem
             icon={<LogOut size={20} />}
-            label="Keluar"
+            label={isLogoutLoading ? "Memproses..." : "Keluar"}
             description="Keluar dari akun Anda"
             onClick={handleLogout}
             danger
+            disabled={isLogoutLoading}
           />
         </SettingSection>
 
@@ -77,6 +138,14 @@ const SettingScreen = () => {
           OUTSHINE Store v1.0.0
         </p>
       </main>
+
+      <Alert
+        isOpen={alertConfig.isOpen}
+        title={alertConfig.title}
+        message={alertConfig.message}
+        type={alertConfig.type}
+        onConfirm={closeAlert}
+      />
     </div>
   );
 };

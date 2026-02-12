@@ -19,7 +19,8 @@ const ResponsiveLayout = ({ children }: ResponsiveLayoutProps) => {
     currentPath === "/sort" ||
     pathname?.includes("/cart") ||
     pathname?.includes("/checkout") ||
-    pathname?.includes("/outshine/product/");
+    pathname?.includes("/outshine/product/") ||
+    pathname?.includes("/outshine/order/");
 
   const hideHeader =
     isFullScreen ||

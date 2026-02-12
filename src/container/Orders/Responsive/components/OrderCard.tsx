@@ -1,5 +1,6 @@
 import { ChevronRight } from "lucide-react";
 import { formatIDR } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
 
 interface OrderCardProps {
   order: {
@@ -9,6 +10,7 @@ interface OrderCardProps {
     totalAmount: number;
     itemsCount: number;
     firstItem: {
+      id: string;
       name: string;
       image: string;
       size: string;
@@ -43,13 +45,21 @@ const statusConfig: Record<string, { label: string; className: string }> = {
 };
 
 const OrderCard = ({ order }: OrderCardProps) => {
+  const navigate = useNavigate();
   const status = statusConfig[order.status.toLowerCase()] || {
     label: order.status,
     className: "text-[#0F172A]",
   };
 
+  const handleCardClick = () => {
+    navigate(`/outshine/order/${order.id}`);
+  };
+
   return (
-    <div className="bg-white flex flex-col transition-all rounded-xl active:bg-gray-50">
+    <div
+      onClick={handleCardClick}
+      className="bg-white flex flex-col transition-all rounded-xl active:bg-gray-50 cursor-pointer"
+    >
       {/* Search Result Style / Store Header */}
       <div className="px-4 py-3 flex justify-between items-center border-b border-gray-50">
         <div className="flex items-center gap-2">
@@ -126,11 +136,20 @@ const OrderCard = ({ order }: OrderCardProps) => {
         {/* Buttons */}
         <div className="flex justify-end gap-2">
           {order.status === "completed" && (
-            <button className="px-4 py-1.5 border border-gray-200 rounded-sm text-xs text-gray-600 font-medium active:bg-gray-100">
+            <button
+              onClick={(e) => e.stopPropagation()}
+              className="px-4 py-1.5 border border-gray-200 rounded-sm text-xs text-gray-600 font-medium active:bg-gray-100"
+            >
               Lihat Penilaian
             </button>
           )}
-          <button className="px-4 py-1.5 bg-[#0F172A] border border-[#0F172A] rounded-sm text-xs text-white font-medium active:opacity-90">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/outshine/product/${order.firstItem.id}`);
+            }}
+            className="px-4 py-1.5 bg-[#0F172A] border border-[#0F172A] rounded-sm text-xs text-white font-medium active:opacity-90"
+          >
             Beli Lagi
           </button>
         </div>

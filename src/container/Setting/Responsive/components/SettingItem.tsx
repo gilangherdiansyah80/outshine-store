@@ -11,6 +11,7 @@ interface SettingItemProps {
   rightElement?: React.ReactNode;
   danger?: boolean;
   useInternal?: boolean; // Use internal ResponsiveNavigation instead of router
+  disabled?: boolean;
 }
 
 const SettingItem = ({
@@ -22,11 +23,13 @@ const SettingItem = ({
   rightElement,
   danger = false,
   useInternal = false,
+  disabled = false,
 }: SettingItemProps) => {
   const navigate = useNavigate();
   const { push } = useNavigationStore((state) => state.actions);
 
   const handleClick = () => {
+    if (disabled) return;
     if (onClick) {
       onClick();
     } else if (path) {
@@ -41,7 +44,10 @@ const SettingItem = ({
   return (
     <button
       onClick={handleClick}
-      className="w-full flex items-center gap-4 px-4 py-4 bg-white hover:bg-gray-50 active:bg-gray-100 transition-colors cursor-pointer"
+      disabled={disabled}
+      className={`w-full flex items-center gap-4 px-4 py-4 bg-white hover:bg-gray-50 active:bg-gray-100 transition-colors ${
+        disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+      }`}
     >
       <div
         className={`w-10 h-10 rounded-full flex items-center justify-center ${

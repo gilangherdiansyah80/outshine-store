@@ -12,6 +12,8 @@ import {
 import { usePostLogout } from "@/services/Auth/usePostLogout";
 import { useTokenActions } from "@/lib/auth-adapter/tokenStore";
 import { useUserActions } from "@/lib/auth-adapter/userStore";
+import { useWishlistStore } from "@/store/wishlistStore";
+import { useCartStore } from "@/store/cartStore";
 import Alert from "@/components/Alert";
 
 import { useGetProfile } from "@/services/Profile/useGetProfile";
@@ -59,6 +61,8 @@ const ProfileScreen = () => {
         // Clear local session
         clearToken();
         clearUser();
+        useWishlistStore.getState().clearWishlist();
+        useCartStore.getState().clearCart();
 
         showAlert("Logout Berhasil", "Anda telah keluar dari akun.", "success");
 
@@ -77,6 +81,8 @@ const ProfileScreen = () => {
       // Even if API fails, still clear local session
       clearToken();
       clearUser();
+      useWishlistStore.getState().clearWishlist();
+      useCartStore.getState().clearCart();
       navigate("/outshine/welcome", { replace: true });
     }
   };

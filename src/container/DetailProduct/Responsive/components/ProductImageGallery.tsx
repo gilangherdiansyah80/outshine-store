@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ChevronLeft, Share2, Heart } from "lucide-react";
 import { useWishlistStore } from "@outshine/store/wishlistStore";
-import { useAuthStore } from "@outshine/store/authStore";
+import { useUserStore } from "@/lib/auth-adapter/userStore";
 import { usePostWishlists } from "@/services/WishLists/usePostWishlists";
 import { useDeleteWishlists } from "@/services/WishLists/useDeleteWishlists";
 
@@ -26,7 +26,7 @@ const ProductImageGallery = ({
   const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
   const { toggleItem, isInWishlist } = useWishlistStore();
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const isLoggedIn = useUserStore((state) => state.dataUser?.isLoggedIn);
   const location = useLocation();
   const isWishlisted = isInWishlist(id);
 
