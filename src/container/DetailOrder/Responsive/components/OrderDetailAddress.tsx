@@ -16,7 +16,7 @@ const OrderDetailAddress = ({ address }: OrderDetailAddressProps) => {
 
       <div className="flex gap-3">
         <div className="bg-gray-50 rounded-full w-8 h-8 flex items-center justify-center shrink-0">
-          <MapPin size={18} className="text-gray-400" />
+          <MapPin size={18} className="text-[#0F172A]" />
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-sm text-gray-800 font-bold mb-1">

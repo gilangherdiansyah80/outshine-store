@@ -27,7 +27,7 @@ const OrderDetailPayment = ({ order }: OrderDetailPaymentProps) => {
         <>
           <div className="flex justify-between text-sm">
             <span className="text-gray-500">Sudah Dibayar</span>
-            <span className="text-[#00BFA5] font-medium">
+            <span className="text-[#0F172A] font-medium">
               {order.formattedPaidAmount}
             </span>
           </div>
