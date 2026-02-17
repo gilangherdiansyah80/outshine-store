@@ -12,11 +12,6 @@ export default function DetailProductWeb() {
   const { id } = useParams();
   const { product, isLoading, isError } = useGetDetailProduct(id);
 
-  console.log("DetailProductWeb - ID:", id);
-  console.log("DetailProductWeb - Product:", product);
-  console.log("DetailProductWeb - IsLoading:", isLoading);
-  console.log("DetailProductWeb - IsError:", isError);
-
   if (isLoading) {
     return <Loading />;
   }
@@ -29,9 +24,8 @@ export default function DetailProductWeb() {
             Product Not Found
           </h2>
           <p className="text-gray-400 text-sm mb-8 font-medium">
-            ID: {id || "undefined"} <br />
-            Error: {isError ? "Yes" : "No"} <br />
-            Product: {product ? "Exists" : "Null"}
+            Maaf, kami tidak dapat menemukan produk yang Anda cari. Silakan
+            kembali ke katalog.
           </p>
           <Link
             to="/outshine/products"
@@ -45,29 +39,15 @@ export default function DetailProductWeb() {
   }
 
   return (
-    <main className="bg-[#F8FAFC] min-h-screen pt-28 pb-20">
-      <div className="max-w-7xl mx-auto px-8 flex flex-col gap-10">
+    <main className="bg-[#F8FAFC] min-h-screen -mt-10 pb-8">
+      <div className="max-w-7xl mx-auto px-8 flex flex-col gap-5">
         {/* Breadcrumbs */}
-        <nav className="flex items-center gap-2 text-xs font-medium text-gray-400">
+        <nav className="flex items-center gap-2 text-xs font-medium text-gray-400 mt-12">
           <Link
             to="/outshine/home"
             className="hover:text-[#2563EB] transition-colors"
           >
             Home
-          </Link>
-          <ChevronRight size={12} />
-          <Link
-            to="/outshine/products"
-            className="hover:text-[#2563EB] transition-colors"
-          >
-            Electronics
-          </Link>
-          <ChevronRight size={12} />
-          <Link
-            to="/outshine/products"
-            className="hover:text-[#2563EB] transition-colors"
-          >
-            Audio
           </Link>
           <ChevronRight size={12} />
           <span className="text-gray-600 truncate max-w-[200px]">
@@ -76,7 +56,7 @@ export default function DetailProductWeb() {
         </nav>
 
         {/* Main Section: Gallery & Info */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+        <div className="grid grid-cols-12 gap-7">
           <div className="lg:col-span-7">
             <ProductGalleryWeb images={product.images} title={product.title} />
           </div>

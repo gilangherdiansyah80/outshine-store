@@ -1,38 +1,25 @@
 import { useState } from "react";
-import { Star, ShoppingCart, Heart, Share2, Info } from "lucide-react";
+import { Star, ShoppingCart, Heart, Share2 } from "lucide-react";
 import { cn } from "@outshine/lib/utils";
 import Button from "@outshine/ui/Button/Button";
+import type { ProductDetail } from "@outshine/services/Products/useGetDetailProduct";
 
 interface ProductInfoWebProps {
-  product: {
-    id: string;
-    title: string;
-    price: number;
-    formattedDiscounted?: string;
-    originalPrice?: number;
-    formattedOriginal?: string;
-    rating: number;
-    reviewCount: number;
-    description: string;
-  };
+  product: ProductDetail;
 }
-
-const COLORS = [
-  { name: "Midnight Black", class: "bg-black" },
-  { name: "Silver Grey", class: "bg-gray-400" },
-  { name: "Navy Blue", class: "bg-[#1E3A8A]" },
-];
 
 const ProductInfoWeb = ({ product }: ProductInfoWebProps) => {
   const [quantity, setQuantity] = useState(1);
-  const [selectedColor, setSelectedColor] = useState("Midnight Black");
-  const [condition, setCondition] = useState<"new" | "refurbished">("new");
+  const [selectedSize, setSelectedSize] = useState(
+    product.sizes[0]?.name || "",
+  );
+  //   const [condition, setCondition] = useState<"new" | "refurbished">("new");
 
   return (
-    <div className="flex flex-col gap-8 py-2">
-      <div className="space-y-4">
+    <div className="flex flex-col gap-5 py-2 bg-white rounded-2xl p-5 border border-gray-200 shadow-sm shadow-black">
+      <div className="space-y-2">
         <h4 className="text-xs font-bold uppercase tracking-widest text-[#2563EB]">
-          Soundmaster Series
+          {product.category}
         </h4>
         <h1 className="text-4xl font-extrabold text-[#0F172A] leading-tight font-sans">
           {product.title}
@@ -52,12 +39,12 @@ const ProductInfoWeb = ({ product }: ProductInfoWebProps) => {
               />
             ))}
             <span className="text-xs font-bold text-gray-400 ml-1">
-              ({product.reviewCount} reviews)
+              ({product.rating} reviews)
             </span>
           </div>
           <div className="h-4 w-px bg-gray-200" />
-          <span className="text-xs font-bold text-green-500 uppercase tracking-tighter">
-            In Stock
+          <span className="text-xs font-bold bg-[#0F172A]/50 px-3 py-1 rounded-full text-white uppercase tracking-tighter">
+            {product.isPo ? "Pre Order" : "In Stock"}
           </span>
         </div>
       </div>
@@ -77,33 +64,34 @@ const ProductInfoWeb = ({ product }: ProductInfoWebProps) => {
         </div>
       </div>
 
-      {/* Color Selection */}
+      {/* Size Selection */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">
-            Color: <span className="text-[#0F172A]">{selectedColor}</span>
+            Size:{" "}
+            <span className="text-[#0F172A] font-black">{selectedSize}</span>
           </span>
         </div>
-        <div className="flex gap-3">
-          {COLORS.map((color) => (
+        <div className="flex flex-wrap gap-3">
+          {product.sizes.map((size) => (
             <button
-              key={color.name}
-              onClick={() => setSelectedColor(color.name)}
+              key={size.id}
+              onClick={() => setSelectedSize(size.name)}
               className={cn(
-                "w-10 h-10 rounded-full border-2 transition-all flex items-center justify-center p-0.5 shadow-sm",
-                selectedColor === color.name
-                  ? "border-[#2563EB] scale-110"
-                  : "border-transparent",
+                "min-w-[48px] h-12 px-4 rounded-xl border-2 transition-all font-bold text-sm flex items-center justify-center shadow-sm",
+                selectedSize === size.name
+                  ? "border-[#2563EB] bg-blue-50 text-[#2563EB] scale-105"
+                  : "border-gray-100 text-gray-400 hover:border-gray-200 bg-white",
               )}
             >
-              <div className={cn("w-full h-full rounded-full", color.class)} />
+              {size.name}
             </button>
           ))}
         </div>
       </div>
 
       {/* Condition Switch */}
-      <div className="space-y-4">
+      {/* <div className="space-y-4">
         <div className="flex items-center justify-between">
           <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">
             Condition
@@ -137,7 +125,7 @@ const ProductInfoWeb = ({ product }: ProductInfoWebProps) => {
             Refurbished
           </button>
         </div>
-      </div>
+      </div> */}
 
       {/* Quantity Selector */}
       <div className="space-y-4">

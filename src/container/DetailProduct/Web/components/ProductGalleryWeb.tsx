@@ -17,7 +17,12 @@ const ProductGalleryWeb = ({
   if (!images || images.length === 0) return null;
 
   return (
-    <div className={cn("flex flex-col gap-6", className)}>
+    <div
+      className={cn(
+        "flex flex-col gap-6 bg-white rounded-2xl p-5 border border-gray-200 shadow-sm shadow-black",
+        className,
+      )}
+    >
       {/* Main Large Image */}
       <div className="aspect-square w-full relative overflow-hidden rounded-3xl bg-[#F1F5F9] group">
         <img

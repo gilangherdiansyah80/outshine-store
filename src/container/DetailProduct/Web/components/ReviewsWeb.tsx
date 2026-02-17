@@ -1,23 +1,18 @@
 import { Star, CheckCircle } from "lucide-react";
 import { cn } from "@outshine/lib/utils";
 import Button from "@outshine/ui/Button/Button";
+import type { ReviewItem } from "@outshine/services/Products/useGetDetailProduct";
 
 interface ReviewsWebProps {
   rating: number;
   reviewCount: number;
-  reviews?: Array<{
-    id: string;
-    rating: number;
-    comment: string;
-    createdAt: string;
-    user: { name: string };
-  }>;
+  reviews?: ReviewItem[];
 }
 
 const ReviewsWeb = ({ rating, reviewCount, reviews }: ReviewsWebProps) => {
   return (
-    <div className="bg-white border-t border-gray-50 pt-20">
-      <div className="flex items-center justify-between mb-12">
+    <div className="bg-white rounded-2xl border border-gray-200 shadow-sm shadow-black">
+      <div className="flex items-center justify-between p-5">
         <div className="space-y-1">
           <h2 className="text-3xl font-black text-[#0F172A] font-sans">
             Customer Reviews
@@ -50,7 +45,7 @@ const ReviewsWeb = ({ rating, reviewCount, reviews }: ReviewsWebProps) => {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-5">
         {reviews && reviews.length > 0 ? (
           reviews.map((review) => (
             <div

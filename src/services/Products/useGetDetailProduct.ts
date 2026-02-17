@@ -56,6 +56,7 @@ export interface ProductDetail {
   poDpPercent?: number;
   discount?: number;
   totalBuyers: number;
+  category: string;
 }
 
 // API Response Interfaces
@@ -168,6 +169,9 @@ const mapAPIDetailToProductDetail = (
   return {
     id: apiProduct.id,
     title: apiProduct.name,
+    category:
+      apiProduct.category?.name ||
+      apiProduct.name.split(" ").slice(0, 2).join(" "),
     price: apiProduct.pricing?.discounted ?? apiProduct.basePrice,
     formattedDiscounted: apiProduct.pricing?.formattedDiscounted,
     originalPrice: apiProduct.discount
