@@ -7,13 +7,6 @@ export default function ProductsResponsive() {
     <>
       <ResponsiveRoute path="/" component={<ProductsScreen />} />
       <ResponsiveRoute path="/filter" component={<FilterScreen />} />
-      {/* 
-        Route for product detail reviews if needed.
-        <ResponsiveRoute
-          path="/reviews"
-          component={<DetailProductReviewListScreen type="saas" />}
-        />
-      */}
     </>
   );
 }

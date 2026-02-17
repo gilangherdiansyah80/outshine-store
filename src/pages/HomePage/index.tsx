@@ -1,5 +1,6 @@
 import { useDevice, useHasMounted } from "@/hooks/use-device";
 import HomeResponsive from "@/container/Home/Responsive/HomeResponsive";
+import HomeWeb from "@/container/Home/Web/HomeWeb";
 
 import Loading from "@/components/Loader/Loading";
 
@@ -12,5 +13,5 @@ export default function HomePage() {
     return <Loading />;
   }
 
-  return <>{isMobile ? <HomeResponsive /> : <p>Desktop</p>}</>;
+  return <>{isMobile ? <HomeResponsive /> : <HomeWeb />}</>;
 }

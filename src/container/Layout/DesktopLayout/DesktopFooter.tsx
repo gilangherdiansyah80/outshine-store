@@ -1,127 +1,145 @@
 import { Link } from "react-router-dom";
+import { Mail, Phone, MapPin, Share2, Globe } from "lucide-react";
 
 const DesktopFooter = () => {
   return (
-    <footer className="bg-[#0F172A] text-white pt-16 pb-8 font-[Poppins,sans-serif]">
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row justify-between gap-12 mb-12">
-          {/* Brand Section */}
-          <div className="md:w-1/3">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 flex items-center justify-center bg-white/10 rounded-lg">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="text-white"
-                >
-                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-                </svg>
+    <footer className="bg-white text-[#0F172A] pt-16 pb-12 font-[Inter,sans-serif] border-t border-gray-100">
+      <div className="max-w-7xl mx-auto px-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+          {/* Brand & About Section */}
+          <div className="flex flex-col gap-6">
+            <Link to="/outshine/home" className="flex items-center gap-2 group">
+              <div className="w-20 h-20 rounded bg-black flex items-center justify-center">
+                <img
+                  src="/images/logo.png"
+                  alt="logo"
+                  className="w-full h-full object-cover"
+                />
               </div>
-              <span className="text-xl font-bold">Outshine Store</span>
-            </div>
-            <p className="text-gray-300 text-sm leading-relaxed pr-8 max-w-sm">
-              Platform Software House & SaaS untuk membantu Anda membangun
-              website, aplikasi, dan sistem bisnis dengan cepat, modern, dan
-              terukur.
+              <span className="text-xl font-extrabold tracking-tight">
+                OUTSHINE
+              </span>
+            </Link>
+            <p className="text-gray-500 text-sm leading-relaxed">
+              Destinasi belanja online terpercaya untuk segala kebutuhan gaya
+              hidup modern Anda. Kualitas terbaik, harga bersaing.
             </p>
+            <div className="flex items-center gap-3">
+              <button className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-50 text-gray-600 hover:bg-[#2563EB] hover:text-white transition-all shadow-sm">
+                <Share2 size={18} />
+              </button>
+              <button className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-50 text-gray-600 hover:bg-[#2563EB] hover:text-white transition-all shadow-sm">
+                <Globe size={18} />
+              </button>
+            </div>
           </div>
 
-          {/* Links Section */}
-          <div className="flex gap-20">
-            {/* Platform Column */}
-            <div className="flex flex-col gap-4">
-              <h4 className="font-semibold text-lg">Platform</h4>
+          {/* Navigation Columns */}
+          <div className="flex flex-col gap-6">
+            <h4 className="font-bold text-base">Belanja</h4>
+            <div className="flex flex-col gap-3">
               <Link
                 to="#"
-                className="text-gray-300 hover:text-white transition-colors text-sm"
+                className="text-gray-500 hover:text-[#2563EB] transition-colors text-sm font-medium"
               >
-                Pricing
+                Semua Kategori
               </Link>
               <Link
                 to="#"
-                className="text-gray-300 hover:text-white transition-colors text-sm"
+                className="text-gray-500 hover:text-[#2563EB] transition-colors text-sm font-medium"
               >
-                Features
+                Produk Unggulan
               </Link>
               <Link
                 to="#"
-                className="text-gray-300 hover:text-white transition-colors text-sm"
+                className="text-gray-500 hover:text-[#2563EB] transition-colors text-sm font-medium"
               >
-                Templates
+                Penawaran Hari Ini
               </Link>
               <Link
                 to="#"
-                className="text-gray-300 hover:text-white transition-colors text-sm"
+                className="text-gray-500 hover:text-[#2563EB] transition-colors text-sm font-medium"
               >
-                Integrations
+                Voucher Belanja
               </Link>
             </div>
+          </div>
 
-            {/* Support Column */}
+          <div className="flex flex-col gap-6">
+            <h4 className="font-bold text-base">Layanan Pelanggan</h4>
+            <div className="flex flex-col gap-3">
+              <Link
+                to="#"
+                className="text-gray-500 hover:text-[#2563EB] transition-colors text-sm font-medium"
+              >
+                Pusat Bantuan
+              </Link>
+              <Link
+                to="#"
+                className="text-gray-500 hover:text-[#2563EB] transition-colors text-sm font-medium"
+              >
+                Cara Pembelian
+              </Link>
+              <Link
+                to="#"
+                className="text-gray-500 hover:text-[#2563EB] transition-colors text-sm font-medium"
+              >
+                Pengiriman & Pengembalian
+              </Link>
+              <Link
+                to="#"
+                className="text-gray-500 hover:text-[#2563EB] transition-colors text-sm font-medium"
+              >
+                Kebijakan Privasi
+              </Link>
+            </div>
+          </div>
+
+          {/* Contact Section */}
+          <div className="flex flex-col gap-6">
+            <h4 className="font-bold text-base">Hubungi Kami</h4>
             <div className="flex flex-col gap-4">
-              <h4 className="font-semibold text-lg">Support</h4>
-              <Link
-                to="#"
-                className="text-gray-300 hover:text-white transition-colors text-sm"
-              >
-                Help Center
-              </Link>
-              <Link
-                to="#"
-                className="text-gray-300 hover:text-white transition-colors text-sm"
-              >
-                Terms of Service
-              </Link>
-              <Link
-                to="#"
-                className="text-gray-300 hover:text-white transition-colors text-sm"
-              >
-                Privacy Policy
-              </Link>
-              <Link
-                to="#"
-                className="text-gray-300 hover:text-white transition-colors text-sm"
-              >
-                Contact Us
-              </Link>
+              <div className="flex items-center gap-3 group">
+                <div className="text-[#2563EB] shrink-0">
+                  <Mail size={18} />
+                </div>
+                <span className="text-gray-500 text-sm font-medium truncate">
+                  outshineid@gmail.com
+                </span>
+              </div>
+              <div className="flex items-center gap-3 group">
+                <div className="text-[#2563EB] shrink-0">
+                  <Phone size={18} />
+                </div>
+                <span className="text-gray-500 text-sm font-medium">
+                  +62 21 1234 5678
+                </span>
+              </div>
+              <div className="flex items-center gap-3 group">
+                <div className="text-[#2563EB] shrink-0">
+                  <MapPin size={18} />
+                </div>
+                <span className="text-gray-500 text-sm font-medium">
+                  Sidoarjo, Indonesia
+                </span>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Divider */}
-        <div className="w-full h-px bg-white/10 mb-8"></div>
+        <div className="w-full h-px bg-gray-100 mb-8"></div>
 
         {/* Bottom Bar */}
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-gray-400 text-sm">
-            © 2026 Outshine Store Inc. All rights reserved.
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+          <p className="text-gray-400 text-xs font-medium">
+            © 2026 OUTSHINE. Seluruh hak cipta dilindungi.
           </p>
 
-          <div className="flex items-center gap-6">
-            <Link
-              to="#"
-              className="text-gray-400 hover:text-white transition-colors text-sm"
-            >
-              Twitter
-            </Link>
-            <Link
-              to="#"
-              className="text-gray-400 hover:text-white transition-colors text-sm"
-            >
-              LinkedIn
-            </Link>
-            <Link
-              to="#"
-              className="text-gray-400 hover:text-white transition-colors text-sm"
-            >
-              Instagram
-            </Link>
+          <div className="flex items-center gap-4">
+            <div className="w-8 h-4 bg-[#0F172A] rounded-sm"></div>
+            <div className="w-8 h-4 bg-[#2563EB] rounded-sm"></div>
+            <div className="w-8 h-4 bg-gray-200 rounded-sm"></div>
           </div>
         </div>
       </div>

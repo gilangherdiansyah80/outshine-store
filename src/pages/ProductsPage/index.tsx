@@ -1,6 +1,7 @@
 import { useDevice, useHasMounted } from "@/hooks/use-device";
 import ProductsResponsive from "@/container/Products/Responsive/ProductsResponsive";
 import Loading from "@/components/Loader/Loading";
+import ProductsWeb from "@/container/Products/Web/ProductsWeb";
 
 export default function ProductsPage() {
   const { isMobile } = useDevice();
@@ -10,5 +11,5 @@ export default function ProductsPage() {
     return <Loading />;
   }
 
-  return <>{isMobile ? <ProductsResponsive /> : <p>Desktop Products</p>}</>;
+  return <>{isMobile ? <ProductsResponsive /> : <ProductsWeb />}</>;
 }

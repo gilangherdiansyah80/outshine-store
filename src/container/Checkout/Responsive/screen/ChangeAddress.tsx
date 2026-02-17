@@ -111,7 +111,7 @@ const ChangeAddress = () => {
               <MapPin size={40} />
             </div>
             <h3 className="font-bold text-white mb-2">No Saved Addresses</h3>
-            <p className="text-sm text-gray-500 max-w-[200px]">
+            <p className="text-sm text-gray-500 max-w-50">
               Add your shipping address to proceed with checkout.
             </p>
           </div>
