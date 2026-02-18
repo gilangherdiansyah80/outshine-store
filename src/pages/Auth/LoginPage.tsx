@@ -1,6 +1,7 @@
 import { useDevice, useHasMounted } from "@/hooks/use-device";
 import Loading from "@/components/Loader/Loading";
 import LoginResponsive from "@/container/Login/Responsive/LoginResponsive";
+import LoginWeb from "@/container/Login/Web/LoginWeb";
 
 export default function LoginPage() {
   const { isMobile } = useDevice();
@@ -12,5 +13,5 @@ export default function LoginPage() {
     return <Loading />;
   }
 
-  return <>{isMobile ? <LoginResponsive /> : <p>Desktop Wishlist</p>}</>;
+  return <>{isMobile ? <LoginResponsive /> : <LoginWeb />}</>;
 }

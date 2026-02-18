@@ -10,7 +10,7 @@ export const OtpHeader = () => {
         Verifikasi OTP
       </h2>
       <p className="mt-3 text-sm text-gray-500 font-medium px-4">
-        Masukkan 4 digit kode yang kami kirimkan ke nomor WhatsApp Anda.
+        Masukkan 4 digit kode yang kami kirimkan ke Email Anda.
       </p>
     </div>
   );

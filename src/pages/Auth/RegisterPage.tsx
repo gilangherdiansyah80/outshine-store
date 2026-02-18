@@ -1,6 +1,7 @@
 import { useDevice, useHasMounted } from "@/hooks/use-device";
 import Loading from "@/components/Loader/Loading";
 import RegisterResponsive from "@/container/Register/Responsive/RegisterResponsive";
+import RegisterWeb from "@/container/Register/Web/RegisterWeb";
 
 export default function RegisterPage() {
   const { isMobile } = useDevice();
@@ -12,5 +13,5 @@ export default function RegisterPage() {
     return <Loading />;
   }
 
-  return <>{isMobile ? <RegisterResponsive /> : <p>Desktop Wishlist</p>}</>;
+  return <>{isMobile ? <RegisterResponsive /> : <RegisterWeb />}</>;
 }

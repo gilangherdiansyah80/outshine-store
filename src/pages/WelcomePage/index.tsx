@@ -1,6 +1,7 @@
 import { useDevice, useHasMounted } from "@/hooks/use-device";
 import WelcomeResponsive from "@/container/Welcome/Responsive/WelcomeResponsive";
 import Loading from "@/components/Loader/Loading";
+import WelcomeWeb from "@/container/Welcome/Web/WelcomeWeb";
 
 export default function WelcomePage() {
   const { isMobile } = useDevice();
@@ -12,5 +13,5 @@ export default function WelcomePage() {
     return <Loading />;
   }
 
-  return <>{isMobile ? <WelcomeResponsive /> : <p>Desktop Wishlist</p>}</>;
+  return <>{isMobile ? <WelcomeResponsive /> : <WelcomeWeb />}</>;
 }
