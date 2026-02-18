@@ -101,6 +101,10 @@ const route = createBrowserRouter([
         path: "order/:id",
         element: <DetailOrderPage />,
       },
+      {
+        path: "product/:id/reviews",
+        element: <DetailProductPage isReviewsPage />,
+      },
     ],
   },
 ]);

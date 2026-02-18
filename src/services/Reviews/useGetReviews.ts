@@ -2,8 +2,9 @@ import useSWR from "swr";
 import { fetcherOSStore } from "@/lib/axios";
 
 export interface ReviewImage {
-  id?: string; // Optional if not returned by API directly in array
+  id?: string;
   url: string;
+  name?: string;
 }
 
 export interface Review {

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { cn } from "@outshine/lib/utils";
-// import { Check } from "lucide-react";
+import { ShieldCheck, Truck, Headset, ChevronRight } from "lucide-react";
 import type { ProductSpec } from "@outshine/services/Products/useGetDetailProduct";
 
 interface ProductDetailsTabsProps {
@@ -17,8 +17,8 @@ const ProductDetailsTabs = ({
   const tabs = [
     { id: "filosofi", label: "Filosofi" },
     { id: "specifications", label: "Specifications" },
-    { id: "customer_reviews", label: "Customer Reviews (128)" },
-    { id: "shipping_returns", label: "Shipping & Returns" },
+    // { id: "customer_reviews", label: "Customer Reviews (128)" },
+    { id: "service", label: "Service" },
   ];
 
   return (
@@ -47,8 +47,8 @@ const ProductDetailsTabs = ({
       {/* Tab Content */}
       <div className="min-h-[300px]">
         {activeTab === "filosofi" && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center animate-in fade-in slide-in-from-bottom-2 duration-500">
-            <div className="space-y-8">
+          <div className="w-full animate-in fade-in slide-in-from-bottom-2 duration-500">
+            <div className="">
               <p className="text-gray-500 text-sm leading-[1.8] font-medium">
                 {description ||
                   "Experience audio like never before with the SoundMaster Premium Wireless Headphones. Engineered with the latest active noise-cancelling technology, these headphones create a sanctuary of sound wherever you go. Whether you're in a crowded office or on a noisy flight, immerse yourself in pure, high-fidelity audio."}
@@ -83,42 +83,62 @@ const ProductDetailsTabs = ({
           </div>
         )}
 
-        {activeTab === "customer_reviews" && (
+        {/* {activeTab === "customer_reviews" && (
           <div className="text-center py-20 animate-in fade-in duration-500">
             <p className="text-gray-400 font-medium italic">
               Reviews content is displayed in the section below.
             </p>
           </div>
-        )}
+        )} */}
 
-        {activeTab === "shipping_returns" && (
-          <div className="max-w-2xl space-y-6 animate-in fade-in duration-500">
-            <h3 className="text-xl font-black text-[#0F172A]">
-              Shipping & Returns
-            </h3>
-            <p className="text-gray-500 text-sm leading-relaxed font-medium">
-              We offer free standard shipping on all orders over Rp 500.000.
-              Orders are typically processed within 1-2 business days.
-            </p>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="p-6 bg-white border border-gray-100 rounded-2xl shadow-sm">
-                <h4 className="text-sm font-black mb-2">Standard Shipping</h4>
-                <p className="text-xs text-gray-500 font-medium">
-                  3-5 business days
-                </p>
-                <p className="text-xs text-[#2563EB] font-extrabold mt-2">
-                  FREE
-                </p>
+        {activeTab === "service" && (
+          <div className="pt-2 border-t border-gray-50 space-y-4">
+            {/* Quality Control */}
+            <div className="flex items-start justify-between group">
+              <div className="flex items-start gap-3">
+                <ShieldCheck className="w-5 h-5 text-[#0B0F19] shrink-0 mt-0.5" />
+                <div className="space-y-0.5">
+                  <span className="text-sm font-semibold text-gray-900 block">
+                    Outshine Quality Control
+                  </span>
+                  <span className="text-xs text-gray-500 block">
+                    Setiap produk melalui pengecekan detail sebelum dikirim.
+                  </span>
+                </div>
               </div>
-              <div className="p-6 bg-white border border-gray-100 rounded-2xl shadow-sm">
-                <h4 className="text-sm font-black mb-2">30-Day Returns</h4>
-                <p className="text-xs text-gray-500 font-medium">
-                  Easy and hassle-free returns
-                </p>
-                <p className="text-xs text-green-500 font-extrabold mt-2">
-                  GUARANTEED
-                </p>
+              <ChevronRight className="w-4 h-4 text-gray-400 self-center" />
+            </div>
+
+            {/* Fast Handling */}
+            <div className="flex items-start justify-between group">
+              <div className="flex items-start gap-3">
+                <Truck className="w-5 h-5 text-[#0B0F19] shrink-0 mt-0.5" />
+                <div className="space-y-0.5">
+                  <span className="text-sm font-semibold text-gray-900 block">
+                    Outshine Fast Handling
+                  </span>
+                  <span className="text-xs text-gray-500 block">
+                    Pesanan diproses cepat & aman oleh tim Outshine.
+                  </span>
+                </div>
               </div>
+              <ChevronRight className="w-4 h-4 text-gray-400 self-center" />
+            </div>
+
+            {/* Customer Support */}
+            <div className="flex items-start justify-between group">
+              <div className="flex items-start gap-3">
+                <Headset className="w-5 h-5 text-[#0B0F19] shrink-0 mt-0.5" />
+                <div className="space-y-0.5">
+                  <span className="text-sm font-semibold text-gray-900 block">
+                    Outshine Customer Support
+                  </span>
+                  <span className="text-xs text-gray-500 block">
+                    Siap bantu sebelum & sesudah pembelian.
+                  </span>
+                </div>
+              </div>
+              <ChevronRight className="w-4 h-4 text-gray-400 self-center" />
             </div>
           </div>
         )}

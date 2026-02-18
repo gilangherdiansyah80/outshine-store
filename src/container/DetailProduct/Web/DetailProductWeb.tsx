@@ -65,6 +65,13 @@ export default function DetailProductWeb() {
           </div>
         </div>
 
+        {/* Reviews Section */}
+        <ReviewsWeb
+          productId={product.id}
+          rating={product.rating}
+          reviewCount={product.reviewCount}
+        />
+
         {/* Detailed Tabs Section */}
         <div className="mt-20">
           <ProductDetailsTabs
@@ -72,13 +79,6 @@ export default function DetailProductWeb() {
             specs={product.specs}
           />
         </div>
-
-        {/* Reviews Section */}
-        <ReviewsWeb
-          rating={product.rating}
-          reviewCount={product.reviewCount}
-          reviews={product.reviews}
-        />
       </div>
     </main>
   );
