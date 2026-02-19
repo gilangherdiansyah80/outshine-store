@@ -1,6 +1,7 @@
 import { useDevice, useHasMounted } from "@/hooks/use-device";
 import CheckoutResponsive from "@/container/Checkout/Responsive/CheckoutResponsive";
 import Loading from "@/components/Loader/Loading";
+import CheckoutWeb from "@/container/Checkout/Web/CheckoutWeb";
 
 export default function CheckoutPage() {
   const { isMobile } = useDevice();
@@ -11,5 +12,5 @@ export default function CheckoutPage() {
     return <Loading />;
   }
 
-  return <>{isMobile ? <CheckoutResponsive /> : <p>Desktop</p>}</>;
+  return <>{isMobile ? <CheckoutResponsive /> : <CheckoutWeb />}</>;
 }

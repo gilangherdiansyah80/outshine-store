@@ -1,6 +1,7 @@
 import { useDevice, useHasMounted } from "@/hooks/use-device";
 import Loading from "@/components/Loader/Loading";
 import ProfileResponsive from "@/container/Profile/Responsive/ProfileResponsive";
+import ProfileWeb from "@/container/Profile/Web/ProfileWeb";
 
 export default function ProfilePage() {
   const { isMobile } = useDevice();
@@ -12,5 +13,5 @@ export default function ProfilePage() {
     return <Loading />;
   }
 
-  return <>{isMobile ? <ProfileResponsive /> : <p>Desktop Wishlist</p>}</>;
+  return <>{isMobile ? <ProfileResponsive /> : <ProfileWeb />}</>;
 }

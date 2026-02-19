@@ -1,6 +1,7 @@
 import { useDevice, useHasMounted } from "@/hooks/use-device";
 import Loading from "@/components/Loader/Loading";
 import OrdersResponsive from "@/container/Orders/Responsive/OrdersResponsive";
+import OrderWeb from "@/container/Orders/Web/OrderWeb";
 
 export default function OrdersPage() {
   const { isMobile } = useDevice();
@@ -12,5 +13,5 @@ export default function OrdersPage() {
     return <Loading />;
   }
 
-  return <>{isMobile ? <OrdersResponsive /> : <p>Desktop Orders</p>}</>;
+  return <>{isMobile ? <OrdersResponsive /> : <OrderWeb />}</>;
 }

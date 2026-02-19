@@ -1,6 +1,7 @@
 import { useDevice, useHasMounted } from "@/hooks/use-device";
 import WishListsResponsive from "@/container/WishLists/Responsive/WishListsResponsive";
 import Loading from "@/components/Loader/Loading";
+import WishlistsWeb from "@/container/WishLists/Web/WishlistsWeb";
 
 export default function WishListsPage() {
   const { isMobile } = useDevice();
@@ -12,5 +13,5 @@ export default function WishListsPage() {
     return <Loading />;
   }
 
-  return <>{isMobile ? <WishListsResponsive /> : <p>Desktop Wishlist</p>}</>;
+  return <>{isMobile ? <WishListsResponsive /> : <WishlistsWeb />}</>;
 }

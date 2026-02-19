@@ -2,6 +2,7 @@ import { useDevice, useHasMounted } from "@/hooks/use-device";
 import CartResponsive from "@outshine/container/Cart/Responsive/CartResponsive";
 
 import Loading from "@/components/Loader/Loading";
+import CartWeb from "@/container/Cart/Web/CartWeb";
 
 export default function CartPage() {
   const { isMobile } = useDevice();
@@ -12,5 +13,5 @@ export default function CartPage() {
     return <Loading />;
   }
 
-  return <>{isMobile ? <CartResponsive /> : <p>Desktop</p>}</>;
+  return <>{isMobile ? <CartResponsive /> : <CartWeb />}</>;
 }
