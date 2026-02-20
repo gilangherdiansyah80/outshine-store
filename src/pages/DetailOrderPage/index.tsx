@@ -1,6 +1,7 @@
 import { useDevice, useHasMounted } from "@/hooks/use-device";
 import Loading from "@/components/Loader/Loading";
 import DetailOrderResponsive from "@/container/DetailOrder/Responsive/DetailOrderResponsive";
+import DetailOrder from "@/container/DetailOrder/Web/DetailOrder";
 
 export default function DetailOrderPage() {
   const { isMobile } = useDevice();
@@ -11,5 +12,5 @@ export default function DetailOrderPage() {
     return <Loading />;
   }
 
-  return <>{isMobile ? <DetailOrderResponsive /> : <p>Desktop</p>}</>;
+  return <>{isMobile ? <DetailOrderResponsive /> : <DetailOrder />}</>;
 }

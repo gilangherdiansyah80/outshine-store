@@ -9,6 +9,7 @@ import ReviewsSummaryWeb from "./components/ReviewsSummaryWeb";
 import RatingDistributionWeb from "./components/RatingDistributionWeb";
 import ReviewsFilterWeb from "./components/ReviewsFilterWeb";
 import ReviewCardDetailedWeb from "./components/ReviewCardDetailedWeb";
+import Pagination from "@/components/Pagination/Pagination";
 
 export default function ProductReviewsWeb() {
   const { id } = useParams();
@@ -17,6 +18,7 @@ export default function ProductReviewsWeb() {
 
   const [activeFilter, setActiveFilter] = useState("all");
   const [activeSort, setActiveSort] = useState("newest");
+  const [currentPage, setCurrentPage] = useState(1);
 
   if (productLoading || reviewsLoading) {
     return <Loading />;
@@ -49,6 +51,16 @@ export default function ProductReviewsWeb() {
     if (activeSort === "lowest") return a.rating - b.rating;
     return 0;
   });
+
+  const itemsPerPage = 5;
+  const totalPages = Math.max(
+    1,
+    Math.ceil(sortedReviews.length / itemsPerPage),
+  );
+  const paginatedReviews = sortedReviews.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage,
+  );
 
   return (
     <main className="bg-[#F8FAFC] min-h-screen pb-20">
@@ -117,8 +129,8 @@ export default function ProductReviewsWeb() {
 
         {/* Reviews List */}
         <div className="space-y-6">
-          {sortedReviews.length > 0 ? (
-            sortedReviews.map((review) => (
+          {paginatedReviews.length > 0 ? (
+            paginatedReviews.map((review) => (
               <ReviewCardDetailedWeb key={review.id} review={review} />
             ))
           ) : (
@@ -130,28 +142,14 @@ export default function ProductReviewsWeb() {
           )}
         </div>
 
-        {/* Pagination Placeholder */}
-        {sortedReviews.length > 0 && (
-          <div className="flex justify-center items-center gap-2 pt-8">
-            <button className="w-10 h-10 rounded-xl bg-white border border-gray-100 text-gray-400 flex items-center justify-center hover:border-[#2563EB] hover:text-[#2563EB] transition-all">
-              <ChevronRight size={16} className="rotate-180" />
-            </button>
-            <button className="w-10 h-10 rounded-xl bg-[#2563EB] text-white font-bold shadow-lg shadow-blue-100">
-              1
-            </button>
-            <button className="w-10 h-10 rounded-xl bg-white border border-gray-100 text-gray-400 font-bold hover:border-[#2563EB] hover:text-[#2563EB] transition-all">
-              2
-            </button>
-            <button className="w-10 h-10 rounded-xl bg-white border border-gray-100 text-gray-400 font-bold hover:border-[#2563EB] hover:text-[#2563EB] transition-all">
-              3
-            </button>
-            <span className="text-gray-400 px-2">...</span>
-            <button className="w-10 h-10 rounded-xl bg-white border border-gray-100 text-gray-400 font-bold hover:border-[#2563EB] hover:text-[#2563EB] transition-all">
-              42
-            </button>
-            <button className="w-10 h-10 rounded-xl bg-white border border-gray-100 text-gray-400 flex items-center justify-center hover:border-[#2563EB] hover:text-[#2563EB] transition-all">
-              <ChevronRight size={16} />
-            </button>
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex justify-center mt-4 pt-4">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
           </div>
         )}
       </div>

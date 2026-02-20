@@ -9,7 +9,7 @@ import Loading from "@/components/Loader/Loading";
 
 import ProductsHeader from "./components/ProductsHeader";
 import FilterSidebar from "./components/FilterSidebar";
-import Pagination from "./components/Pagination";
+import Pagination from "@/components/Pagination/Pagination";
 
 export default function ProductsWeb() {
   const { products, isLoading } = useGetProducts();
