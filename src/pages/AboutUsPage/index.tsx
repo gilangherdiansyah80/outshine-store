@@ -1,5 +1,6 @@
 import { useDevice, useHasMounted } from "@/hooks/use-device";
 import AboutUsResponsive from "@/container/AboutUs/Responsive/AboutUsResponsive";
+import AboutUsWeb from "@/container/AboutUs/Web/AboutUsWeb";
 
 import Loading from "@/components/Loader/Loading";
 
@@ -12,5 +13,5 @@ export default function AboutUsPage() {
     return <Loading />;
   }
 
-  return <>{isMobile ? <AboutUsResponsive /> : <p>Desktop</p>}</>;
+  return <>{isMobile ? <AboutUsResponsive /> : <AboutUsWeb />}</>;
 }

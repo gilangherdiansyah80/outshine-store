@@ -5,6 +5,7 @@ import {
   Truck,
   XCircle,
   Copy,
+  type LucideIcon,
 } from "lucide-react";
 import type { OrderDetailData } from "@/services/Order/useGetDetailOrder";
 
@@ -14,7 +15,7 @@ interface DetailStatusWebProps {
 
 const statusConfig: Record<
   string,
-  { label: string; icon: any; color: string; bg: string }
+  { label: string; icon: LucideIcon; color: string; bg: string }
 > = {
   pending: {
     label: "Menunggu Pembayaran",
@@ -46,15 +47,19 @@ const statusConfig: Record<
     color: "text-slate-500",
     bg: "bg-slate-50 border-slate-200",
   },
+  unpaid: {
+    label: "Menunggu Pembayaran",
+    icon: Clock,
+    color: "text-amber-600",
+    bg: "bg-amber-50 border-amber-200",
+  },
 };
 
 export default function DetailStatusWeb({ order }: DetailStatusWebProps) {
-  const currentStatus = statusConfig[order.status.toLowerCase()] || {
-    label: order.status,
-    icon: CheckCircle2,
-    color: "text-[#0F172A]",
-    bg: "bg-slate-50 border-slate-200",
-  };
+  const lowerStatus = order.status.toLowerCase();
+  const currentStatus =
+    statusConfig[lowerStatus as keyof typeof statusConfig] ||
+    statusConfig.pending;
 
   const Icon = currentStatus.icon;
 

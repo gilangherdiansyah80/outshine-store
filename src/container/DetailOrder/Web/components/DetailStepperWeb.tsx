@@ -5,12 +5,17 @@ import {
   CheckCircle2,
   type LucideIcon,
 } from "lucide-react";
+import { formatDate } from "@/lib/utils";
 
 interface DetailStepperWebProps {
   status: string;
+  date: string;
 }
 
-export default function DetailStepperWeb({ status }: DetailStepperWebProps) {
+export default function DetailStepperWeb({
+  status,
+  date,
+}: DetailStepperWebProps) {
   const lowerStatus = status.toLowerCase();
 
   const steps: { id: string; label: string; icon: LucideIcon }[] = [
@@ -50,8 +55,8 @@ export default function DetailStepperWeb({ status }: DetailStepperWebProps) {
   }
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 p-8 py-10">
-      <div className="relative flex justify-between items-center max-w-4xl mx-auto">
+    <div className="bg-white rounded-xl border border-slate-200 p-8 py-16">
+      <div className="relative flex justify-between items-center -mt-12 w-full mx-auto">
         {/* Progress Line */}
         <div className="absolute top-1/2 left-0 right-0 h-1 bg-slate-100 -translate-y-1/2 rounded-full z-0 pointer-events-none mx-10"></div>
 
@@ -86,7 +91,9 @@ export default function DetailStepperWeb({ status }: DetailStepperWebProps) {
                   {step.label}
                 </p>
                 {/* Normally we'd use actual dates from the order history, showing placeholder here matching design */}
-                <p className="text-xs text-slate-400 mt-1">14 Aug, 10:24</p>
+                <p className="text-xs text-slate-400 mt-1">
+                  {formatDate(date)}
+                </p>
               </div>
             </div>
           );

@@ -7,6 +7,7 @@ import DetailInfoWeb from "./components/DetailInfoWeb";
 import DetailItemsWeb from "./components/DetailItemsWeb";
 import DetailSummaryWeb from "./components/DetailSummaryWeb";
 import DetailShippingWeb from "./components/DetailShippingWeb";
+import { formatDate } from "@/lib/utils";
 
 export default function DetailOrder() {
   const { id } = useParams<{ id: string }>();
@@ -72,7 +73,7 @@ export default function DetailOrder() {
               Pesanan #{displayId}
             </h1>
             <p className="text-slate-500 text-sm mt-1">
-              Dipesan pada 14 Agustus 2023, 10:24 WIB
+              Dipesan pada {formatDate(order.createdAt)}
             </p>
           </div>
           <div className="flex gap-3">
@@ -89,7 +90,7 @@ export default function DetailOrder() {
 
         {/* Top Stepper */}
         <div className="mb-8">
-          <DetailStepperWeb status={order.status} />
+          <DetailStepperWeb status={order.status} date={order.createdAt} />
         </div>
 
         {/* 2-Column Grid */}

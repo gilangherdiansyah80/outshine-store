@@ -77,10 +77,10 @@ const DesktopHeader = () => {
                 Katalog
               </NavLink>
               <NavLink
-                href="/outshine/promo"
+                href="/outshine/about-us"
                 className="text-sm font-medium text-gray-600 hover:text-[#2563EB] transition-colors"
               >
-                Promo
+                Tentang Kami
               </NavLink>
             </nav>
 

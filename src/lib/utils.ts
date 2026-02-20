@@ -103,3 +103,15 @@ export const formatIDR = (amount: number): string => {
     maximumFractionDigits: 0,
   }).format(amount);
 };
+
+/**
+ * Formats an ISO date string to Indonesian localized format (e.g., 14 Agustus 2023).
+ */
+export const formatDate = (dateString: string): string => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString("id-ID", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+};
