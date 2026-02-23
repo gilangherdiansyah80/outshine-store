@@ -68,32 +68,31 @@ const AboutContactSocialsWeb = () => {
         </div>
 
         <div className="mt-auto flex items-center justify-between relative z-10">
-          <div className="flex gap-4">
+          <div className="flex justify-center gap-2">
             {[
               {
                 icon: Instagram,
-                url: "https://www.instagram.com/outshineid/",
                 label: "Instagram",
+                url: "https://www.instagram.com/outshineid/",
               },
               {
                 icon: TikTokIcon,
-                url: "https://www.tiktok.com/@outshine.id",
                 label: "TikTok",
+                url: "https://www.tiktok.com/@outshine.id",
               },
-            ].map((social, idx) => (
-              <a
-                key={idx}
-                href={social.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-white hover:text-[#0F172A] transition-all group/social"
-                title={social.label}
+            ].map((item, i) => (
+              <div
+                key={i}
+                className="flex flex-col items-center group cursor-pointer"
+                onClick={() => window.open(item.url, "_blank")}
               >
-                <social.icon
-                  size={20}
-                  className="group-hover/social:scale-110 transition-transform"
-                />
-              </a>
+                <div className="w-10 h-10 rounded-xl border bg-white border-[#0F172A] flex items-center justify-center hover:bg-white/50 transition-colors">
+                  <item.icon className="w-6 h-6 text-[#0F172A] group-hover:scale-110 transition-transform" />
+                </div>
+                <span className="text-[10px] uppercase font-bold text-[#0F172A] tracking-wider">
+                  {item.label}
+                </span>
+              </div>
             ))}
           </div>
           <button className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors font-bold text-sm">

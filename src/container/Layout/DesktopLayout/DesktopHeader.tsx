@@ -1,16 +1,28 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import NavLink from "@outshine/ui/Nav/NavLink.tsx";
-import { Search, Heart, User, ShoppingCart } from "lucide-react";
+import { Search, User, ShoppingCart } from "lucide-react";
 import { useCartStore } from "@outshine/store/cartStore";
 import { useSearchStore } from "@outshine/store/searchStore";
 import { useAuth } from "@/lib/auth";
+import { useGetProfile } from "@/services/Profile/useGetProfile";
+
+interface ExtendedUser {
+  name?: string | null;
+  photo?: string | null;
+  Avatar?: string;
+}
 
 const DesktopHeader = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { searchQuery, setSearchQuery } = useSearchStore();
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, dataUser } = useAuth();
+  const { profile } = useGetProfile();
   const { items } = useCartStore();
+
+  const user = dataUser as ExtendedUser | null;
+  const userAvatar = profile?.avatarUrl || user?.Avatar || user?.photo;
+  const userName = profile?.fullName || user?.name || "Profile";
 
   const cartCount = items.reduce((total, item) => total + item.quantity, 0);
 
@@ -68,19 +80,22 @@ const DesktopHeader = () => {
             <nav className="flex items-center gap-6">
               <NavLink
                 href="/outshine/home"
-                className="text-sm font-medium text-[#2563EB]"
+                className="text-sm font-medium text-gray-600 hover:text-[#0F172A] transition-colors"
+                activeClassName="text-[#0F172A] after:scale-x-100 after:bg-[#0F172A]"
               >
                 Beranda
               </NavLink>
               <NavLink
                 href="/outshine/products"
-                className="text-sm font-medium text-gray-600 hover:text-[#2563EB] transition-colors"
+                className="text-sm font-medium text-gray-600 hover:text-[#0F172A] transition-colors"
+                activeClassName="text-[#0F172A] after:scale-x-100 after:bg-[#0F172A]"
               >
                 Katalog
               </NavLink>
               <NavLink
                 href="/outshine/about-us"
-                className="text-sm font-medium text-gray-600 hover:text-[#2563EB] transition-colors"
+                className="text-sm font-medium text-gray-600 hover:text-[#0F172A] transition-colors"
+                activeClassName="text-[#0F172A] after:scale-x-100 after:bg-[#0F172A]"
               >
                 Tentang Kami
               </NavLink>
@@ -88,15 +103,8 @@ const DesktopHeader = () => {
 
             <div className="flex items-center gap-5 border-l border-gray-200 pl-8">
               <Link
-                to="/outshine/wishlist"
-                className="text-gray-600 hover:text-[#2563EB] transition-colors"
-              >
-                <Heart size={24} />
-              </Link>
-
-              <Link
                 to="/outshine/cart"
-                className="relative text-gray-600 hover:text-[#2563EB] transition-colors"
+                className={`relative text-gray-600 hover:text-[#2563EB] transition-colors ${isLoggedIn ? "flex" : "hidden"}`}
               >
                 <ShoppingCart size={24} />
                 {cartCount > 0 && (
@@ -108,9 +116,30 @@ const DesktopHeader = () => {
 
               <Link
                 to={isLoggedIn ? "/outshine/profile" : "/outshine/welcome"}
-                className="text-gray-600 hover:text-[#2563EB] transition-colors"
+                className={`text-gray-600 hover:text-[#2563EB] transition-colors border border-slate-200 rounded-full flex items-center gap-2 ${isLoggedIn ? "p-1.5 pr-4" : "p-1.5"}`}
               >
-                <User size={24} />
+                {isLoggedIn ? (
+                  <>
+                    <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center overflow-hidden border border-slate-200">
+                      {userAvatar ? (
+                        <img
+                          src={userAvatar}
+                          alt={userName}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <p className="text-sm font-bold text-[#0F172A]">
+                          {userName.charAt(0).toUpperCase()}
+                        </p>
+                      )}
+                    </div>
+                    <span className="text-sm font-bold text-[#0F172A] max-w-[100px] truncate">
+                      {userName}
+                    </span>
+                  </>
+                ) : (
+                  <User size={24} />
+                )}
               </Link>
             </div>
           </div>

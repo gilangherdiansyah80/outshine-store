@@ -15,7 +15,7 @@ const AboutQuoteWeb = () => {
           balik proses."
         </h4>
         <div className="w-16 h-px bg-slate-200" />
-        <button className="px-10 py-4 bg-blue-600 hover:bg-blue-700 text-white font-black rounded-2xl transition-all shadow-xl shadow-blue-200 hover:shadow-blue-300 transform hover:-translate-y-1 flex items-center gap-3">
+        <button className="px-10 py-4 bg-blue-600 hover:bg-blue-700 text-white font-black rounded-2xl transition-all shadow-xl shadow-blue-200 hover:shadow-blue-300 transform hover:-translate-y-1 flex items-center gap-3 cursor-pinter" onClick={() => window.location.href = "/outshine/products"}>
           LIHAT KOLEKSI <ExternalLink size={20} />
         </button>
       </div>
