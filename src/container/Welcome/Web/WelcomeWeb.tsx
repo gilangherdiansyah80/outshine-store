@@ -100,7 +100,7 @@ export default function WelcomeWeb() {
 
           <div className="pt-10 border-t border-slate-100 flex items-center justify-between">
             <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">
-              EST. 2024 • PREMIUM ESSENTIALS
+              EST. 2026 • PREMIUM ESSENTIALS
             </span>
             <span className="text-[10px] italic font-medium text-slate-400">
               Happy Shopping!

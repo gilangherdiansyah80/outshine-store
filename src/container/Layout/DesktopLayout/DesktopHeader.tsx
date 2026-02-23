@@ -3,11 +3,13 @@ import NavLink from "@outshine/ui/Nav/NavLink.tsx";
 import { Search, Heart, User, ShoppingCart } from "lucide-react";
 import { useCartStore } from "@outshine/store/cartStore";
 import { useSearchStore } from "@outshine/store/searchStore";
+import { useAuth } from "@/lib/auth";
 
 const DesktopHeader = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { searchQuery, setSearchQuery } = useSearchStore();
+  const { isLoggedIn } = useAuth();
   const { items } = useCartStore();
 
   const cartCount = items.reduce((total, item) => total + item.quantity, 0);
@@ -23,7 +25,7 @@ const DesktopHeader = () => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 flex flex-col font-[Inter,sans-serif]">
       {/* Top Bar */}
-      <div className="bg-[#2563EB] text-white py-2 text-center text-sm font-semibold tracking-wide">
+      <div className="bg-[#0F172A] text-white py-2 text-center text-sm font-semibold tracking-wide">
         Gratis ongkir untuk seluruh pesanan di atas Rp 500.000! 🚚
       </div>
 
@@ -105,7 +107,7 @@ const DesktopHeader = () => {
               </Link>
 
               <Link
-                to="/outshine/profile"
+                to={isLoggedIn ? "/outshine/profile" : "/outshine/welcome"}
                 className="text-gray-600 hover:text-[#2563EB] transition-colors"
               >
                 <User size={24} />

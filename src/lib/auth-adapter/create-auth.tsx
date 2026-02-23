@@ -135,14 +135,14 @@ export const createAuthAdapter = <
           guard.loggedOutRedirectTo &&
           window.location.pathname !== guard.loggedOutRedirectTo
         ) {
-          window.location.replace(guard.loggedOutRedirectTo);
+          navigate(guard.loggedOutRedirectTo, { replace: true });
         } else if (
           dataUser?.isLoggedIn &&
           isPublicRoute &&
           guard.loggedInRedirectTo &&
           window.location.pathname !== guard.loggedInRedirectTo
         ) {
-          window.location.replace(guard.loggedInRedirectTo);
+          navigate(guard.loggedInRedirectTo, { replace: true });
         }
 
         hasCheckAccess.current = true;
@@ -153,6 +153,7 @@ export const createAuthAdapter = <
       guard.loggedInRedirectTo,
       guard.loggedOutRedirectTo,
       guard.publicRoutes,
+      navigate,
     ]);
 
     const login = useCallback(
