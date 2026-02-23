@@ -1,64 +1,139 @@
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { cn } from "@outshine/lib/utils";
 import Button from "@outshine/ui/Button/Button";
+import { useGetHero } from "@/services/Hero/useGetHero";
 
-interface HeroProps {
+interface HeroBannerProps {
   className?: string;
 }
 
-const Hero = ({ className }: HeroProps) => {
+/**
+ * Hero banner section for home page
+ * Features: Background image, exclusive label, title, and CTA button with auto-slideshow
+ */
+const Hero = ({ className }: HeroBannerProps) => {
   const navigate = useNavigate();
+  const { heroData, isLoading } = useGetHero();
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  // Filter or take all heroes for the slider
+  const heroes = heroData || [];
+
+  useEffect(() => {
+    if (heroes.length <= 1) return;
+
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % heroes.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [heroes.length]);
+
+  if (isLoading) {
+    return (
+      <div
+        className={cn(
+          "w-full h-[320px] rounded-2xl overflow-hidden bg-slate-800 animate-pulse",
+          className,
+        )}
+      />
+    );
+  }
+
+  if (heroes.length === 0) return null;
 
   return (
     <section
       className={cn(
-        "grid grid-cols-1 md:grid-cols-2 bg-white rounded-2xl overflow-hidden",
+        "relative w-full overflow-hidden rounded-2xl bg-[#0F172A] min-h-[820px]",
         className,
       )}
     >
-      {/* Left Image Part */}
-      <div className="relative aspect-4/3 md:aspect-auto overflow-hidden rounded-2xl">
-        <img
-          src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=1974&auto=format&fit=crop"
-          alt="Hero Fashion"
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute bottom-4 left-4 bg-black/40 backdrop-blur-md px-3 py-1 rounded-full text-[10px] text-white font-bold uppercase tracking-widest">
-          Koleksi 2024
-        </div>
-      </div>
+      {/* Slides */}
+      {heroes.map((hero, index) => (
+        <div
+          key={hero.id}
+          className={cn(
+            "absolute inset-0 transition-all duration-1000 ease-in-out",
+            index === currentIndex
+              ? "opacity-100 scale-100 z-10"
+              : "opacity-0 scale-105 z-0",
+          )}
+        >
+          {/* Background Image */}
+          <div className="absolute inset-0">
+            <img
+              src={hero.backgroundImage}
+              alt={hero.title}
+              className="h-full w-full object-cover object-center"
+            />
+            {/* Overlay gradient */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+          </div>
 
-      {/* Right Content Part */}
-      <div className="flex flex-col justify-center p-8 md:p-16 gap-8">
-        <div className="flex flex-col gap-4">
-          <h1 className="text-5xl md:text-6xl font-extrabold text-[#0F172A] leading-[1.1]">
-            Eksplorasi
-            <br />
-            Gaya Baru
-            <br />
-            Anda
-          </h1>
-          <p className="text-gray-500 text-sm leading-relaxed max-w-sm">
-            Tingkatkan gaya hidup Anda dengan koleksi eksklusif kami. Penawaran
-            terbatas untuk produk elektronik premium dan fashion terkini.
-          </p>
-        </div>
+          {/* Content */}
+          <div className="relative h-full flex flex-col justify-end p-6 pb-8 gap-y-3">
+            {/* Exclusive Badge */}
+            <span
+              className={cn(
+                "text-[10px] font-bold uppercase tracking-[0.2em] text-blue-400 transition-all duration-700 delay-300",
+                index === currentIndex
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-4",
+              )}
+            >
+              {hero.badgeText}
+            </span>
 
-        <div className="flex items-center gap-4">
-          <Button
-            onClick={() => navigate("/outshine/products")}
-            className="bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold py-3 px-8 rounded-xl transition-all shadow-lg shadow-blue-200"
-          >
-            Belanja Sekarang
-          </Button>
-          <Button
-            onClick={() => navigate("/outshine/products")}
-            className="bg-gray-50 hover:bg-gray-100 text-[#0F172A] font-bold py-3 px-8 rounded-xl transition-all"
-          >
-            Lihat Katalog
-          </Button>
+            {/* Title */}
+            <h1
+              className={cn(
+                "text-3xl font-extrabold text-white leading-tight whitespace-pre-line transition-all duration-700 delay-500",
+                index === currentIndex
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-4",
+              )}
+            >
+              {hero.title}
+            </h1>
+
+            {/* CTA Button */}
+            <div
+              className={cn(
+                "transition-all duration-700 delay-700",
+                index === currentIndex
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-4",
+              )}
+            >
+              <Button
+                onClick={() => navigate("/outshine/products")}
+                className="w-fit bg-white hover:bg-slate-100 text-[#0F172A] font-bold py-3.5 px-6 rounded-2xl cursor-pointer transition-all duration-300 shadow-[0_10px_20px_rgba(0,0,0,0.3)] hover:shadow-[0_15px_30px_rgba(0,0,0,0.4)] hover:-translate-y-0.5 border-none"
+              >
+                {hero.buttonText}
+              </Button>
+            </div>
+          </div>
         </div>
-      </div>
+      ))}
+
+      {/* Pagination Indicators */}
+      {heroes.length > 1 && (
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex gap-1.5">
+          {heroes.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentIndex(index)}
+              className={cn(
+                "h-1 rounded-full transition-all duration-300",
+                index === currentIndex ? "w-6 bg-white" : "w-2 bg-white/40",
+              )}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </div>
+      )}
     </section>
   );
 };

@@ -1,24 +1,6 @@
 import { Link } from "react-router-dom";
 import { cn } from "@outshine/lib/utils";
 import { useGetCategory } from "@/services/Category/useGetCategory";
-import {
-  Laptop,
-  Shirt,
-  Home as HomeIcon,
-  Sparkles,
-  Watch,
-  Gamepad2,
-  type LucideIcon,
-} from "lucide-react";
-
-const categoryIcons: Record<string, LucideIcon> = {
-  Elektronik: Laptop,
-  Fashion: Shirt,
-  "Perabot Rumah": HomeIcon,
-  Kecantikan: Sparkles,
-  Aksesoris: Watch,
-  Gaming: Gamepad2,
-};
 
 const PopularCategories = ({ className }: { className?: string }) => {
   const { data: categories, isLoading } = useGetCategory();
@@ -39,7 +21,7 @@ const PopularCategories = ({ className }: { className?: string }) => {
         <h2 className="text-xl font-bold text-[#0F172A]">Kategori Populer</h2>
         <Link
           to="/outshine/categories"
-          className="text-sm font-semibold text-[#2563EB] hover:underline"
+          className="text-sm font-semibold text-[#0F172A] hover:underline"
         >
           Lihat Semua
         </Link>
@@ -47,16 +29,17 @@ const PopularCategories = ({ className }: { className?: string }) => {
 
       <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
         {categories.slice(0, 6).map((category) => {
-          const Icon = categoryIcons[category.name] || Sparkles;
           return (
             <Link
               key={category.id}
               to={`/detail-category?categoryName=${category.name}`}
-              className="flex items-center justify-start gap-3 px-4 py-3 bg-white border border-gray-100 rounded-xl hover:border-[#2563EB] hover:shadow-md transition-all group"
+              className="flex flex-col items-center justify-center gap-1 w-20 py-3 bg-white border border-[#0F172A] rounded-xl hover:border-[#2563EB] hover:shadow-md transition-all group"
             >
-              <div className="text-[#2563EB] group-hover:scale-110 transition-transform">
-                <Icon size={20} />
-              </div>
+              <img
+                src={category.imageUrl}
+                alt={category.name}
+                className="w-10 h-10 object-cover"
+              />
               <span className="text-sm font-semibold text-gray-700 truncate">
                 {category.name}
               </span>

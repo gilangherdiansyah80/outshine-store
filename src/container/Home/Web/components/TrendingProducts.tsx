@@ -27,7 +27,7 @@ const TrendingProducts = ({ className }: { className?: string }) => {
   return (
     <section className={cn("flex flex-col gap-6", className)}>
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold text-[#2563EB]">Sedang Tren</h2>
+        <h2 className="text-xl font-bold text-[#0F172A]">Sedang Tren</h2>
         <div className="flex items-center gap-2">
           <button className="w-8 h-8 flex items-center justify-center rounded-full border border-gray-200 text-gray-400 hover:text-[#2563EB] hover:border-[#2563EB] transition-all">
             <ChevronLeft size={20} />
