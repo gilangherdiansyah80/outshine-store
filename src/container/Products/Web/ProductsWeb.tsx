@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import { useGetProducts } from "@/services/Products/useGetProducts";
 import { useFilterSortStore } from "@outshine/store/filterSortStore";
 import { useSearchStore } from "@outshine/store/searchStore";
+import { cn } from "@outshine/lib/utils";
 import CardProduct from "@/components/Card/CardProduct";
 import DataNotFound from "@/components/DataNotFound/DataNotFound";
 import Loading from "@/components/Loader/Loading";
@@ -15,11 +16,13 @@ export default function ProductsWeb() {
   const { products, isLoading } = useGetProducts();
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
+  const [layout, setLayout] = useState<"grid" | "list">("grid");
   const itemsPerPage = 12;
 
   const {
     selectedCategories,
     selectedRating,
+    maxPrice,
     sortOption,
     setSortOption,
     clearFilters,
@@ -40,6 +43,11 @@ export default function ProductsWeb() {
     // Filtering logic
     if (selectedCategories.length > 0) {
       result = result.filter((p) => selectedCategories.includes(p.category));
+    }
+
+    // Price filter
+    if (maxPrice !== null) {
+      result = result.filter((p) => Number(p.price) <= Number(maxPrice));
     }
 
     // Rating filter (Floor for simplicity assuming integer selection)
@@ -65,7 +73,14 @@ export default function ProductsWeb() {
     }
 
     return result;
-  }, [products, searchQuery, selectedCategories, selectedRating, sortOption]);
+  }, [
+    products,
+    searchQuery,
+    selectedCategories,
+    selectedRating,
+    maxPrice,
+    sortOption,
+  ]);
 
   const totalPages = Math.ceil(filteredAndSortedProducts.length / itemsPerPage);
   const paginatedProducts = filteredAndSortedProducts.slice(
@@ -78,12 +93,14 @@ export default function ProductsWeb() {
   }
 
   return (
-    <main className="bg-[#F8FAFC] min-h-screen pt-28 pb-20">
-      <div className="max-w-7xl mx-auto px-8 flex flex-col gap-10">
+    <main className="bg-[#F8FAFC] min-h-screen pt-5 -mt-10 pb-20">
+      <div className="max-w-7xl mx-auto px-8 flex flex-col gap-10 mt-10">
         <ProductsHeader
           totalProducts={filteredAndSortedProducts.length}
           currentSort={sortOption}
           onSortChange={setSortOption}
+          layout={layout}
+          onLayoutChange={setLayout}
         />
 
         <div className="flex gap-10">
@@ -92,7 +109,14 @@ export default function ProductsWeb() {
           <div className="flex-1 flex flex-col gap-10">
             {paginatedProducts.length > 0 ? (
               <>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div
+                  className={cn(
+                    "grid gap-6",
+                    layout === "grid"
+                      ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
+                      : "grid-cols-1",
+                  )}
+                >
                   {paginatedProducts.map((product) => (
                     <CardProduct
                       key={product.id}
@@ -107,7 +131,7 @@ export default function ProductsWeb() {
                       isNew={product.isNew}
                       isPo={product.isPo}
                       rating={product.rating}
-                      aspectRatio="portrait"
+                      layout={layout}
                       onClick={() =>
                         navigate(`/outshine/product/${product.id}`)
                       }

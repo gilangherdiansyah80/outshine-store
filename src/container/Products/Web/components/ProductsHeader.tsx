@@ -7,6 +7,8 @@ interface ProductsHeaderProps {
   totalProducts: number;
   currentSort: SortOption;
   onSortChange: (sort: SortOption) => void;
+  layout: "grid" | "list";
+  onLayoutChange: (layout: "grid" | "list") => void;
   className?: string;
 }
 
@@ -14,6 +16,8 @@ const ProductsHeader = ({
   totalProducts,
   currentSort,
   onSortChange,
+  layout,
+  onLayoutChange,
   className,
 }: ProductsHeaderProps) => {
   return (
@@ -44,10 +48,26 @@ const ProductsHeader = ({
         <div className="flex items-center gap-4">
           {/* View Toggles */}
           <div className="flex items-center bg-gray-50 rounded-lg p-1">
-            <button className="p-1.5 rounded-md bg-white shadow-sm text-[#2563EB]">
+            <button
+              onClick={() => onLayoutChange("grid")}
+              className={cn(
+                "p-1.5 rounded-md transition-all",
+                layout === "grid"
+                  ? "bg-white shadow-sm text-[#2563EB]"
+                  : "text-gray-400 hover:text-gray-600",
+              )}
+            >
               <LayoutGrid size={18} />
             </button>
-            <button className="p-1.5 rounded-md text-gray-400 hover:text-gray-600 transition-colors">
+            <button
+              onClick={() => onLayoutChange("list")}
+              className={cn(
+                "p-1.5 rounded-md transition-all",
+                layout === "list"
+                  ? "bg-white shadow-sm text-[#2563EB]"
+                  : "text-gray-400 hover:text-gray-600",
+              )}
+            >
               <List size={18} />
             </button>
           </div>

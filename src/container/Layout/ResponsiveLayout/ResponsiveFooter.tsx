@@ -84,7 +84,7 @@ const ResponsiveFooter = () => {
                       : "text-gray-500"
                   }`}
                 >
-                  Produk
+                  Katalog
                 </span>
               </div>
             </Link>

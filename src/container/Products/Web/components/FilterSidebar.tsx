@@ -2,17 +2,15 @@ import { Check, ChevronDown, RotateCcw, Star } from "lucide-react";
 import { cn } from "@outshine/lib/utils";
 import { useGetCategory } from "@/services/Category/useGetCategory";
 import { useFilterSortStore } from "@outshine/store/filterSortStore";
-import Button from "@outshine/ui/Button/Button";
-import { useState } from "react";
 
-const COLORS = [
-  { name: "Black", class: "bg-black" },
-  { name: "White", class: "bg-white border-gray-200" },
-  { name: "Red", class: "bg-red-500" },
-  { name: "Blue", class: "bg-blue-500" },
-  { name: "Green", class: "bg-green-500" },
-  { name: "Yellow", class: "bg-yellow-400" },
-];
+// const COLORS = [
+//   { name: "Black", class: "bg-black" },
+//   { name: "White", class: "bg-white border-gray-200" },
+//   { name: "Red", class: "bg-red-500" },
+//   { name: "Blue", class: "bg-blue-500" },
+//   { name: "Green", class: "bg-green-500" },
+//   { name: "Yellow", class: "bg-yellow-400" },
+// ];
 
 const FilterSidebar = ({ className }: { className?: string }) => {
   const { data: categories, isLoading: categoriesLoading } = useGetCategory();
@@ -21,11 +19,12 @@ const FilterSidebar = ({ className }: { className?: string }) => {
     selectedRating,
     toggleCategory,
     setRating,
+    setMaxPrice,
+    maxPrice,
     clearFilters,
   } = useFilterSortStore();
 
-  const [priceRange, setPriceRange] = useState(1500000);
-  const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  const currentMax = maxPrice || 1000000;
 
   return (
     <aside
@@ -38,16 +37,16 @@ const FilterSidebar = ({ className }: { className?: string }) => {
         <h2 className="text-base font-extrabold text-[#0F172A]">Filter</h2>
         <button
           onClick={clearFilters}
-          className="text-xs font-bold text-[#2563EB] hover:underline flex items-center gap-1"
+          className="flex items-center gap-1.5 text-xs font-bold text-gray-400 hover:text-[#2563EB] transition-colors"
         >
-          <RotateCcw size={12} />
+          <RotateCcw size={14} />
           Reset
         </button>
       </div>
 
       {/* Categories */}
       <div className="space-y-4">
-        <div className="flex items-center justify-between group cursor-pointer">
+        <div className="flex items-center justify-between">
           <h3 className="text-[13px] font-extrabold text-[#0F172A] uppercase tracking-wider">
             Kategori
           </h3>
@@ -71,62 +70,55 @@ const FilterSidebar = ({ className }: { className?: string }) => {
               type="checkbox"
               className="hidden"
               checked={selectedCategories.length === 0}
-              onChange={clearFilters}
+              onChange={() => clearFilters()}
             />
             <span
               className={cn(
                 "text-sm font-medium transition-colors",
                 selectedCategories.length === 0
-                  ? "text-[#0F172A]"
-                  : "text-gray-400 group-hover:text-gray-600",
+                  ? "text-[#0F172A] font-bold"
+                  : "text-gray-500 hover:text-[#2563EB]",
               )}
             >
               Semua Produk
             </span>
           </label>
-
-          {categoriesLoading
-            ? [1, 2, 3].map((i) => (
+          {!categoriesLoading &&
+            categories?.map((category) => (
+              <label
+                key={category.id}
+                className="flex items-center gap-3 cursor-pointer group"
+              >
                 <div
-                  key={i}
-                  className="h-4 w-full bg-gray-50 animate-pulse rounded"
-                />
-              ))
-            : categories.map((cat) => (
-                <label
-                  key={cat.id}
-                  className="flex items-center gap-3 cursor-pointer group"
+                  className={cn(
+                    "w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all",
+                    selectedCategories.includes(category.name)
+                      ? "bg-[#2563EB] border-[#2563EB]"
+                      : "border-gray-200 group-hover:border-[#2563EB]",
+                  )}
                 >
-                  <div
-                    className={cn(
-                      "w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all",
-                      selectedCategories.includes(cat.name)
-                        ? "bg-[#2563EB] border-[#2563EB]"
-                        : "border-gray-200 group-hover:border-[#2563EB]",
-                    )}
-                  >
-                    {selectedCategories.includes(cat.name) && (
-                      <Check size={12} className="text-white" />
-                    )}
-                  </div>
-                  <input
-                    type="checkbox"
-                    className="hidden"
-                    checked={selectedCategories.includes(cat.name)}
-                    onChange={() => toggleCategory(cat.name)}
-                  />
-                  <span
-                    className={cn(
-                      "text-sm font-medium transition-colors",
-                      selectedCategories.includes(cat.name)
-                        ? "text-[#0F172A]"
-                        : "text-gray-400 group-hover:text-gray-600",
-                    )}
-                  >
-                    {cat.name}
-                  </span>
-                </label>
-              ))}
+                  {selectedCategories.includes(category.name) && (
+                    <Check size={12} className="text-white" />
+                  )}
+                </div>
+                <input
+                  type="checkbox"
+                  className="hidden"
+                  checked={selectedCategories.includes(category.name)}
+                  onChange={() => toggleCategory(category.name)}
+                />
+                <span
+                  className={cn(
+                    "text-sm font-medium transition-colors",
+                    selectedCategories.includes(category.name)
+                      ? "text-[#0F172A] font-bold"
+                      : "text-gray-500 hover:text-[#2563EB]",
+                  )}
+                >
+                  {category.name}
+                </span>
+              </label>
+            ))}
         </div>
       </div>
 
@@ -139,10 +131,10 @@ const FilterSidebar = ({ className }: { className?: string }) => {
           <input
             type="range"
             min="0"
-            max="5000000"
-            step="100000"
-            value={priceRange}
-            onChange={(e) => setPriceRange(parseInt(e.target.value))}
+            max="1000000"
+            step="10000"
+            value={currentMax}
+            onChange={(e) => setMaxPrice(parseInt(e.target.value))}
             className="w-full h-1.5 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-[#2563EB]"
           />
           <div className="flex items-center gap-2">
@@ -156,38 +148,10 @@ const FilterSidebar = ({ className }: { className?: string }) => {
             <div className="flex-1 bg-gray-50 border border-gray-100 rounded-lg p-2 text-center">
               <span className="text-[10px] text-gray-400 block p-0">Max</span>
               <span className="text-xs font-extrabold text-[#0F172A]">
-                Rp {(priceRange / 1000000).toFixed(1)}M
+                Rp {new Intl.NumberFormat("id-ID").format(currentMax)}
               </span>
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Color */}
-      <div className="space-y-4">
-        <h3 className="text-[13px] font-extrabold text-[#0F172A] uppercase tracking-wider">
-          Warna
-        </h3>
-        <div className="flex flex-wrap gap-2">
-          {COLORS.map((color) => (
-            <button
-              key={color.name}
-              onClick={() =>
-                setSelectedColor(
-                  selectedColor === color.name ? null : color.name,
-                )
-              }
-              className={cn(
-                "w-6 h-6 rounded-full border-2 transition-all p-0.5",
-                selectedColor === color.name
-                  ? "border-[#2563EB] scale-110 shadow-sm"
-                  : "border-transparent",
-              )}
-              title={color.name}
-            >
-              <div className={cn("w-full h-full rounded-full", color.class)} />
-            </button>
-          ))}
         </div>
       </div>
 
@@ -244,9 +208,11 @@ const FilterSidebar = ({ className }: { className?: string }) => {
         </div>
       </div>
 
-      <Button className="w-full bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold py-3 rounded-xl shadow-lg shadow-blue-100 mt-2">
-        Terapkan Filter
-      </Button>
+      <div className="pt-2">
+        <p className="text-[10px] text-gray-400 text-center italic">
+          Filter diterapkan secara otomatis
+        </p>
+      </div>
     </aside>
   );
 };

@@ -7,7 +7,7 @@ import { useWishlistStore } from "@outshine/store/wishlistStore";
 import { useAuth } from "@/lib/auth";
 import { usePostWishlists } from "@/services/WishLists/usePostWishlists";
 import { useDeleteWishlists } from "@/services/WishLists/useDeleteWishlists";
-import { FolderPlus, Star } from "lucide-react";
+import { Star } from "lucide-react";
 
 export interface CardProductProps {
   /** Product image URL */
@@ -42,6 +42,8 @@ export interface CardProductProps {
   aspectRatio?: "square" | "portrait";
   /** Average rating */
   rating?: number;
+  /** Layout orientation */
+  layout?: "grid" | "list";
 }
 
 /**
@@ -58,12 +60,12 @@ const CardProduct = ({
   isPo,
   discount,
   onWishlistClick,
-  onAddToCollection,
   onClick,
   className,
   aspectRatio = "portrait",
   rating,
   id, // Need ID for wishlist
+  layout = "grid",
 }: CardProductProps & { id?: string }) => {
   const { trigger: addToWishlist } = usePostWishlists();
   const { trigger: removeFromWishlist } = useDeleteWishlists();
@@ -126,15 +128,22 @@ const CardProduct = ({
     <div
       onClick={onClick}
       className={cn(
-        "group relative flex flex-col gap-3 cursor-pointer",
+        "group relative flex gap-3 cursor-pointer",
+        layout === "grid"
+          ? "flex-col"
+          : "flex-row bg-white p-4 rounded-2xl border border-gray-100 hover:border-[#2563EB] hover:shadow-lg transition-all",
         className,
       )}
     >
       {/* Image Container */}
       <div
         className={cn(
-          "relative overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-800",
-          aspectRatio === "square" ? "aspect-square" : "aspect-3/4",
+          "relative overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-800 shrink-0",
+          layout === "grid"
+            ? aspectRatio === "square"
+              ? "aspect-square w-full"
+              : "aspect-3/4 w-full"
+            : "w-32 h-32 md:w-40 md:h-40",
         )}
       >
         <Image
@@ -162,6 +171,7 @@ const CardProduct = ({
             "absolute top-2 right-2 h-8 w-8 flex items-center justify-center rounded-full",
             "bg-black/50 backdrop-blur-md shadow-md border border-white/20",
             "transition-all duration-200 hover:bg-black/70 hover:scale-110 active:scale-95",
+            layout === "list" && "hidden", // Move to end for list view for better design
           )}
         >
           <HeartIcon
@@ -173,50 +183,101 @@ const CardProduct = ({
             color={wishlisted ? "#ef4444" : "#ffffff"}
           />
         </button>
-
-        {/* Add to Collection Button (Custom for Wishlist) */}
-        {onAddToCollection && (
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onAddToCollection();
-            }}
-            className={cn(
-              "absolute top-12 right-2 h-8 w-8 flex items-center justify-center rounded-full",
-              "bg-white/20 backdrop-blur-md shadow-sm text-white",
-              "transition-all duration-200 hover:bg-white hover:text-black hover:scale-110 active:scale-95",
-            )}
-          >
-            <FolderPlus size={16} />
-          </button>
-        )}
       </div>
 
       {/* Content Info */}
-      <div className="flex flex-col gap-1">
-        <h3 className="text-sm font-semibold text-gray-500 truncate">{name}</h3>
-        <div className="flex justify-between">
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-bold text-[#0F172A]">
-              {currency}
-              {formattedPrice}
-            </span>
-            {formattedOriginalPrice &&
-              formattedOriginalPrice !== formattedPrice && (
-                <span className="text-xs text-gray-500 line-through dark:text-gray-400">
-                  {currency}
-                  {formattedOriginalPrice}
-                </span>
-              )}
-          </div>
-          {rating !== undefined && (
-            <div className="flex items-center gap-1 -mt-12">
-              <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-              <span className="text-xs font-medium text-gray-600">
-                {rating.toFixed(1)}
-              </span>
-            </div>
+      <div
+        className={cn(
+          "flex flex-col flex-1",
+          layout === "grid" ? "gap-1" : "gap-2 py-2",
+        )}
+      >
+        <h3
+          className={cn(
+            "font-semibold text-gray-500 truncate",
+            layout === "grid" ? "text-sm" : "text-lg text-[#0F172A]",
           )}
+        >
+          {name}
+        </h3>
+
+        <div
+          className={cn(
+            "flex justify-between",
+            layout === "grid" ? "flex-row" : "flex-col gap-4",
+          )}
+        >
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-2">
+              <span
+                className={cn(
+                  "font-bold text-[#0F172A]",
+                  layout === "grid" ? "text-sm" : "text-xl",
+                )}
+              >
+                {currency}
+                {formattedPrice}
+              </span>
+              {formattedOriginalPrice &&
+                formattedOriginalPrice !== formattedPrice && (
+                  <span className="text-xs text-gray-400 line-through">
+                    {currency}
+                    {formattedOriginalPrice}
+                  </span>
+                )}
+            </div>
+            {layout === "list" && (
+              <p className="text-sm text-gray-400 line-clamp-2 max-w-xl">
+                Dapatkan produk kualitas terbaik dengan harga terjangkau hanya
+                di Outshine Store.
+              </p>
+            )}
+          </div>
+
+          <div className="flex items-center gap-4">
+            {rating !== undefined && (
+              <div
+                className={cn(
+                  "flex items-center gap-1",
+                  layout === "grid" ? "-mt-12" : "",
+                )}
+              >
+                <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                <span className="text-xs font-medium text-gray-600">
+                  {rating.toFixed(1)}
+                </span>
+              </div>
+            )}
+
+            {layout === "list" && (
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handleWishlistClick}
+                  className={cn(
+                    "h-10 w-10 flex items-center justify-center rounded-xl border border-gray-200",
+                    "transition-all duration-200 hover:bg-gray-50 active:scale-95",
+                  )}
+                >
+                  <HeartIcon
+                    size={20}
+                    className={cn(
+                      "transition-colors",
+                      wishlisted
+                        ? "fill-red-500 text-red-500"
+                        : "text-gray-400",
+                    )}
+                    color={wishlisted ? "#ef4444" : "#9ca3af"}
+                  />
+                </button>
+                <button
+                  onClick={onClick}
+                  className="bg-[#0F172A] text-white px-6 py-2 rounded-xl text-sm font-bold hover:bg-[#1e293b] transition-all"
+                >
+                  Detail
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

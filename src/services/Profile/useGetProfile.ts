@@ -1,5 +1,6 @@
 import useSWR from "swr";
 import { fetcherOSStore } from "@/lib/axios";
+import { useAuth } from "@/lib/auth";
 
 export interface UserProfile {
   id: string;
@@ -52,8 +53,9 @@ export const getProfileData = async (): Promise<UserProfile> => {
 };
 
 export const useGetProfile = () => {
+  const { isLoggedIn } = useAuth();
   const { data, error, isLoading, mutate } = useSWR<UserProfile>(
-    "/api/v1/users/me",
+    isLoggedIn ? "/api/v1/users/me" : null,
     getProfileData,
     {
       revalidateOnFocus: false,
@@ -64,7 +66,7 @@ export const useGetProfile = () => {
 
   return {
     profile: data,
-    isLoading,
+    isLoading: isLoggedIn ? isLoading : false,
     isError: error,
     mutate,
   };

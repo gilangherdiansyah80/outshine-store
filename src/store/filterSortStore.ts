@@ -37,11 +37,13 @@ export type PriceRangeRecord = (typeof PRICE_RANGES)[number];
 interface FilterSortState {
   selectedCategories: string[];
   selectedPriceRange: string | null; // ID of the price range
+  maxPrice: number | null; // Dynamic max price from slider
   selectedRating: number | null;
   sortOption: SortOption;
 
   toggleCategory: (category: string) => void;
   setPriceRange: (rangeId: string | null) => void;
+  setMaxPrice: (price: number | null) => void;
   setRating: (rating: number | null) => void;
   setSortOption: (option: SortOption) => void;
   clearFilters: () => void;
@@ -50,6 +52,7 @@ interface FilterSortState {
 export const useFilterSortStore = create<FilterSortState>((set) => ({
   selectedCategories: [],
   selectedPriceRange: null,
+  maxPrice: null,
   selectedRating: null,
   sortOption: "Recommended",
 
@@ -62,6 +65,8 @@ export const useFilterSortStore = create<FilterSortState>((set) => ({
 
   setPriceRange: (rangeId) => set({ selectedPriceRange: rangeId }),
 
+  setMaxPrice: (price) => set({ maxPrice: price }),
+
   setRating: (rating) => set({ selectedRating: rating }),
 
   setSortOption: (option) => set({ sortOption: option }),
@@ -70,6 +75,7 @@ export const useFilterSortStore = create<FilterSortState>((set) => ({
     set({
       selectedCategories: [],
       selectedPriceRange: null,
+      maxPrice: null,
       selectedRating: null,
       sortOption: "Recommended",
     }),
