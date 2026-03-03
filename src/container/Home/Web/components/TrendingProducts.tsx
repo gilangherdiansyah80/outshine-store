@@ -38,7 +38,7 @@ const TrendingProducts = ({ className }: { className?: string }) => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
         {products.slice(0, 4).map((product) => (
           <CardProduct
             key={product.id}
@@ -55,7 +55,11 @@ const TrendingProducts = ({ className }: { className?: string }) => {
             rating={product.rating}
             aspectRatio="square"
             onAddToCart={() => console.log("Add to cart:", product.name)}
-            onClick={() => navigate(`/outshine/product/${product.id}`)}
+            onClick={() =>
+              navigate(`/outshine/product/${product.id}`, {
+                state: { from: "Home", path: "/outshine/home" },
+              })
+            }
           />
         ))}
       </div>

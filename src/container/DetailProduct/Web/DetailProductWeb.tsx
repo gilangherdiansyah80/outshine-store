@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useLocation } from "react-router-dom";
 import { useGetDetailProduct } from "@outshine/services/Products/useGetDetailProduct";
 import Loading from "@/components/Loader/Loading";
 import { ChevronRight } from "lucide-react";
@@ -8,8 +8,15 @@ import ProductInfoWeb from "./components/ProductInfoWeb";
 import ProductDetailsTabs from "./components/ProductDetailsTabs";
 import ReviewsWeb from "./components/ReviewsWeb";
 
+interface NavigationState {
+  from?: string;
+  path?: string;
+}
+
 export default function DetailProductWeb() {
   const { id } = useParams();
+  const location = useLocation();
+  const state = location.state as NavigationState;
   const { product, isLoading, isError } = useGetDetailProduct(id);
 
   if (isLoading) {
@@ -44,10 +51,10 @@ export default function DetailProductWeb() {
         {/* Breadcrumbs */}
         <nav className="flex items-center gap-2 text-xs font-medium text-gray-400 mt-12">
           <Link
-            to="/outshine/home"
+            to={state?.path || "/outshine/home"}
             className="hover:text-[#2563EB] transition-colors"
           >
-            Home
+            {state?.from || "Home"}
           </Link>
           <ChevronRight size={12} />
           <span className="text-gray-600 truncate max-w-[200px]">
@@ -57,10 +64,10 @@ export default function DetailProductWeb() {
 
         {/* Main Section: Gallery & Info */}
         <div className="grid grid-cols-12 gap-7">
-          <div className="lg:col-span-7">
+          <div className="md:col-span-7">
             <ProductGalleryWeb images={product.images} title={product.title} />
           </div>
-          <div className="lg:col-span-5">
+          <div className="md:col-span-5">
             <ProductInfoWeb product={product} />
           </div>
         </div>

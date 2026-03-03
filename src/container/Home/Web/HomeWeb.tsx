@@ -5,8 +5,8 @@ import Newsletter from "./components/Newsletter";
 
 export default function HomeWeb() {
   return (
-    <main className="bg-white min-h-screen pt-5 pb-20">
-      <div className="max-w-7xl mx-auto px-8 flex flex-col gap-16">
+    <main className="bg-white min-h-screen pt-5 pb-10">
+      <div className="max-w-7xl mx-auto px-8 flex flex-col gap-10">
         {/* Hero Section */}
         <Hero />
 

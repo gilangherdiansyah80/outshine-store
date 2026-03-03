@@ -133,7 +133,12 @@ export default function ProductsWeb() {
                       rating={product.rating}
                       layout={layout}
                       onClick={() =>
-                        navigate(`/outshine/product/${product.id}`)
+                        navigate(`/outshine/product/${product.id}`, {
+                          state: {
+                            from: "Katalog",
+                            path: "/outshine/products",
+                          },
+                        })
                       }
                       onWishlistClick={() =>
                         console.log("Wishlist:", product.name)

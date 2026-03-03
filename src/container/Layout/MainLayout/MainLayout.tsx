@@ -13,8 +13,9 @@ const MainLayout = () => {
   const { isLoading, setRouteLoading } = useLoadingStore();
   const location = useLocation();
 
-  // Simulate loading on route change
+  // Simulate loading on route change and reset scroll position
   useEffect(() => {
+    window.scrollTo(0, 0);
     setRouteLoading(true);
     const timer = setTimeout(() => {
       setRouteLoading(false);

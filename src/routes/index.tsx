@@ -15,6 +15,7 @@ import LoginPage from "@outshine/pages/Auth/LoginPage";
 import OrdersPage from "@outshine/pages/OrdersPage";
 import SettingPage from "@outshine/pages/SettingPage";
 import DetailOrderPage from "@outshine/pages/DetailOrderPage";
+import DetailCategoryPage from "@outshine/pages/DetailCategoryPage";
 
 const route = createBrowserRouter([
   {
@@ -96,6 +97,10 @@ const route = createBrowserRouter([
       {
         path: "product/:id",
         element: <DetailProductPage />,
+      },
+      {
+        path: "category/:id",
+        element: <DetailCategoryPage />,
       },
       {
         path: "order/:id",

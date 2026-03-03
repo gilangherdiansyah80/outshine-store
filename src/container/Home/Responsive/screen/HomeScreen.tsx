@@ -43,7 +43,10 @@ export default function HomeScreen() {
           if (category) {
             toggleCategory(category.name);
           }
-          push("/detail-category", { categoryName: category?.name });
+          push("/detail-category", {
+            id: category?.id,
+            categoryName: category?.name,
+          });
         }}
       />
 
