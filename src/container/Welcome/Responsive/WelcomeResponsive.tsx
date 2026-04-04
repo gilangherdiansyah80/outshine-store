@@ -5,13 +5,6 @@ export default function WelcomeResponsive() {
   return (
     <>
       <ResponsiveRoute path="/" component={<WelcomeScreeen />} />
-      {/* 
-        Route for product detail reviews if needed.
-        <ResponsiveRoute
-          path="/reviews"
-          component={<DetailProductReviewListScreen type="saas" />}
-        />
-      */}
     </>
   );
 }

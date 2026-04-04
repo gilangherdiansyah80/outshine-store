@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import Modal from "@outshine/ui/Modal/Modal";
 import type { GetCategoryResponse } from "@/services/Category/useGetCategory";
-import { Search, ChevronRight } from "lucide-react";
+import { Search } from "lucide-react";
 import { useState, useMemo } from "react";
 
 interface CategoryListPopupProps {
@@ -47,13 +47,6 @@ const CategoryListPopup = ({
 
         {/* Categories Grid */}
         <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-gray-900">Suku Cadang</h3>
-            <button className="text-gray-400 hover:text-gray-600">
-              <ChevronRight size={18} className="rotate-90" />
-            </button>
-          </div>
-
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar">
             {filteredCategories.map((category) => (
               <Link

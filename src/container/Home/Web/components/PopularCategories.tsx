@@ -24,7 +24,7 @@ const PopularCategories = ({ className }: { className?: string }) => {
         <h2 className="text-xl font-bold text-[#0F172A]">Kategori Produk</h2>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-6 gap-2">
+      <div className="grid grid-cols-6 md:grid-cols-9 gap-2">
         {categories.slice(0, 5).map((category) => (
           <Link
             key={category.id}
