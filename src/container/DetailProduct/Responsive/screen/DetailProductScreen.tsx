@@ -14,6 +14,7 @@ import ProductQuantitySelector from "../components/ProductQuantitySelector";
 import { useCartStore } from "@outshine/store/cartStore";
 import { useAddressStore } from "@/store/addressStore";
 import { postCartItem } from "@/services/Carts/usePostCart";
+import { useTokenStore } from "@/lib/auth-adapter";
 
 interface DetailProductScreenProps {
   product: ProductDetail;
@@ -36,6 +37,7 @@ const DetailProductScreen: React.FC<DetailProductScreenProps> = ({
   const navigate = useNavigate();
   const { addItem, setBuyNowItem } = useCartStore();
   const { actions: addressActions } = useAddressStore();
+  const accessToken = useTokenStore((state) => state.accessToken);
 
   return (
     <div className="min-h-screen bg-gray-100 pb-24 font-sans">
@@ -141,6 +143,13 @@ const DetailProductScreen: React.FC<DetailProductScreenProps> = ({
 
           <button
             onClick={async () => {
+              if (actionType === "cart" || actionType === "buy") {
+                if (!accessToken) {
+                  navigate("/outshine/welcome");
+                  return;
+                }
+              }
+
               if (!selectedSize) return;
 
               const sizeId = product.sizes.find(

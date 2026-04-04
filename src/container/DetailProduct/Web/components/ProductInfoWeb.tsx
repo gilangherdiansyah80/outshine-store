@@ -1,19 +1,107 @@
 import { useState } from "react";
 import { Star, ShoppingCart, Heart, Share2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { cn } from "@outshine/lib/utils";
 import Button from "@outshine/ui/Button/Button";
 import type { ProductDetail } from "@outshine/services/Products/useGetDetailProduct";
+import { useCartStore } from "@outshine/store/cartStore";
+import { useAddressStore } from "@/store/addressStore";
+import { postCartItem } from "@/services/Carts/usePostCart";
+import { useTokenStore } from "@/lib/auth-adapter";
 
 interface ProductInfoWebProps {
   product: ProductDetail;
 }
 
 const ProductInfoWeb = ({ product }: ProductInfoWebProps) => {
+  const navigate = useNavigate();
+  const { addItem, setBuyNowItem } = useCartStore();
+  const { actions: addressActions } = useAddressStore();
+  const accessToken = useTokenStore((state) => state.accessToken);
+
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState(
     product.sizes[0]?.name || "",
   );
-  //   const [condition, setCondition] = useState<"new" | "refurbished">("new");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleAddToCart = async () => {
+    if (!accessToken) {
+      navigate("/outshine/welcome");
+      return;
+    }
+
+    if (!selectedSize) return;
+
+    const sizeId = product.sizes.find((s) => s.name === selectedSize)?.id;
+    if (!sizeId) return;
+
+    setIsSubmitting(true);
+    try {
+      const response = await postCartItem({
+        productId: product.id,
+        sizeId,
+        quantity,
+      });
+
+      if (response.success) {
+        addItem({
+          id: product.id,
+          name: product.title,
+          price: product.price,
+          originalPrice: product.originalPrice || product.price,
+          formattedDiscounted: product.formattedDiscounted || "",
+          formattedOriginal: product.formattedOriginal || "",
+          isPo: product.isPo,
+          poDpPercent: product.poDpPercent,
+          sizeId,
+          image: product.images[0],
+          size: selectedSize,
+          color: "Standard",
+          quantity,
+        });
+        navigate("/outshine/cart");
+      }
+    } catch (error) {
+      console.error("Failed to add to cart:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleBuyNow = () => {
+    if (!accessToken) {
+      navigate("/outshine/welcome");
+      return;
+    }
+
+    if (!selectedSize) return;
+
+    const sizeId = product.sizes.find((s) => s.name === selectedSize)?.id;
+    if (!sizeId) return;
+
+    const buyNowItem = {
+      id: product.id,
+      name: product.title,
+      price: product.price,
+      originalPrice: product.originalPrice || product.price,
+      formattedDiscounted: product.formattedDiscounted || "",
+      formattedOriginal: product.formattedOriginal || "",
+      isPo: product.isPo,
+      poDpPercent: product.poDpPercent,
+      image: product.images[0],
+      sizeId,
+      size: selectedSize,
+      color: "Standard",
+      quantity,
+    };
+
+    setBuyNowItem(buyNowItem);
+    addressActions.resetSelection();
+    navigate(
+      `/outshine/checkout?productId=${product.id}&sizeId=${sizeId}&quantity=${quantity}`,
+    );
+  };
 
   return (
     <div className="flex flex-col gap-5 py-2 bg-white rounded-2xl p-5 border border-gray-200 shadow-sm shadow-black">
@@ -153,11 +241,19 @@ const ProductInfoWeb = ({ product }: ProductInfoWebProps) => {
 
       {/* Actions */}
       <div className="flex flex-col gap-3 pt-4">
-        <Button className="w-full bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold py-4 rounded-xl shadow-xl shadow-blue-100 flex items-center justify-center gap-3 active:scale-[0.98] transition-all">
+        <Button
+          onClick={handleAddToCart}
+          isLoading={isSubmitting}
+          className="w-full bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold py-4 rounded-xl shadow-xl shadow-blue-100 flex items-center justify-center gap-3 active:scale-[0.98] transition-all"
+        >
           <ShoppingCart size={20} />
           Add to Cart
         </Button>
-        <Button className="w-full bg-[#0F172A] hover:bg-black text-white font-bold py-4 rounded-xl shadow-xl shadow-gray-100 active:scale-[0.98] transition-all">
+        <Button
+          onClick={handleBuyNow}
+          disabled={isSubmitting}
+          className="w-full bg-[#0F172A] hover:bg-black text-white font-bold py-4 rounded-xl shadow-xl shadow-gray-100 active:scale-[0.98] transition-all"
+        >
           Buy It Now
         </Button>
       </div>
